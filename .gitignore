@@ -1,0 +1,65 @@
+﻿## General ##
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.orig
+
+## Build Results ##
+[Bb]in/
+[Oo]bj/
+*.dll
+*.exe
+*.app
+*.log
+*.cache
+*.db
+*.pdb
+
+## Rider IDE ##
+.idea/
+*.sln.iml
+
+## VS Code (optional, in case someone uses it) ##
+.vscode/
+
+## NuGet ##
+*.nupkg
+*.snupkg
+*.nuspec
+*.psmdcp
+project.lock.json
+project.fragment.lock.json
+artifacts/
+packages/
+*.nuget.props
+*.nuget.targets
+NuGet.config
+
+## Dotnet CLI ##
+*.vs/
+.vsconfig
+*.dotCover
+
+## Test Results ##
+TestResults/
+*.coverage
+*.coveragexml
+*.trx
+
+## Local Config Files ##
+*.local.json
+*.env
+
+## macOS/Linux ##
+.DS_Store
+*.swp
+*.swo
+*~
+
+## Logs ##
+*.log
+
+## Git ##
+!.gitattributes
+!.gitignore
