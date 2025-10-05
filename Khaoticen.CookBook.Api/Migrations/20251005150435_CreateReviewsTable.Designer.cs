@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Khaoticen.CookBook.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251003120251_Recipes")]
-    partial class Recipes
+    [Migration("20251005150435_CreateReviewsTable")]
+    partial class CreateReviewsTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -53,6 +53,28 @@ namespace Khaoticen.CookBook.Api.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Recipes");
+                });
+
+            modelBuilder.Entity("Khaoticen.CookBook.Api.Core.Entities.Review", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Comment")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Reviews");
                 });
 #pragma warning restore 612, 618
         }

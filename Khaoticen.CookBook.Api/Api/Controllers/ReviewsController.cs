@@ -1,44 +1,32 @@
-﻿// using AutoMapper;
-// using Khaoticen.CookBook.Api.Api.Controllers.Base;
-// using Khaoticen.CookBook.Api.Api.DTOs;
-// using Khaoticen.CookBook.Api.Core.Dtos.Reviews;
-// using Khaoticen.CookBook.Api.Core.Entities;
-// using Khaoticen.CookBook.Api.Core.Services.Entity.Interfaces;
-// using Microsoft.AspNetCore.Mvc;
-//
-// namespace Khaoticen.CookBook.Api.Api.Controllers;
-//
-// [ApiController]
-// [Route("[controller]")]
-// public class ReviewsController(IMapper mapper, IReviewService entityService)
-//     : AppControllerBase<Review, IReviewService, ReviewCreateDto, ReviewResponseDto>(mapper)
-// {
-//     #region CRUD
-//
-//     [HttpPost]
-//     public async Task<ActionResult> Create([FromBody] ReviewCreateDto entityCreateDto)
-//     {
-//         var entity = await entityService.Create(entityCreateDto);
-//
-//         return CreatedAtAction(
-//             nameof(GetByGuid),
-//             new { id = entity.Id },
-//             Transform(entity)
-//         );
-//     }
-//
-//     [HttpGet("{id:guid}")]
-//     public async Task<ActionResult> GetByGuid(Guid id)
-//     {
-//         var entity = await entityService.Get(id);
-//
-//         if (entity == null)
-//         {
-//             return NotFound();
-//         }
-//
-//         return Ok(Transform(entity));
-//     }
-//
-//     #endregion
-// }
+﻿using AutoMapper;
+using Khaoticen.CookBook.Api.Api.Controllers.Shared.Base;
+using Khaoticen.CookBook.Api.Api.Dtos.Response;
+using Khaoticen.CookBook.Api.Core.Dtos.Entity.Create;
+using Khaoticen.CookBook.Api.Core.Dtos.Entity.Update;
+using Khaoticen.CookBook.Api.Core.Entities;
+using Khaoticen.CookBook.Api.Core.Services.Entity;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Khaoticen.CookBook.Api.Api.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+public class ReviewsController : AppControllerBase <
+    Review,
+    ReviewService,
+    ReviewCreateDto,
+    ReviewUpdateDto,
+    ReviewResponseDto
+>
+{
+    public ReviewsController(ReviewService entityService, IMapper mapper) : base(entityService, mapper)
+    {
+    }
+    
+    [NonAction] // todo: IgnoreApi = true
+    public override Task<ActionResult> Create([FromBody] ReviewCreateDto dto)
+    {
+        return base.Create(dto);
+    }
+    
+}

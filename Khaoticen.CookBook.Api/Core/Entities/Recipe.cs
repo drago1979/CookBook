@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Khaoticen.CookBook.Api.Core.Entities.Entity;
+using Khaoticen.CookBook.Api.Core.Entities.Shared.Base;
+using Khaoticen.CookBook.Api.Core.Entities.Shared.Interfaces;
 
 namespace Khaoticen.CookBook.Api.Core.Entities;
 
-[Table("Recipes")]
+[Table("Recipes")] // todo: not needed?
 public class Recipe : SoftDeletableEntity
 {
     [MaxLength(100)]
@@ -15,6 +16,8 @@ public class Recipe : SoftDeletableEntity
 
     [MaxLength(200)]
     public string? Url { get; set; }
+    
+    public ICollection<Review> Reviews { get; set; } = new List<Review>();
     
     
     

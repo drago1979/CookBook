@@ -1,17 +1,40 @@
-﻿// using Khaoticen.CookBook.Api.Core.Dtos.Reviews;
-// using Khaoticen.CookBook.Api.Core.Entities;
-// using Khaoticen.CookBook.Api.Core.Factories;
-// using Khaoticen.CookBook.Api.Core.Services.Entity.Base;
-// using Khaoticen.CookBook.Api.Infrastructure;
-//
-// namespace Khaoticen.CookBook.Api.Core.Services.Entity;
-//
-// public class ReviewService:
-//     BaseEntityService<Review, RecipeFactory, ReviewCreateDto>// todo: never instantiated
-// {
-//     public ReviewService(AppDbContext db, RecipeFactory factory)
-//         : base(db, factory)
-//     {
-//     }
-//
-// }
+﻿using Khaoticen.CookBook.Api.Core.Dtos.Entity.Create;
+using Khaoticen.CookBook.Api.Core.Dtos.Entity.Update;
+using Khaoticen.CookBook.Api.Core.Entities;
+using Khaoticen.CookBook.Api.Core.Factories;
+using Khaoticen.CookBook.Api.Core.Services.Entity.Shared.Base;
+using Khaoticen.CookBook.Api.Core.Services.Entity.Shared.Interfaces;
+using Khaoticen.CookBook.Api.Infrastructure;
+using Khaoticen.CookBook.Api.Infrastructure.Db;
+
+namespace Khaoticen.CookBook.Api.Core.Services.Entity;
+
+public class ReviewService :
+    BaseEntityService<
+        Review,
+        ReviewFactory,
+        ReviewCreateDto,
+        ReviewUpdateDto
+    >,
+    IEntityService<
+        Review,
+        ReviewCreateDto,
+        ReviewUpdateDto
+    >
+{
+    public ReviewService(AppDbContext db, ReviewFactory factory)
+        : base(db, factory)
+    {
+    }
+
+    public Review CreateForRecipe(ReviewCreateDto dto, Recipe recipe)
+    {
+        var review = Create(dto);
+
+        review.RecipeId = recipe.Id;
+        review.Recipe = recipe;
+        recipe.Reviews.Add(review);
+
+        return review;
+    }
+}

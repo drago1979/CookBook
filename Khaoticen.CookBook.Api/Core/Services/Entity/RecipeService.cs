@@ -1,65 +1,50 @@
-﻿using Khaoticen.CookBook.Api.Core.Dtos.Recipes;
+﻿using Khaoticen.CookBook.Api.Core.Dtos.Entity.Create;
+using Khaoticen.CookBook.Api.Core.Dtos.Entity.Update;
 using Khaoticen.CookBook.Api.Core.Entities;
 using Khaoticen.CookBook.Api.Core.Factories;
-using Khaoticen.CookBook.Api.Core.Factories.Interfaces;
-using Khaoticen.CookBook.Api.Core.Services.Entity.Base;
-using Khaoticen.CookBook.Api.Core.Services.Entity.Interfaces;
+using Khaoticen.CookBook.Api.Core.Services.Entity.Shared.Base;
+using Khaoticen.CookBook.Api.Core.Services.Entity.Shared.Interfaces;
 using Khaoticen.CookBook.Api.Infrastructure;
+using Khaoticen.CookBook.Api.Infrastructure.Db;
 
 namespace Khaoticen.CookBook.Api.Core.Services.Entity;
 
-// public class RecipeService : BaseEntityService<Recipe, RecipeFactory, RecipeCreateDto, RecipeUpdateDto>,
-// IEntityService<Recipe, RecipeCreateDto, RecipeUpdateDto>
-// {
-//     public RecipeService(AppDbContext db, RecipeFactory factory)
-//         : base(db, factory)
-//     {
-//     }
- 
-// ### IF BASED
-public class RecipeService : BaseEntityService<Recipe, RecipeFactory, RecipeCreateDto, RecipeUpdateDto>,
-    IEntityService<Recipe, RecipeCreateDto, RecipeUpdateDto>
+public class RecipeService :
+    BaseEntityService<
+        Recipe,
+        RecipeFactory,
+        RecipeCreateDto,
+        RecipeUpdateDto
+    >
+    ,
+    IEntityService<
+        Recipe,
+        RecipeCreateDto,
+        RecipeUpdateDto
+    >
 {
-    public RecipeService(AppDbContext db, IRecipeFactory factory)
+    private readonly ReviewService _reviewService;
+
+    public RecipeService(AppDbContext db, RecipeFactory factory, ReviewService reviewService)
         : base(db, factory)
     {
+        _reviewService = reviewService;
     }
 
-    // public async Task<Recipe> Create(RecipeCreateDto dto)
-    // {
-    //     var recipe = factory.Create(dto);
-    //
-    //     db.Recipes.Add(recipe);
-    //     await db.SaveChangesAsync();
-    //
-    //     return recipe;
-    // }
-    //
-    // public async Task<Recipe?> Get(Guid id)
-    // {
-    //     return await db.Recipes.FindAsync(id);
-    // }
+    public async Task<Review> AddReview(Recipe recipe, ReviewCreateDto entityCreateDto)
+    {
+        var review = _reviewService.CreateForRecipe(entityCreateDto, recipe);
+    
+        await Db.SaveChangesAsync();
+        
+        var result = review;
+        
+    
+        return review;
+    }
 
-    // public async Task<List<Recipe>> GetAll()
+    // public Task<Recipe> Create(RecipeCreateDto dto)
     // {
-    //     return await db.Recipes.ToListAsync();
+    //     throw new NotImplementedException();
     // }
-    //
-    // public async Task<Recipe> Update(Recipe entity, RecipeUpdateDto dto)
-    // {
-    //     factory.Update(dto, entity);
-    //     // db.Recipes.Update(entity);
-    //     await db.SaveChangesAsync();
-    //
-    //     return entity;
-    // }
-    //
-    // public async Task Delete(Recipe entity)
-    // {
-    //     db.Recipes.Remove(entity);
-    //
-    //     await db.SaveChangesAsync();
-    // }
-
-
 }

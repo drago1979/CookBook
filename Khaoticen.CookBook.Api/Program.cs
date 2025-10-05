@@ -1,6 +1,8 @@
 using Khaoticen.CookBook.Api.Core.Services;
 using Khaoticen.CookBook.Api.Core.Services.Entity;
 using Khaoticen.CookBook.Api.Infrastructure;
+using Khaoticen.CookBook.Api.Infrastructure.Db;
+using Khaoticen.CookBook.Api.Infrastructure.Interceptors;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,11 +34,11 @@ builder.Services.Scan(scan => scan
     .FromAssemblyOf<RecipeService>()
     // Factories first
     .AddClasses(classes => classes.Where(c => c.Name.EndsWith("Factory")))
-    .AsImplementedInterfaces()
+    .AsSelfWithInterfaces()
     .WithScopedLifetime()
     // Then services
     .AddClasses(classes => classes.Where(c => c.Name.EndsWith("Service")))
-    .AsImplementedInterfaces()
+    .AsSelfWithInterfaces()
     .WithScopedLifetime()
 );
 #endregion

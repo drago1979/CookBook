@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Khaoticen.CookBook.Api.Core.Entities.Entity;
+using Khaoticen.CookBook.Api.Core.Entities.Shared.Base;
 using Microsoft.EntityFrameworkCore;
 
 namespace Khaoticen.CookBook.Api.Core.Entities;
