@@ -12,39 +12,112 @@ namespace Khaoticen.CookBook.Api.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class RecipesController : AppControllerBase<
-    Recipe,
-    RecipeService,
-    RecipeCreateDto,
-    RecipeUpdateDto,
-    RecipeResponseDto
->
+public class RecipesController(RecipeService entityService, IMapper mapper)
+    : AppControllerBase<Recipe, RecipeResponseDto>(mapper)
 {
-    public RecipesController(RecipeService entityService, IMapper mapper) : base(entityService, mapper)
+    #region  CRUD
+
+    [HttpPost(Name = "RecipeCreate")]
+    public async Task<ActionResult> Create([FromBody] RecipeCreateDto entityCreateDto)
     {
+        var entity = await entityService.CreateAsync(entityCreateDto);
+
+        return CreatedAtAction(
+            nameof(GetByGuid),
+            new { id = entity.Id },
+            Transform(entity)
+        );
+    }
+    
+    [HttpGet("{id:guid}", Name = "RecipeGetByGuid")]
+    public async Task<ActionResult> GetByGuid(Guid id)
+    {
+        var entity = await entityService.Get(id);
+
+        if (entity == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(Transform(entity));
+    }
+    
+    [HttpGet(Name = "RecipeGetAll")]
+    public async Task<ActionResult> GetAll()
+    {
+        var entities = await entityService.GetAll();
+
+        return Ok(Transform(entities));
+    }
+    
+    [HttpPatch("{id:guid}", Name = "RecipePatch")]
+    public async Task<ActionResult> Patch(Guid id, [FromBody] RecipeUpdateDto entityUpdateDto,
+        bool returnUpdated = false)
+    {
+        var entity = await entityService.Get(id);
+
+        if (entity == null)
+        {
+            return NotFound();
+        }
+
+        await entityService.Update(entity, entityUpdateDto);
+
+        if (returnUpdated)
+        {
+            return Ok(Transform(entity));
+        }
+
+        return NoContent();
     }
 
-    [HttpPost("{id:guid}/reviews")]
+    [HttpDelete("{id:guid}", Name = "RecipeDelete")]
+    public async Task<ActionResult> Delete(Guid id) // todo: dodaj createdAt, updatedAt u response
+    {
+        var entity = await entityService.Get(id);
+
+        if (entity == null)
+        {
+            return NotFound();
+        }
+
+        await entityService.Delete(entity);
+
+        return NoContent();
+    }
+    
+    #endregion
+
+    #region RELATIONSHIPS
+
+    [HttpPost("{id:guid}/reviews", Name = "RecipeAddReview")]
     public async Task<ActionResult> AddReview(Guid id, [FromBody] ReviewCreateDto entityCreateDto)
     {
-        var recipe = await EntityService.Get(id);
+        var recipe = await entityService.Get(id);
         
         if (recipe == null)
         {
             return NotFound();
         }
         
-        var review = await EntityService.AddReview(recipe, entityCreateDto);
+        var review = await entityService.AddReview(recipe, entityCreateDto);
        
-        return CreatedAtAction(
-            nameof(GetByGuid), // this exists in the base controller
-            new { id = review.Id }, 
-            Transform(review)
+        return CreatedAtRoute(
+            routeName: "ReviewGetByGuid",
+            routeValues: new { id = review.Id },
+            value: Transform(review)
         );
     }
+    
+    #endregion
+
+    #region HELPERS
 
     private ReviewResponseDto Transform(Review entity)
     {
         return Mapper.Map<ReviewResponseDto>(entity);
     }
+
+    #endregion
+
 }
