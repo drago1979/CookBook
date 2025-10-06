@@ -1,4 +1,4 @@
-﻿namespace Khaoticen.CookBook.Api.Core.Services.Entity.Shared;
+﻿namespace Khaoticen.CookBook.Api.Core.Entities.Shared.Interfaces;
 
 public interface ISoftDeletable
 {

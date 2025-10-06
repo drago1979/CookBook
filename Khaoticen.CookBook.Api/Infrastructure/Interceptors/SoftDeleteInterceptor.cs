@@ -1,4 +1,4 @@
-﻿using Khaoticen.CookBook.Api.Core.Services.Entity.Shared;
+﻿using Khaoticen.CookBook.Api.Core.Entities.Shared.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 

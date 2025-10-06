@@ -1,9 +1,8 @@
-﻿using Khaoticen.CookBook.Api.Core.Entities.Shared.Base;
-using Khaoticen.CookBook.Api.Core.Services.Entity.Shared;
+﻿using Khaoticen.CookBook.Api.Core.Entities.Shared.Interfaces;
 
-namespace Khaoticen.CookBook.Api.Core.Entities.Shared.Interfaces;
+namespace Khaoticen.CookBook.Api.Core.Entities.Shared.Base;
 
-public class SoftDeletableEntity : BaseEntity, ISoftDeletable
+public class BaseSoftDeletableEntity : BaseEntity, ISoftDeletable
 {
     public DateTime? DeletedAt { get; set; }
 

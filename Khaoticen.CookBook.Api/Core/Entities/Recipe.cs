@@ -6,7 +6,7 @@ using Khaoticen.CookBook.Api.Core.Entities.Shared.Interfaces;
 namespace Khaoticen.CookBook.Api.Core.Entities;
 
 [Table("Recipes")] // todo: not needed?
-public class Recipe : SoftDeletableEntity
+public class Recipe : BaseSoftDeletableEntity
 {
     [MaxLength(100)]
     public required string Title { get; set; }
