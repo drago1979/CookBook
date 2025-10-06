@@ -4,22 +4,28 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Khaoticen.CookBook.Api.Api.Controllers.Shared.Base;
 
-public abstract class AppControllerBase<TEntity, TResponseDto>(IMapper mapper) : ControllerBase
+public abstract class AppControllerBase<
+    TEntity,
+    TEntityResponseDto,
+    TEntitiesResponseDto
+>
+    (IMapper mapper) : ControllerBase
     where TEntity : BaseEntity
-    where TResponseDto : class
+    where TEntityResponseDto : class
+    where TEntitiesResponseDto : class
 {
     protected readonly IMapper Mapper = mapper;
 
     #region ServiceMethods
 
-    protected List<TResponseDto> Transform(IEnumerable<TEntity> entities)
+    protected List<TEntitiesResponseDto> TransformEntities(IEnumerable<TEntity> entities)
     {
-        return entities.Select(Transform).ToList();
+        return Mapper.Map<List<TEntitiesResponseDto>>(entities);
     }
 
-    protected TResponseDto Transform(TEntity entity)
+    protected TEntityResponseDto TransformEntity(TEntity entity)
     {
-        return Mapper.Map<TResponseDto>(entity);
+        return Mapper.Map<TEntityResponseDto>(entity);
     }
 
     #endregion

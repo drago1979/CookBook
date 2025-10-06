@@ -24,17 +24,16 @@ public class BaseEntityService<
         Factory = factory;
     }
 
-    public TEntity Create(TCreateDto dto)
+    public virtual TEntity Create(TCreateDto dto)
     {
         var entity = Factory.Create(dto);
 
         Db.Set<TEntity>().Add(entity);
-        // await Db.SaveChangesAsync();
 
         return entity;
     }
 
-    public async Task<TEntity> CreateAsync(TCreateDto dto)
+    public virtual async Task<TEntity> CreateAsync(TCreateDto dto)
     {
         var entity = Create(dto);
         
@@ -43,17 +42,17 @@ public class BaseEntityService<
         return entity;
     }
 
-    public async Task<TEntity?> Get(Guid id)
+    public virtual async Task<TEntity?> Get(Guid id)
     {
         return await Db.Set<TEntity>().FindAsync(id);
     }
 
-    public async Task<List<TEntity>> GetAll()
+    public virtual async Task<List<TEntity>> GetAll()
     {
         return await Db.Set<TEntity>().ToListAsync();
     }
 
-    public async Task<TEntity> Update(TEntity entity, TUpdateDto dto)
+    public virtual async Task<TEntity> Update(TEntity entity, TUpdateDto dto)
     {
         Factory.Update(dto, entity);
 
@@ -62,7 +61,7 @@ public class BaseEntityService<
         return entity;
     }
 
-    public async Task Delete(TEntity entity)
+    public virtual async Task Delete(TEntity entity)
     {
         Db.Set<TEntity>().Remove(entity);
 

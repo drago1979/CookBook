@@ -32,12 +32,16 @@ builder.Services.AddOpenApi();
 #region Autowiring // todo: note - order important: before services; 
 builder.Services.Scan(scan => scan
     .FromAssemblyOf<RecipeService>()
-    // Factories first
+    // Factories
     .AddClasses(classes => classes.Where(c => c.Name.EndsWith("Factory")))
     .AsSelfWithInterfaces()
     .WithScopedLifetime()
-    // Then services
+    // Services
     .AddClasses(classes => classes.Where(c => c.Name.EndsWith("Service")))
+    .AsSelfWithInterfaces()
+    .WithScopedLifetime()
+    // Repositories
+    .AddClasses(classes => classes.Where(c => c.Name.EndsWith("Repository")))
     .AsSelfWithInterfaces()
     .WithScopedLifetime()
 );
@@ -68,3 +72,20 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+#region DEBUG
+Console.WriteLine("##########");
+
+app.Lifetime.ApplicationStarted.Register(() =>
+{
+    Console.WriteLine("########## Routes ##########");
+    var endpointSources = app.Services.GetRequiredService<IEnumerable<EndpointDataSource>>();
+
+    foreach (var endpoint in endpointSources.SelectMany(es => es.Endpoints).OfType<RouteEndpoint>())
+    {
+        var methods = endpoint.Metadata.OfType<HttpMethodMetadata>().FirstOrDefault()?.HttpMethods;
+        Console.WriteLine($"Route: {endpoint.RoutePattern.RawText}, Methods: {string.Join(", ", methods ?? new List<string>())}");
+    }
+});
+
+#endregion

@@ -2,6 +2,8 @@
 using AutoMapper;
 using Khaoticen.CookBook.Api.Api.Controllers.Shared.Base;
 using Khaoticen.CookBook.Api.Api.Dtos.Response;
+using Khaoticen.CookBook.Api.Api.Dtos.Response.Recipes;
+using Khaoticen.CookBook.Api.Api.Dtos.Response.Reviews;
 using Khaoticen.CookBook.Api.Core.Dtos.Entity.Create;
 using Khaoticen.CookBook.Api.Core.Dtos.Entity.Update;
 using Khaoticen.CookBook.Api.Core.Entities;
@@ -12,8 +14,11 @@ namespace Khaoticen.CookBook.Api.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class RecipesController(RecipeService entityService, IMapper mapper)
-    : AppControllerBase<Recipe, RecipeResponseDto>(mapper)
+public class RecipesController(RecipeService entityService, IMapper mapper) : AppControllerBase<
+    Recipe, 
+    RecipeResponseDto,
+    RecipesResponseDto
+>(mapper)
 {
     #region  CRUD
 
@@ -25,7 +30,7 @@ public class RecipesController(RecipeService entityService, IMapper mapper)
         return CreatedAtAction(
             nameof(GetByGuid),
             new { id = entity.Id },
-            Transform(entity)
+            TransformEntity(entity)
         );
     }
     
@@ -39,7 +44,7 @@ public class RecipesController(RecipeService entityService, IMapper mapper)
             return NotFound();
         }
 
-        return Ok(Transform(entity));
+        return Ok(TransformEntity(entity));
     }
     
     [HttpGet(Name = "RecipeGetAll")]
@@ -47,7 +52,7 @@ public class RecipesController(RecipeService entityService, IMapper mapper)
     {
         var entities = await entityService.GetAll();
 
-        return Ok(Transform(entities));
+        return Ok(TransformEntities(entities));
     }
     
     [HttpPatch("{id:guid}", Name = "RecipePatch")]
@@ -65,7 +70,7 @@ public class RecipesController(RecipeService entityService, IMapper mapper)
 
         if (returnUpdated)
         {
-            return Ok(Transform(entity));
+            return Ok(TransformEntity(entity));
         }
 
         return NoContent();

@@ -3,9 +3,15 @@ using Khaoticen.CookBook.Api.Core.Entities.Shared.Base;
 
 namespace Khaoticen.CookBook.Api.Api.Mappings.Entities.Shared.Base;
 
-public abstract class BaseEntityProfile<TEntity, TResponseDto, TCreateDto, TUpdateDto> : Profile
+public abstract class BaseEntityProfile<
+    TEntity, 
+    TEntityResponseDto,
+    TEntitiesResponseDto,
+    TCreateDto, 
+    TUpdateDto
+> : Profile
     where TEntity : BaseEntity
-    where TResponseDto: class // todo: IF?
+    where TEntityResponseDto: class // todo: IF?
     where TCreateDto : class // todo: IF?
     where TUpdateDto : class // todo: IF?
 {
@@ -23,6 +29,7 @@ public abstract class BaseEntityProfile<TEntity, TResponseDto, TCreateDto, TUpda
     
     private void ApiResponseMapping()
     {
-        CreateMap<TEntity, TResponseDto>();
+        CreateMap<TEntity, TEntityResponseDto>();
+        CreateMap<TEntity, TEntitiesResponseDto>();
     }
 }

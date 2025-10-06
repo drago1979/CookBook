@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Khaoticen.CookBook.Api.Api.Controllers.Shared.Base;
 using Khaoticen.CookBook.Api.Api.Dtos.Response;
+using Khaoticen.CookBook.Api.Api.Dtos.Response.Reviews;
 using Khaoticen.CookBook.Api.Core.Dtos.Entity.Update;
 using Khaoticen.CookBook.Api.Core.Entities;
 using Khaoticen.CookBook.Api.Core.Services.Entity;
@@ -10,14 +11,12 @@ namespace Khaoticen.CookBook.Api.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class ReviewsController(ReviewService entityService, IMapper mapper)
-    : AppControllerBase<Review, ReviewResponseDto>(mapper)
+public class ReviewsController(ReviewService entityService, IMapper mapper) : AppControllerBase<
+    Review,
+    ReviewResponseDto,
+    ReviewsResponseDto
+>(mapper)
 {
-    // public ReviewsController(ReviewService entityService, IMapper mapper) : base(mapper)
-    // {
-    //     _entityService = entityService;
-    // }
-
     #region CRUD
 
     [HttpGet("{id:guid}", Name = "ReviewGetByGuid")]
@@ -30,7 +29,7 @@ public class ReviewsController(ReviewService entityService, IMapper mapper)
             return NotFound();
         }
 
-        return Ok(Transform(entity));
+        return Ok(TransformEntity(entity));
     }
 
     [HttpGet(Name = "ReviewGetAll")]
@@ -38,7 +37,7 @@ public class ReviewsController(ReviewService entityService, IMapper mapper)
     {
         var entities = await entityService.GetAll();
 
-        return Ok(Transform(entities));
+        return Ok(TransformEntities(entities));
     }
 
     [HttpPatch("{id:guid}", Name = "ReviewPatch")]
@@ -56,13 +55,13 @@ public class ReviewsController(ReviewService entityService, IMapper mapper)
 
         if (returnUpdated)
         {
-            return Ok(Transform(entity));
+            return Ok(TransformEntity(entity));
         }
 
         return NoContent();
     }
 
-    [HttpDelete("{id:guid}",  Name = "ReviewDelete")]
+    [HttpDelete("{id:guid}", Name = "ReviewDelete")]
     public async Task<ActionResult> Delete(Guid id) // todo: dodaj createdAt, updatedAt u response
     {
         var entity = await entityService.Get(id);
