@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using Khaoticen.CookBook.Api.Api.Controllers.Shared.Base;
-using Khaoticen.CookBook.Api.Api.Dtos.Response.Reviews;
-using Khaoticen.CookBook.Api.Core.Dtos.Entity.Review;
+using Khaoticen.CookBook.Api.Api.Dtos.Response.Categories;
+using Khaoticen.CookBook.Api.Core.Dtos.Entity.Category;
+using Khaoticen.CookBook.Api.Core.Dtos.Entity.Recipe;
 using Khaoticen.CookBook.Api.Core.Entities;
 using Khaoticen.CookBook.Api.Core.Services.Entity;
 using Microsoft.AspNetCore.Mvc;
@@ -10,15 +11,27 @@ namespace Khaoticen.CookBook.Api.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class ReviewsController(ReviewService entityService, IMapper mapper) : AppControllerBase<
-    Review,
-    ReviewResponseDto,
-    ReviewsResponseDto
+public class CategoriesController(CategoryService entityService, IMapper mapper) : AppControllerBase<
+    Category, 
+    CategoryResponseDto,
+    CategoriesResponseDto
 >(mapper)
 {
     #region CRUD
 
-    [HttpGet("{id:guid}", Name = "ReviewGetByGuid")]
+    [HttpPost(Name = "CategoryCreate")]
+    public async Task<ActionResult> Create([FromBody] CategoryCreateDto entityCreateDto)
+    {
+        var entity = await entityService.CreateAsync(entityCreateDto);
+
+        return CreatedAtAction(
+            nameof(GetByGuid),
+            new { id = entity.Id },
+            TransformEntity(entity)
+        );
+    }
+    
+    [HttpGet("{id:guid}", Name = "CategoryGetByGuid")]
     public async Task<ActionResult> GetByGuid(Guid id)
     {
         var entity = await entityService.Get(id);
@@ -31,16 +44,16 @@ public class ReviewsController(ReviewService entityService, IMapper mapper) : Ap
         return Ok(TransformEntity(entity));
     }
 
-    [HttpGet(Name = "ReviewGetAll")]
+    [HttpGet(Name = "CategoryGetAll")]
     public async Task<ActionResult> GetAll()
     {
         var entities = await entityService.GetAll();
 
         return Ok(TransformEntities(entities));
     }
-
-    [HttpPatch("{id:guid}", Name = "ReviewPatch")]
-    public async Task<ActionResult> Patch(Guid id, [FromBody] ReviewUpdateDto entityUpdateDto,
+    
+    [HttpPatch("{id:guid}", Name = "CategoryPatch")]
+    public async Task<ActionResult> Patch(Guid id, [FromBody] CategoryUpdateDto entityUpdateDto,
         bool returnUpdated = false)
     {
         var entity = await entityService.Get(id);
@@ -59,8 +72,8 @@ public class ReviewsController(ReviewService entityService, IMapper mapper) : Ap
 
         return NoContent();
     }
-
-    [HttpDelete("{id:guid}", Name = "ReviewDelete")]
+    
+    [HttpDelete("{id:guid}", Name = "CategoryDelete")]
     public async Task<ActionResult> Delete(Guid id)
     {
         var entity = await entityService.Get(id);
@@ -74,6 +87,6 @@ public class ReviewsController(ReviewService entityService, IMapper mapper) : Ap
 
         return NoContent();
     }
-
+    
     #endregion
 }

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Khaoticen.CookBook.Api.Core.Dtos.Entity.Update;
+namespace Khaoticen.CookBook.Api.Core.Dtos.Entity.Review;
 
 public class ReviewUpdateDto
 {

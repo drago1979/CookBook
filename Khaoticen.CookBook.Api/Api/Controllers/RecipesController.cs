@@ -4,8 +4,8 @@ using Khaoticen.CookBook.Api.Api.Controllers.Shared.Base;
 using Khaoticen.CookBook.Api.Api.Dtos.Response;
 using Khaoticen.CookBook.Api.Api.Dtos.Response.Recipes;
 using Khaoticen.CookBook.Api.Api.Dtos.Response.Reviews;
-using Khaoticen.CookBook.Api.Core.Dtos.Entity.Create;
-using Khaoticen.CookBook.Api.Core.Dtos.Entity.Update;
+using Khaoticen.CookBook.Api.Core.Dtos.Entity.Recipe;
+using Khaoticen.CookBook.Api.Core.Dtos.Entity.Review;
 using Khaoticen.CookBook.Api.Core.Entities;
 using Khaoticen.CookBook.Api.Core.Services.Entity;
 using Microsoft.AspNetCore.Mvc;
@@ -77,7 +77,7 @@ public class RecipesController(RecipeService entityService, IMapper mapper) : Ap
     }
 
     [HttpDelete("{id:guid}", Name = "RecipeDelete")]
-    public async Task<ActionResult> Delete(Guid id) // todo: dodaj createdAt, updatedAt u response
+    public async Task<ActionResult> Delete(Guid id)
     {
         var entity = await entityService.Get(id);
 

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Khaoticen.CookBook.Api.Core.Entities;
 
-namespace Khaoticen.CookBook.Api.Core.Dtos.Entity.Create;
+namespace Khaoticen.CookBook.Api.Core.Dtos.Entity.Recipe;
 
 public class RecipeCreateDto
 {
@@ -14,10 +14,10 @@ public class RecipeCreateDto
     public required  string Description { get; set; }
 
     [StringLength(100, MinimumLength = 10)]
-    public string? Url { get; set; } // todo: finish this
+    public string? ImageUrl { get; set; } // todo: finish this
 
 
 
     // public ICollection<Category> Categories { get; set; } // M2M todo: obavezno
-    public ICollection<Review>? Reviews { get; set; } // 12M // todo: nullable?
+    // public ICollection<Review>? Reviews { get; set; } // 12M // todo: nullable?
 }

@@ -4,5 +4,5 @@ namespace Khaoticen.CookBook.Api.Api.Dtos.Response.Recipes;
 
 public class RecipesResponseDto : BaseEntitiesResponseDto
 {
-    public required string Title { get; init; }
+    public required string Title { get; init; } // todo: dodaj count reviews
 }

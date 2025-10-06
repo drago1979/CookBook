@@ -3,6 +3,7 @@ using System;
 using Khaoticen.CookBook.Api.Infrastructure.Db;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,52 +11,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Khaoticen.CookBook.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251006161750_AlterRecipesTableRenameColumn")]
+    partial class AlterRecipesTableRenameColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.9");
-
-            modelBuilder.Entity("CategoryRecipe", b =>
-                {
-                    b.Property<Guid>("CategoriesId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("RecipesId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("CategoriesId", "RecipesId");
-
-                    b.HasIndex("RecipesId");
-
-                    b.ToTable("CategoryRecipe");
-                });
-
-            modelBuilder.Entity("Khaoticen.CookBook.Api.Core.Entities.Category", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .IsUnique();
-
-                    b.ToTable("Categories");
-                });
 
             modelBuilder.Entity("Khaoticen.CookBook.Api.Core.Entities.Recipe", b =>
                 {
@@ -116,21 +79,6 @@ namespace Khaoticen.CookBook.Api.Migrations
                     b.HasIndex("RecipeId");
 
                     b.ToTable("Reviews");
-                });
-
-            modelBuilder.Entity("CategoryRecipe", b =>
-                {
-                    b.HasOne("Khaoticen.CookBook.Api.Core.Entities.Category", null)
-                        .WithMany()
-                        .HasForeignKey("CategoriesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Khaoticen.CookBook.Api.Core.Entities.Recipe", null)
-                        .WithMany()
-                        .HasForeignKey("RecipesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Khaoticen.CookBook.Api.Core.Entities.Review", b =>

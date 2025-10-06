@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace Khaoticen.CookBook.Api.Core.Dtos.Entity.Update;
+namespace Khaoticen.CookBook.Api.Core.Dtos.Entity.Recipe;
 
 public class RecipeUpdateDto
 {
@@ -15,5 +15,5 @@ public class RecipeUpdateDto
 
     [StringLength(100, MinimumLength = 10)]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string? Url { get; set; } // todo: finish this
+    public string? ImageUrl { get; set; } // todo: finish this
 }

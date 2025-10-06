@@ -1,5 +1,4 @@
-﻿using Khaoticen.CookBook.Api.Core.Dtos.Entity.Create;
-using Khaoticen.CookBook.Api.Core.Dtos.Entity.Update;
+﻿using Khaoticen.CookBook.Api.Core.Dtos.Entity.Review;
 using Khaoticen.CookBook.Api.Core.Entities;
 using Khaoticen.CookBook.Api.Core.Factories;
 using Khaoticen.CookBook.Api.Core.Services.Entity.Shared.Base;

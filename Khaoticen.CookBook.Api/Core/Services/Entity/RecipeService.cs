@@ -1,5 +1,5 @@
-﻿using Khaoticen.CookBook.Api.Core.Dtos.Entity.Create;
-using Khaoticen.CookBook.Api.Core.Dtos.Entity.Update;
+﻿using Khaoticen.CookBook.Api.Core.Dtos.Entity.Recipe;
+using Khaoticen.CookBook.Api.Core.Dtos.Entity.Review;
 using Khaoticen.CookBook.Api.Core.Entities;
 using Khaoticen.CookBook.Api.Core.Factories;
 using Khaoticen.CookBook.Api.Core.Repositories;
@@ -19,8 +19,12 @@ public class RecipeService : BaseEntityService<
     private readonly ReviewService _reviewService;
     private readonly RecipeRepository _repository;
 
-    public RecipeService(AppDbContext db, RecipeFactory factory, ReviewService reviewService,
-        RecipeRepository repository)
+    public RecipeService(
+        AppDbContext db,
+        RecipeFactory factory,
+        ReviewService reviewService,
+        RecipeRepository repository
+    )
         : base(db, factory)
     {
         _reviewService = reviewService;

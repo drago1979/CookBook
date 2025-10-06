@@ -5,7 +5,7 @@ using Khaoticen.CookBook.Api.Core.Entities.Shared.Interfaces;
 
 namespace Khaoticen.CookBook.Api.Core.Entities;
 
-[Table("Recipes")] // todo: not needed?
+[Table("Recipes")]
 public class Recipe : BaseSoftDeletableEntity
 {
     [MaxLength(100)]
@@ -15,14 +15,16 @@ public class Recipe : BaseSoftDeletableEntity
     public required string Description { get; set; }
 
     [MaxLength(200)]
-    public string? Url { get; set; }
+    public string? ImageUrl { get; set; }
     
-    public ICollection<Review> Reviews { get; set; } = new List<Review>();
+    public ICollection<Review> Reviews { get; set; } = new List<Review>(); // todo!!: proveri
     
+    // public ICollection<CategoryRecipe> CategoryRecipes { get; } = [];
+    public ICollection<Category> Categories { get; } = [];
     
     
 
     //
-    // // public ICollection<Category> Categories { get; set; } // M2M todo: obavezno
+    // // 
     // public ICollection<Review>? Reviews { get; set; } // 12M // todo: nullable?
 }

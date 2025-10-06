@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Khaoticen.CookBook.Api.Core.Dtos.Entity.Create;
+namespace Khaoticen.CookBook.Api.Core.Dtos.Entity.Review;
 
 public class ReviewCreateDto
 {
