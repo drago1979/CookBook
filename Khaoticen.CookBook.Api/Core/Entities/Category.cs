@@ -14,3 +14,6 @@ public class Category : BaseEntity
      
      public ICollection<Recipe> Recipes { get; } = []; // todo!!!: Cascading? (soft delete?)
 }
+
+
+

@@ -22,7 +22,7 @@ public class CategoriesController(CategoryService entityService, IMapper mapper)
     [HttpPost(Name = "CategoryCreate")]
     public async Task<ActionResult> Create([FromBody] CategoryCreateDto entityCreateDto)
     {
-        var entity = await entityService.CreateAsync(entityCreateDto);
+        var entity = await entityService.CreateAndSave(entityCreateDto);
 
         return CreatedAtAction(
             nameof(GetByGuid),
@@ -89,4 +89,20 @@ public class CategoriesController(CategoryService entityService, IMapper mapper)
     }
     
     #endregion
+    
+    #region RELATIONSHIPS
+    #endregion
+
+    #region OTHER
+
+    // [HttpGet("/check-name", Name = "CategoryCheckName")]
+    // public async Task<ActionResult> CheckName(string name)
+    // {
+    //     var entity = await entityService.Get(name);
+    //     
+    //     return Ok(entity != null);
+    // }
+
+    #endregion
+    
 }

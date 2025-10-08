@@ -25,7 +25,7 @@ public class RecipesController(RecipeService entityService, IMapper mapper) : Ap
     [HttpPost(Name = "RecipeCreate")]
     public async Task<ActionResult> Create([FromBody] RecipeCreateDto entityCreateDto)
     {
-        var entity = await entityService.CreateAsync(entityCreateDto);
+        var entity = await entityService.CreateAndSave(entityCreateDto);
 
         return CreatedAtAction(
             nameof(GetByGuid),

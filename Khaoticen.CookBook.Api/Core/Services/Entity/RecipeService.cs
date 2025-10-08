@@ -31,6 +31,11 @@ public class RecipeService : BaseEntityService<
         _repository = repository;
     }
 
+    public override async Task<Recipe?> Get(Guid id)
+    {
+        return await _repository.GetByIdWithReviewsAsync(id);
+    }
+    
     public async Task<Review> AddReview(Recipe recipe, ReviewCreateDto entityCreateDto)
     {
         var review = _reviewService.CreateForRecipe(entityCreateDto, recipe);
@@ -41,10 +46,5 @@ public class RecipeService : BaseEntityService<
 
 
         return review;
-    }
-
-    public override async Task<Recipe?> Get(Guid id)
-    {
-        return await _repository.GetByIdWithReviewsAsync(id);
     }
 }

@@ -33,7 +33,7 @@ public class BaseEntityService<
         return entity;
     }
 
-    public virtual async Task<TEntity> CreateAsync(TCreateDto dto)
+    public virtual async Task<TEntity> CreateAndSave(TCreateDto dto)
     {
         var entity = Create(dto);
         
