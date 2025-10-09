@@ -18,12 +18,12 @@ public abstract class AppControllerBase<
 
     #region ServiceMethods
 
-    protected List<TEntitiesResponseDto> TransformEntities(IEnumerable<TEntity> entities)
+    protected List<TEntitiesResponseDto> TransformEntitiesToResponse(IEnumerable<TEntity> entities)
     {
         return Mapper.Map<List<TEntitiesResponseDto>>(entities);
     }
 
-    protected TEntityResponseDto TransformEntity(TEntity entity)
+    protected TEntityResponseDto TransformEntityToResponse(TEntity entity)
     {
         return Mapper.Map<TEntityResponseDto>(entity);
     }

@@ -3,7 +3,7 @@ using Khaoticen.CookBook.Api.Core.Validation;
 
 namespace Khaoticen.CookBook.Api.Api.Dtos.Request.Recipe;
 
-public class CreateRecipeRequest
+public class RecipeCreateRequest
 {
     [Required]
     [StringLength(100, MinimumLength = 10)]
@@ -13,9 +13,7 @@ public class CreateRecipeRequest
     [StringLength(100, MinimumLength = 10)]
     public required  string Description { get; set; }
     
-    [Required]
-    [StringGuid]
-    public required string CategoryId { get; set; }
+    public required CategoriesUpdateRecipeRequest Categories { get; set; }
     
     [StringLength(100, MinimumLength = 10)]
     public string? ImageUrl { get; set; } // todo: finish this

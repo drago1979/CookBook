@@ -1,4 +1,5 @@
-﻿using Khaoticen.CookBook.Api.Core.Entities.Shared.Interfaces;
+﻿
+using Khaoticen.CookBook.Api.Core.Entities.Shared.Interfaces;
 
 namespace Khaoticen.CookBook.Api.Core.Entities.Shared.Base;
 

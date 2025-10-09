@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
 using Khaoticen.CookBook.Api.Api.Controllers.Shared.Base;
+using Khaoticen.CookBook.Api.Api.Dtos.Request.Category;
 using Khaoticen.CookBook.Api.Api.Dtos.Response.Categories;
-using Khaoticen.CookBook.Api.Api.Dtos.Response.Recipes;
 using Khaoticen.CookBook.Api.Core.Dtos.Entity.Category;
-using Khaoticen.CookBook.Api.Core.Dtos.Entity.Recipe;
 using Khaoticen.CookBook.Api.Core.Entities;
 using Khaoticen.CookBook.Api.Core.Services.Entity;
 using Microsoft.AspNetCore.Mvc;
@@ -21,16 +20,27 @@ public class CategoriesController(CategoryService entityService, IMapper mapper)
     #region CRUD
 
     [HttpPost(Name = "CategoryCreate")]
-    public async Task<ActionResult> Create([FromBody] CategoryCreateDto entityCreateDto)
+    public async Task<ActionResult> Create([FromBody] CategoryCreateRequest request)
     {
-        var entity = await entityService.CreateAndSave(entityCreateDto);
+        var createEntityDto = TransformToCreateDto(request);
+        
+        var entity = await entityService.CreateAndSave(createEntityDto);
 
         return CreatedAtAction(
             nameof(GetByGuid),
             new { id = entity.Id },
-            TransformEntity(entity)
+            TransformEntityToResponse(entity)
         );
     }
+    
+    [HttpGet(Name = "CategoryGetAll")]
+    public async Task<ActionResult> GetAll()
+    {
+        var entities = await entityService.GetAll();
+
+        return Ok(TransformEntitiesToResponse(entities));
+    }
+
     
     [HttpGet("{id:guid}", Name = "CategoryGetByGuid")]
     public async Task<ActionResult> GetByGuid(Guid id)
@@ -42,19 +52,11 @@ public class CategoriesController(CategoryService entityService, IMapper mapper)
             return NotFound();
         }
 
-        return Ok(TransformEntity(entity));
-    }
-
-    [HttpGet(Name = "CategoryGetAll")]
-    public async Task<ActionResult> GetAll()
-    {
-        var entities = await entityService.GetAll();
-
-        return Ok(TransformEntities(entities));
+        return Ok(TransformEntityToResponse(entity));
     }
     
     [HttpPatch("{id:guid}", Name = "CategoryPatch")]
-    public async Task<ActionResult> Patch(Guid id, [FromBody] CategoryUpdateDto entityUpdateDto,
+    public async Task<ActionResult> Patch(Guid id, [FromBody] CategoryUpdateRequest request,
         bool returnUpdated = false)
     {
         var entity = await entityService.Get(id);
@@ -64,11 +66,13 @@ public class CategoriesController(CategoryService entityService, IMapper mapper)
             return NotFound();
         }
 
-        await entityService.Update(entity, entityUpdateDto);
+        var updateEntityDto = TransformToUpdateDto(request);
+        
+        await entityService.Update(entity, updateEntityDto);
 
         if (returnUpdated)
         {
-            return Ok(TransformEntity(entity));
+            return Ok(TransformEntityToResponse(entity));
         }
 
         return NoContent();
@@ -94,9 +98,14 @@ public class CategoriesController(CategoryService entityService, IMapper mapper)
 
     #region HELPERS
 
-    private RecipeResponseDto Transform(Review entity)
+    private CategoryCreateDto TransformToCreateDto(CategoryCreateRequest request)
     {
-        return Mapper.Map<RecipeResponseDto>(entity);
+        return mapper.Map<CategoryCreateDto>(request);
+    }
+    
+    private CategoryUpdateDto TransformToUpdateDto(CategoryUpdateRequest request)
+    {
+        return mapper.Map<CategoryUpdateDto>(request);
     }
 
     #endregion
@@ -114,3 +123,4 @@ public class CategoriesController(CategoryService entityService, IMapper mapper)
     #endregion
     
 }
+

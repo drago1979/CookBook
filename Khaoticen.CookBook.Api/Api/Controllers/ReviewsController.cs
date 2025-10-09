@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Khaoticen.CookBook.Api.Api.Controllers.Shared.Base;
+using Khaoticen.CookBook.Api.Api.Dtos.Request.Review;
 using Khaoticen.CookBook.Api.Api.Dtos.Response.Reviews;
 using Khaoticen.CookBook.Api.Core.Dtos.Entity.Review;
 using Khaoticen.CookBook.Api.Core.Entities;
@@ -18,6 +19,14 @@ public class ReviewsController(ReviewService entityService, IMapper mapper) : Ap
 {
     #region CRUD
 
+    [HttpGet(Name = "ReviewGetAll")]
+    public async Task<ActionResult> GetAll()
+    {
+        var entities = await entityService.GetAll();
+
+        return Ok(TransformEntitiesToResponse(entities));
+    }
+    
     [HttpGet("{id:guid}", Name = "ReviewGetByGuid")]
     public async Task<ActionResult> GetByGuid(Guid id)
     {
@@ -28,19 +37,11 @@ public class ReviewsController(ReviewService entityService, IMapper mapper) : Ap
             return NotFound();
         }
 
-        return Ok(TransformEntity(entity));
+        return Ok(TransformEntityToResponse(entity));
     }
-
-    [HttpGet(Name = "ReviewGetAll")]
-    public async Task<ActionResult> GetAll()
-    {
-        var entities = await entityService.GetAll();
-
-        return Ok(TransformEntities(entities));
-    }
-
+    
     [HttpPatch("{id:guid}", Name = "ReviewPatch")]
-    public async Task<ActionResult> Patch(Guid id, [FromBody] ReviewUpdateDto entityUpdateDto,
+    public async Task<ActionResult> Patch(Guid id, [FromBody] ReviewUpdateRequest request,
         bool returnUpdated = false)
     {
         var entity = await entityService.Get(id);
@@ -50,11 +51,13 @@ public class ReviewsController(ReviewService entityService, IMapper mapper) : Ap
             return NotFound();
         }
 
-        await entityService.Update(entity, entityUpdateDto);
+        var updateEntityDto =  TransformToUpdateDto(request);
+        
+        await entityService.Update(entity, updateEntityDto);
 
         if (returnUpdated)
         {
-            return Ok(TransformEntity(entity));
+            return Ok(TransformEntityToResponse(entity));
         }
 
         return NoContent();
@@ -73,6 +76,15 @@ public class ReviewsController(ReviewService entityService, IMapper mapper) : Ap
         await entityService.Delete(entity);
 
         return NoContent();
+    }
+
+    #endregion
+
+    #region HELPERS
+
+    private ReviewUpdateDto TransformToUpdateDto(ReviewUpdateRequest request)
+    {
+        return mapper.Map<ReviewUpdateDto>(request);
     }
 
     #endregion
