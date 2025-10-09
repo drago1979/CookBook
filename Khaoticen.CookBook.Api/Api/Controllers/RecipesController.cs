@@ -1,6 +1,7 @@
 ﻿using System.Security.Cryptography.Xml;
 using AutoMapper;
 using Khaoticen.CookBook.Api.Api.Controllers.Shared.Base;
+using Khaoticen.CookBook.Api.Api.Dtos.Request.Recipe;
 using Khaoticen.CookBook.Api.Api.Dtos.Response;
 using Khaoticen.CookBook.Api.Api.Dtos.Response.Recipes;
 using Khaoticen.CookBook.Api.Api.Dtos.Response.Reviews;
@@ -18,14 +19,18 @@ public class RecipesController(RecipeService entityService, IMapper mapper) : Ap
     Recipe, 
     RecipeResponseDto,
     RecipesResponseDto
->(mapper)
+>(mapper) // todo!!
 {
+    
     #region  CRUD
 
     [HttpPost(Name = "RecipeCreate")]
-    public async Task<ActionResult> Create([FromBody] RecipeCreateDto entityCreateDto)
+    public async Task<ActionResult> Create([FromBody] CreateRecipeRequest request)
     {
-        var entity = await entityService.CreateAndSave(entityCreateDto);
+        var createDto = mapper.Map<RecipeCreateDto>(request);
+        
+        // todo!!! alow multi category IDs
+        var entity = await entityService.CreateAndSave(createDto);
 
         return CreatedAtAction(
             nameof(GetByGuid),

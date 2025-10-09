@@ -1,6 +1,5 @@
-using Khaoticen.CookBook.Api.Core.Services;
+using Khaoticen.CookBook.Api.Api.Middleware;
 using Khaoticen.CookBook.Api.Core.Services.Entity;
-using Khaoticen.CookBook.Api.Infrastructure;
 using Khaoticen.CookBook.Api.Infrastructure.Db;
 using Khaoticen.CookBook.Api.Infrastructure.Interceptors;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +20,6 @@ builder.Services.AddOpenApi();
 
         // Interceptors
         options.AddInterceptors(sp.GetRequiredService<AuditInterceptor>());
-        options.AddInterceptors(sp.GetRequiredService<SoftDeleteInterceptor>());
     });
 
 // todo: prebaci u skriptu - debugging
@@ -54,7 +52,6 @@ builder.Services.AddAutoMapper(typeof(Program));
 // builder.Services.AddScoped<IRecipeService, RecipeService>();
 
 builder.Services.AddScoped<AuditInterceptor>();
-builder.Services.AddSingleton<SoftDeleteInterceptor>();
 #endregion
 
 var app = builder.Build();
@@ -68,6 +65,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.MapControllers();
 

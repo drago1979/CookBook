@@ -8,24 +8,13 @@ namespace Khaoticen.CookBook.Api.Core.Services.Entity;
 
 public class ReviewService : BaseEntityService<
     Review,
-    ReviewFactory,
+    Factories.ReviewFactory,
     ReviewCreateDto,
     ReviewUpdateDto
 >
 {
-    public ReviewService(AppDbContext db, ReviewFactory factory)
+    public ReviewService(AppDbContext db, Factories.ReviewFactory factory)
         : base(db, factory)
     {
-    }
-
-    public Review CreateForRecipe(ReviewCreateDto dto, Recipe recipe)
-    {
-        var review = Create(dto);
-
-        review.RecipeId = recipe.Id;
-        review.Recipe = recipe;
-        recipe.Reviews.Add(review);
-
-        return review;
     }
 }

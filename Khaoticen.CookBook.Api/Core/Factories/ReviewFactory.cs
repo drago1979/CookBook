@@ -10,4 +10,15 @@ public class ReviewFactory : BaseFactory<Review, ReviewCreateDto, ReviewUpdateDt
     public ReviewFactory(IMapper mapper): base(mapper) // todo: primary constr?
     {
     }
+    
+    public Review CreateForRecipe(ReviewCreateDto dto, Recipe recipe)
+    {
+        var review = Create(dto);
+    
+        // review.RecipeId = recipe.Id;
+        // review.Recipe = recipe;
+        recipe.Reviews.Add(review);
+    
+        return review;
+    }
 }

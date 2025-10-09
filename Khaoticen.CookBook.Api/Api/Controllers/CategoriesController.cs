@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Khaoticen.CookBook.Api.Api.Controllers.Shared.Base;
 using Khaoticen.CookBook.Api.Api.Dtos.Response.Categories;
+using Khaoticen.CookBook.Api.Api.Dtos.Response.Recipes;
 using Khaoticen.CookBook.Api.Core.Dtos.Entity.Category;
 using Khaoticen.CookBook.Api.Core.Dtos.Entity.Recipe;
 using Khaoticen.CookBook.Api.Core.Entities;
@@ -90,18 +91,25 @@ public class CategoriesController(CategoryService entityService, IMapper mapper)
     
     #endregion
     
-    #region RELATIONSHIPS
+
+    #region HELPERS
+
+    private RecipeResponseDto Transform(Review entity)
+    {
+        return Mapper.Map<RecipeResponseDto>(entity);
+    }
+
     #endregion
-
+    
     #region OTHER
-
-    // [HttpGet("/check-name", Name = "CategoryCheckName")]
-    // public async Task<ActionResult> CheckName(string name)
-    // {
-    //     var entity = await entityService.Get(name);
-    //     
-    //     return Ok(entity != null);
-    // }
+    
+    [HttpGet("/check-name", Name = "CategoryCheckName")]
+    public async Task<ActionResult> CheckName(string name)
+    {
+        var entity = await entityService.GetByName(name);
+        
+        return Ok(entity != null);
+    }
 
     #endregion
     

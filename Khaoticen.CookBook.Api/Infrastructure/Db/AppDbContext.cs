@@ -23,7 +23,20 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         // todo: note-po interfejsu
 
         base.OnModelCreating(modelBuilder);
-
+        
+        // Data seeding
+        modelBuilder.Entity<Category>().HasData(
+            new Category {
+                Id = Guid.Parse("11111111-1111-1111-1111-111111111111"),
+                Name = "Default" 
+            },
+            new Category
+            {
+                Id = Guid.Parse("22222222-2222-2222-2222-222222222222"),
+                Name = "Sweets"
+            }
+        );
+        
         // Apply global filter to all BaseSoftDeletableEntity descendants
         foreach (var entityType in modelBuilder.Model.GetEntityTypes())
         {

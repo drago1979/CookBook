@@ -18,6 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Api\Controllers\Shared\Helpers\" />
     <Folder Include="Core\Services\Entity\Shared\Interfaces\" />
   </ItemGroup>
 

@@ -9,6 +9,8 @@ public class Review : BaseEntity
     public required string Comment { get; set; }
 
     public required Guid RecipeId { get; set; }
+    
+    // todo!! [DeleteBehavior(DeleteBehavior.Restrict)]
     public required Recipe Recipe { get; set; }  // todo!! Proveri da li / kako kaskadira (Recipe-Review) + soft deletion
     
     // public required  Recipe Recipe { get; set; }

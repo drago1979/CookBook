@@ -10,4 +10,15 @@ public class RecipeFactory : BaseFactory<Recipe, RecipeCreateDto, RecipeUpdateDt
     public RecipeFactory(IMapper mapper): base(mapper) // todo: primary constr?
     {
     }
+    
+    public Recipe CreateForCategory(RecipeCreateDto dto, Category category)
+    {
+        var recipe = Create(dto);
+    
+        // review.RecipeId = category.Id;
+        // review.Recipe = category;
+        category.Recipes.Add(recipe);
+    
+        return recipe;
+    }
 }

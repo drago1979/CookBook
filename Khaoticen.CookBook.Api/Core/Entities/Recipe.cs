@@ -17,10 +17,10 @@ public class Recipe : BaseSoftDeletableEntity
     [MaxLength(200)]
     public string? ImageUrl { get; set; }
     
+    public ICollection<Category> Categories { get; } = [];
     public ICollection<Review> Reviews { get; set; } = new List<Review>(); // todo!!: proveri
     
-    // public ICollection<CategoryRecipe> CategoryRecipes { get; } = [];
-    public ICollection<Category> Categories { get; } = [];
+
     
     
 

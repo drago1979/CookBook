@@ -4,7 +4,7 @@ namespace Khaoticen.CookBook.Api.Core.Factories.Shared.Base;
 
 public abstract class BaseFactory<TEntity, TCreateDto, TUpdateDto>(IMapper mapper)
 {
-    public TEntity Create(TCreateDto dto)
+    public virtual TEntity Create(TCreateDto dto)
     {
         return mapper.Map<TEntity>(dto);
     }
@@ -13,7 +13,7 @@ public abstract class BaseFactory<TEntity, TCreateDto, TUpdateDto>(IMapper mappe
     // recipe.Title = dto.Title.Trim();          // normalization
     // recipe.CreatedAt = DateTime.UtcNow;       // system-set field
 
-    public void Update(TUpdateDto dto, TEntity entity)
+    public virtual void Update(TUpdateDto dto, TEntity entity)
     {
         mapper.Map(dto, entity);
 

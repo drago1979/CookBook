@@ -10,4 +10,14 @@ public class CategoryRepository (AppDbContext db)
     {
         return await db.Categories.FirstOrDefaultAsync(c => c.Name == name);
     }
+
+    // public async Task<Category?> GetById(Guid id)
+    // {
+    //     return await db.Categories.FirstOrDefaultAsync(c => c.Id == id);
+    // }
+    
+    public async Task<Category?> GetById(Guid id)
+    {
+        return await db.Categories.FirstOrDefaultAsync(c => c.Id == id);
+    }
 }
