@@ -1,10 +1,9 @@
-﻿using System.Security.Cryptography.Xml;
-using AutoMapper;
+﻿using AutoMapper;
 using Khaoticen.CookBook.Api.Api.Controllers.Shared.Base;
-using Khaoticen.CookBook.Api.Api.Dtos.Request.Recipe;
-using Khaoticen.CookBook.Api.Api.Dtos.Request.Review;
-using Khaoticen.CookBook.Api.Api.Dtos.Response.Recipes;
-using Khaoticen.CookBook.Api.Api.Dtos.Response.Reviews;
+using Khaoticen.CookBook.Api.Api.RequestDtos.Recipe;
+using Khaoticen.CookBook.Api.Api.RequestDtos.Review;
+using Khaoticen.CookBook.Api.Api.ResponseDtos.Recipe;
+using Khaoticen.CookBook.Api.Api.ResponseDtos.Review;
 using Khaoticen.CookBook.Api.Core.Dtos.Entity.Recipe;
 using Khaoticen.CookBook.Api.Core.Dtos.Entity.Review;
 using Khaoticen.CookBook.Api.Core.Entities;
@@ -26,17 +25,17 @@ public class RecipesController(RecipeService entityService, IMapper mapper) : Ap
     /// <summary>
     /// Accepts multiple Categories
     /// </summary>
-    /// <param name="request"></param>
+    /// <param name="requestDto"></param>
     /// <returns></returns>
     [HttpPost(Name = "RecipeCreate")]
-    public async Task<ActionResult> Create([FromBody] RecipeCreateRequest request)
+    public async Task<ActionResult> Create([FromBody] RecipeCreateRequestDto requestDto)
     {
-        var createDto = TransformToCreateDto(request);
+        var createDto = TransformToCreateDto(requestDto);
 
         var entity = await entityService.CreateAndSave(createDto);
 
         return CreatedAtAction(
-            nameof(GetByGuid),
+            nameof(Get),
             new { id = entity.Id },
             TransformEntityToResponse(entity)
         );
@@ -51,7 +50,7 @@ public class RecipesController(RecipeService entityService, IMapper mapper) : Ap
     }
 
     [HttpGet("{id:guid}", Name = "RecipeGetByGuid")]
-    public async Task<ActionResult> GetByGuid(Guid id)
+    public async Task<ActionResult> Get(Guid id)
     {
         var entity = await entityService.Get(id);
 
@@ -64,7 +63,7 @@ public class RecipesController(RecipeService entityService, IMapper mapper) : Ap
     }
 
     [HttpPatch("{id:guid}", Name = "RecipePatch")]
-    public async Task<ActionResult> Patch(Guid id, [FromBody] RecipeUpdateRequest request,
+    public async Task<ActionResult> Patch(Guid id, [FromBody] RecipeUpdateRequestDto requestDto,
         bool returnUpdated = false)
     {
         var entity = await entityService.Get(id);
@@ -74,7 +73,7 @@ public class RecipesController(RecipeService entityService, IMapper mapper) : Ap
             return NotFound();
         }
 
-        var updateEntityDto = TransformToUpdateDto(request);
+        var updateEntityDto = TransformToUpdateDto(requestDto);
 
         await entityService.Update(entity, updateEntityDto);
 
@@ -106,7 +105,7 @@ public class RecipesController(RecipeService entityService, IMapper mapper) : Ap
     #region RELATIONSHIPS
 
     [HttpPut("{id:guid}/categories", Name = "RecipeUpdateCategories")]
-    public async Task<ActionResult> UpdateCategories(Guid id, [FromBody] CategoriesUpdateRecipeRequest request,
+    public async Task<ActionResult> UpdateCategories(Guid id, [FromBody] CategoriesUpdateRecipeRequestDto requestDto,
         bool returnUpdated = false)
     {
         var entity = await entityService.Get(id);
@@ -116,7 +115,7 @@ public class RecipesController(RecipeService entityService, IMapper mapper) : Ap
             return NotFound();
         }
 
-        var updateCategoriesDto = TransformToRecipeCategoriesCreateDto(request);
+        var updateCategoriesDto = TransformToRecipeCategoriesCreateDto(requestDto);
 
         await entityService.UpdateCategories(entity, updateCategoriesDto);
 
@@ -130,7 +129,7 @@ public class RecipesController(RecipeService entityService, IMapper mapper) : Ap
 
 
     [HttpPost("{id:guid}/reviews", Name = "RecipeAddReview")]
-    public async Task<ActionResult> AddReview(Guid id, [FromBody] ReviewCreateRequest createRequest)
+    public async Task<ActionResult> AddReview(Guid id, [FromBody] ReviewCreateRequestDto createRequestDto)
     {
         var recipe = await entityService.Get(id);
 
@@ -139,7 +138,7 @@ public class RecipesController(RecipeService entityService, IMapper mapper) : Ap
             return NotFound();
         }
 
-        var createDto = mapper.Map<ReviewCreateDto>(createRequest);
+        var createDto = mapper.Map<ReviewCreateDto>(createRequestDto);
 
         var review = await entityService.AddReview(recipe, createDto);
 
@@ -154,25 +153,18 @@ public class RecipesController(RecipeService entityService, IMapper mapper) : Ap
 
     #region HELPERS
 
-    private RecipeCreateDto TransformToCreateDto(RecipeCreateRequest request)
-    {
-        return mapper.Map<RecipeCreateDto>(request);
-    }
+    private RecipeCreateDto TransformToCreateDto(RecipeCreateRequestDto requestDto) =>
+        mapper.Map<RecipeCreateDto>(requestDto);
 
-    private RecipeUpdateDto TransformToUpdateDto(RecipeUpdateRequest request)
-    {
-        return mapper.Map<RecipeUpdateDto>(request);
-    }
+    private RecipeUpdateDto TransformToUpdateDto(RecipeUpdateRequestDto requestDto) =>
+        mapper.Map<RecipeUpdateDto>(requestDto);
 
-    public RecipeCategoriesDto TransformToRecipeCategoriesCreateDto(CategoriesUpdateRecipeRequest request)
-    {
-        return mapper.Map<RecipeCategoriesDto>(request);
-    }
 
-    private ReviewResponseDto Transform(Review entity)
-    {
-        return Mapper.Map<ReviewResponseDto>(entity);
-    }
+    private RecipeCategoriesDto TransformToRecipeCategoriesCreateDto(CategoriesUpdateRecipeRequestDto requestDto) =>
+        mapper.Map<RecipeCategoriesDto>(requestDto);
+
+    private ReviewResponseDto Transform(Review entity) =>
+        Mapper.Map<ReviewResponseDto>(entity);
 
     #endregion
 }

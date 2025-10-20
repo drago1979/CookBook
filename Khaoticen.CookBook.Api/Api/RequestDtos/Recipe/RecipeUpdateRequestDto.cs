@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace Khaoticen.CookBook.Api.Api.Dtos.Request.Recipe;
+namespace Khaoticen.CookBook.Api.Api.RequestDtos.Recipe;
 
-public class RecipeUpdateRequest
+public class RecipeUpdateRequestDto
 {
     [StringLength(100, MinimumLength = 10)]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]

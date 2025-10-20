@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Khaoticen.CookBook.Api.Api.Controllers.Shared.Base;
-using Khaoticen.CookBook.Api.Api.Dtos.Request.Category;
-using Khaoticen.CookBook.Api.Api.Dtos.Response.Categories;
+using Khaoticen.CookBook.Api.Api.RequestDtos.Category;
+using Khaoticen.CookBook.Api.Api.ResponseDtos.Category;
 using Khaoticen.CookBook.Api.Core.Dtos.Entity.Category;
 using Khaoticen.CookBook.Api.Core.Entities;
 using Khaoticen.CookBook.Api.Core.Services.Entity;
@@ -12,7 +12,7 @@ namespace Khaoticen.CookBook.Api.Api.Controllers;
 [ApiController]
 [Route("[controller]")]
 public class CategoriesController(CategoryService entityService, IMapper mapper) : AppControllerBase<
-    Category, 
+    Category,
     CategoryResponseDto,
     CategoriesResponseDto
 >(mapper)
@@ -20,19 +20,19 @@ public class CategoriesController(CategoryService entityService, IMapper mapper)
     #region CRUD
 
     [HttpPost(Name = "CategoryCreate")]
-    public async Task<ActionResult> Create([FromBody] CategoryCreateRequest request)
+    public async Task<ActionResult> Create([FromBody] CategoryCreateRequestDto requestDto)
     {
-        var createEntityDto = TransformToCreateDto(request);
-        
+        var createEntityDto = TransformToCreateDto(requestDto);
+
         var entity = await entityService.CreateAndSave(createEntityDto);
 
         return CreatedAtAction(
-            nameof(GetByGuid),
+            nameof(Get),
             new { id = entity.Id },
             TransformEntityToResponse(entity)
         );
     }
-    
+
     [HttpGet(Name = "CategoryGetAll")]
     public async Task<ActionResult> GetAll()
     {
@@ -41,9 +41,9 @@ public class CategoriesController(CategoryService entityService, IMapper mapper)
         return Ok(TransformEntitiesToResponse(entities));
     }
 
-    
+
     [HttpGet("{id:guid}", Name = "CategoryGetByGuid")]
-    public async Task<ActionResult> GetByGuid(Guid id)
+    public async Task<ActionResult> Get(Guid id)
     {
         var entity = await entityService.Get(id);
 
@@ -54,9 +54,9 @@ public class CategoriesController(CategoryService entityService, IMapper mapper)
 
         return Ok(TransformEntityToResponse(entity));
     }
-    
+
     [HttpPatch("{id:guid}", Name = "CategoryPatch")]
-    public async Task<ActionResult> Patch(Guid id, [FromBody] CategoryUpdateRequest request,
+    public async Task<ActionResult> Patch(Guid id, [FromBody] CategoryUpdateRequestDto requestDto,
         bool returnUpdated = false)
     {
         var entity = await entityService.Get(id);
@@ -66,8 +66,8 @@ public class CategoriesController(CategoryService entityService, IMapper mapper)
             return NotFound();
         }
 
-        var updateEntityDto = TransformToUpdateDto(request);
-        
+        var updateEntityDto = TransformToUpdateDto(requestDto);
+
         await entityService.Update(entity, updateEntityDto);
 
         if (returnUpdated)
@@ -77,7 +77,7 @@ public class CategoriesController(CategoryService entityService, IMapper mapper)
 
         return NoContent();
     }
-    
+
     [HttpDelete("{id:guid}", Name = "CategoryDelete")]
     public async Task<ActionResult> Delete(Guid id)
     {
@@ -92,35 +92,29 @@ public class CategoriesController(CategoryService entityService, IMapper mapper)
 
         return NoContent();
     }
-    
+
     #endregion
-    
+
 
     #region HELPERS
 
-    private CategoryCreateDto TransformToCreateDto(CategoryCreateRequest request)
-    {
-        return mapper.Map<CategoryCreateDto>(request);
-    }
-    
-    private CategoryUpdateDto TransformToUpdateDto(CategoryUpdateRequest request)
-    {
-        return mapper.Map<CategoryUpdateDto>(request);
-    }
+    private CategoryCreateDto TransformToCreateDto(CategoryCreateRequestDto requestDto) =>
+        mapper.Map<CategoryCreateDto>(requestDto);
+
+    private CategoryUpdateDto TransformToUpdateDto(CategoryUpdateRequestDto requestDto) =>
+        mapper.Map<CategoryUpdateDto>(requestDto);
 
     #endregion
-    
+
     #region OTHER
-    
+
     [HttpGet("/check-name", Name = "CategoryCheckName")]
     public async Task<ActionResult> CheckName(string name)
     {
         var entity = await entityService.GetByName(name);
-        
+
         return Ok(entity != null);
     }
 
     #endregion
-    
 }
-

@@ -1,5 +1,5 @@
-﻿using Khaoticen.CookBook.Api.Api.Dtos.Request.Recipe;
-using Khaoticen.CookBook.Api.Api.Dtos.Response.Recipes;
+﻿using Khaoticen.CookBook.Api.Api.RequestDtos.Recipe;
+using Khaoticen.CookBook.Api.Api.ResponseDtos.Recipe;
 using Khaoticen.CookBook.Api.Core.Dtos.Entity.Recipe;
 using Khaoticen.CookBook.Api.Core.Entities;
 using Khaoticen.CookBook.Api.Mappings.Entities.Shared;
@@ -8,8 +8,8 @@ namespace Khaoticen.CookBook.Api.Mappings.Entities;
 
 public class RecipeProfile : BaseEntityProfile<
     Recipe,
-    RecipeCreateRequest,
-    RecipeUpdateRequest,
+    RecipeCreateRequestDto,
+    RecipeUpdateRequestDto,
     RecipeCreateDto,
     RecipeUpdateDto,
     RecipeResponseDto,
@@ -19,8 +19,8 @@ public class RecipeProfile : BaseEntityProfile<
     public RecipeProfile()
     {
         // REQUESTS => DTOs
-        CreateMap<RecipeCreateRequest, RecipeCreateDto>();
-        CreateMap<CategoriesUpdateRecipeRequest, RecipeCategoriesDto>();
+        CreateMap<RecipeCreateRequestDto, RecipeCreateDto>();
+        CreateMap<CategoriesUpdateRecipeRequestDto, RecipeCategoriesDto>();
         
         // DTOs => ENTITIES
         CreateMap<RecipeCreateDto, Recipe>()

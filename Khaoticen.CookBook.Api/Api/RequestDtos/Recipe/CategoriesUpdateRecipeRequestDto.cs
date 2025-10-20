@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Khaoticen.CookBook.Api.Core.Validation;
 
-namespace Khaoticen.CookBook.Api.Api.Dtos.Request.Recipe;
+namespace Khaoticen.CookBook.Api.Api.RequestDtos.Recipe;
 
-public class CategoriesUpdateRecipeRequest
+public class CategoriesUpdateRecipeRequestDto
 {
     [Required]
     [MinLength(1, ErrorMessage = "At least one category ID must be provided.")]

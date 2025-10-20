@@ -1,6 +1,6 @@
-﻿using Khaoticen.CookBook.Api.Api.Dtos.Response.Shared.Base;
+﻿using Khaoticen.CookBook.Api.Api.ResponseDtos.Shared.Base;
 
-namespace Khaoticen.CookBook.Api.Api.Dtos.Response.Recipes;
+namespace Khaoticen.CookBook.Api.Api.ResponseDtos.Recipe;
 
 public class RecipesResponseDto : BaseEntitiesResponseDto
 {

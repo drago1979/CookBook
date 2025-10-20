@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Khaoticen.CookBook.Api.Api.Controllers.Shared.Base;
-using Khaoticen.CookBook.Api.Api.Dtos.Request.Review;
-using Khaoticen.CookBook.Api.Api.Dtos.Response.Reviews;
+using Khaoticen.CookBook.Api.Api.RequestDtos.Review;
+using Khaoticen.CookBook.Api.Api.ResponseDtos.Review;
 using Khaoticen.CookBook.Api.Core.Dtos.Entity.Review;
 using Khaoticen.CookBook.Api.Core.Entities;
 using Khaoticen.CookBook.Api.Core.Services.Entity;
@@ -28,7 +28,7 @@ public class ReviewsController(ReviewService entityService, IMapper mapper) : Ap
     }
     
     [HttpGet("{id:guid}", Name = "ReviewGetByGuid")]
-    public async Task<ActionResult> GetByGuid(Guid id)
+    public async Task<ActionResult> Get(Guid id)
     {
         var entity = await entityService.Get(id);
 
@@ -41,7 +41,7 @@ public class ReviewsController(ReviewService entityService, IMapper mapper) : Ap
     }
     
     [HttpPatch("{id:guid}", Name = "ReviewPatch")]
-    public async Task<ActionResult> Patch(Guid id, [FromBody] ReviewUpdateRequest request,
+    public async Task<ActionResult> Patch(Guid id, [FromBody] ReviewUpdateRequestDto requestDto,
         bool returnUpdated = false)
     {
         var entity = await entityService.Get(id);
@@ -51,7 +51,7 @@ public class ReviewsController(ReviewService entityService, IMapper mapper) : Ap
             return NotFound();
         }
 
-        var updateEntityDto =  TransformToUpdateDto(request);
+        var updateEntityDto =  TransformToUpdateDto(requestDto);
         
         await entityService.Update(entity, updateEntityDto);
 
@@ -82,9 +82,9 @@ public class ReviewsController(ReviewService entityService, IMapper mapper) : Ap
 
     #region HELPERS
 
-    private ReviewUpdateDto TransformToUpdateDto(ReviewUpdateRequest request)
+    private ReviewUpdateDto TransformToUpdateDto(ReviewUpdateRequestDto requestDto)
     {
-        return mapper.Map<ReviewUpdateDto>(request);
+        return mapper.Map<ReviewUpdateDto>(requestDto);
     }
 
     #endregion

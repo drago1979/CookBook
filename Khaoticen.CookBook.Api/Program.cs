@@ -11,8 +11,6 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 #region DB
-// builder.Services.AddDbContext<AppDbContext>(options =>
-    // options.UseSqlite(builder.Configuration.GetConnectionString("DbConnectionString")));
 
     builder.Services.AddDbContext<AppDbContext>((sp, options) =>
     {
@@ -22,22 +20,22 @@ builder.Services.AddOpenApi();
         options.AddInterceptors(sp.GetRequiredService<AuditInterceptor>());
     });
 
-// todo: prebaci u skriptu - debugging
-// Console.WriteLine("############# ");
-// Console.WriteLine(builder.Configuration.GetConnectionString("DbConnectionString"));
 #endregion
 
-#region Autowiring // todo: note - order important: before services; 
+#region Autowiring
 builder.Services.Scan(scan => scan
     .FromAssemblyOf<RecipeService>()
+    
     // Factories
     .AddClasses(classes => classes.Where(c => c.Name.EndsWith("Factory")))
     .AsSelfWithInterfaces()
     .WithScopedLifetime()
+    
     // Services
     .AddClasses(classes => classes.Where(c => c.Name.EndsWith("Service")))
     .AsSelfWithInterfaces()
     .WithScopedLifetime()
+    
     // Repositories
     .AddClasses(classes => classes.Where(c => c.Name.EndsWith("Repository")))
     .AsSelfWithInterfaces()
@@ -47,9 +45,6 @@ builder.Services.Scan(scan => scan
 
 #region Services
 builder.Services.AddAutoMapper(typeof(Program));
-
-// todo: remove
-// builder.Services.AddScoped<IRecipeService, RecipeService>();
 
 builder.Services.AddScoped<AuditInterceptor>();
 #endregion
@@ -72,7 +67,7 @@ app.MapControllers();
 
 app.Run();
 
-#region DEBUG
+#region DEBUG // todo: remove
 Console.WriteLine("##########");
 
 app.Lifetime.ApplicationStarted.Register(() =>
