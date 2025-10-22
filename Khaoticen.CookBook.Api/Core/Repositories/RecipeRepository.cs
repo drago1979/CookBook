@@ -1,11 +1,13 @@
 ﻿using Khaoticen.CookBook.Api.Core.Entities;
+using Khaoticen.CookBook.Api.Core.Repositories.Shared;
 using Khaoticen.CookBook.Api.Infrastructure.Db;
 using Microsoft.EntityFrameworkCore;
 
 namespace Khaoticen.CookBook.Api.Core.Repositories;
 
-public class RecipeRepository(AppDbContext db)
+public class RecipeRepository(AppDbContext db): BaseRepository<Recipe>(db)
 {
+    
     public async Task<Recipe?> GetByIdIncludeAllRelatedAsync(Guid id) =>
         await db.Recipes
             .Include(r => r.Reviews)

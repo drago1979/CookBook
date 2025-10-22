@@ -20,32 +20,31 @@ public class CategoriesController(CategoryService entityService, IMapper mapper)
     #region CRUD
 
     [HttpPost(Name = "CategoryCreate")]
-    public async Task<ActionResult> Create([FromBody] CategoryCreateRequestDto requestDto)
+    public async Task<ActionResult> CreateAsync([FromBody] CategoryCreateRequestDto requestDto)
     {
         var createEntityDto = TransformToCreateDto(requestDto);
 
-        var entity = await entityService.CreateAndSave(createEntityDto);
+        var entity = await entityService.CreateAndSaveAsync(createEntityDto);
 
-        return CreatedAtAction(
-            nameof(Get),
+        return CreatedAtRoute(
+            "CategoryGet",
             new { id = entity.Id },
             TransformEntityToResponse(entity)
         );
     }
 
     [HttpGet(Name = "CategoryGetAll")]
-    public async Task<ActionResult> GetAll()
+    public async Task<ActionResult> GetAllAsync()
     {
-        var entities = await entityService.GetAll();
+        var entities = await entityService.GetAllAsync();
 
         return Ok(TransformEntitiesToResponse(entities));
     }
-
-
-    [HttpGet("{id:guid}", Name = "CategoryGetByGuid")]
-    public async Task<ActionResult> Get(Guid id)
+    
+    [HttpGet("{id:guid}", Name = "CategoryGet")]
+    public async Task<ActionResult> GetAsync(Guid id)
     {
-        var entity = await entityService.Get(id);
+        var entity = await entityService.GetAsync(id);
 
         if (entity == null)
         {
@@ -56,10 +55,10 @@ public class CategoriesController(CategoryService entityService, IMapper mapper)
     }
 
     [HttpPatch("{id:guid}", Name = "CategoryPatch")]
-    public async Task<ActionResult> Patch(Guid id, [FromBody] CategoryUpdateRequestDto requestDto,
+    public async Task<ActionResult> PatchAsync(Guid id, [FromBody] CategoryUpdateRequestDto requestDto,
         bool returnUpdated = false)
     {
-        var entity = await entityService.Get(id);
+        var entity = await entityService.GetAsync(id);
 
         if (entity == null)
         {
@@ -68,7 +67,7 @@ public class CategoriesController(CategoryService entityService, IMapper mapper)
 
         var updateEntityDto = TransformToUpdateDto(requestDto);
 
-        await entityService.Update(entity, updateEntityDto);
+        await entityService.UpdateAsync(updateEntityDto, entity);
 
         if (returnUpdated)
         {
@@ -79,16 +78,16 @@ public class CategoriesController(CategoryService entityService, IMapper mapper)
     }
 
     [HttpDelete("{id:guid}", Name = "CategoryDelete")]
-    public async Task<ActionResult> Delete(Guid id)
+    public async Task<ActionResult> DeleteAsync(Guid id)
     {
-        var entity = await entityService.Get(id);
+        var entity = await entityService.GetAsync(id);
 
         if (entity == null)
         {
             return NotFound();
         }
 
-        await entityService.Delete(entity);
+        await entityService.DeleteAsync(entity);
 
         return NoContent();
     }
@@ -109,9 +108,9 @@ public class CategoriesController(CategoryService entityService, IMapper mapper)
     #region OTHER
 
     [HttpGet("/check-name", Name = "CategoryCheckName")]
-    public async Task<ActionResult> CheckName(string name)
+    public async Task<ActionResult> CheckNameAsync(string name)
     {
-        var entity = await entityService.GetByName(name);
+        var entity = await entityService.GetByNameAsync(name);
 
         return Ok(entity != null);
     }

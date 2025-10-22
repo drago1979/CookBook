@@ -2,9 +2,9 @@
 using Khaoticen.CookBook.Api.Api.ResponseDtos.Review;
 using Khaoticen.CookBook.Api.Core.Dtos.Entity.Review;
 using Khaoticen.CookBook.Api.Core.Entities;
-using Khaoticen.CookBook.Api.Mappings.Entities.Shared;
+using Khaoticen.CookBook.Api.Shared.Mappings.Entities.Shared;
 
-namespace Khaoticen.CookBook.Api.Mappings.Entities;
+namespace Khaoticen.CookBook.Api.Shared.Mappings.Entities;
 
 public class ReviewProfile: BaseEntityProfile<
     Review,

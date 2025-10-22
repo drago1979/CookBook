@@ -3,7 +3,7 @@ using Khaoticen.CookBook.Api.Core.Entities.Shared.Base;
 
 namespace Khaoticen.CookBook.Api.Core.Entities;
 
-public class Review : BaseEntity
+public class Review : BaseSoftDeletableEntity
 {
     [MaxLength(100)]
     public required string Comment { get; set; }

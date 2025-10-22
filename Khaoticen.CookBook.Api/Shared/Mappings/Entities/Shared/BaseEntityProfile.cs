@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Khaoticen.CookBook.Api.Core.Entities.Shared.Base;
 
-namespace Khaoticen.CookBook.Api.Mappings.Entities.Shared;
+namespace Khaoticen.CookBook.Api.Shared.Mappings.Entities.Shared;
 
 public abstract class BaseEntityProfile<
     TEntity,

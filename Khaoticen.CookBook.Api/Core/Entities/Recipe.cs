@@ -21,7 +21,16 @@ public class Recipe : BaseSoftDeletableEntity
     public ICollection<Review> Reviews { get; set; } = new List<Review>(); // todo!!: proveri
     
 
-    
+    public override void SoftDelete()
+    {
+        DeletedAt = DateTime.UtcNow;
+
+        foreach (var review in Reviews)
+        {
+            review.SoftDelete();
+        }
+    }
+
     
 
     //

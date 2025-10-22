@@ -2,6 +2,7 @@ using Khaoticen.CookBook.Api.Api.Middleware;
 using Khaoticen.CookBook.Api.Core.Services.Entity;
 using Khaoticen.CookBook.Api.Infrastructure.Db;
 using Khaoticen.CookBook.Api.Infrastructure.Interceptors;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -49,6 +50,49 @@ builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddScoped<AuditInterceptor>();
 #endregion
 
+#region Validation-error-customization
+#region Customize validation error exceptions
+
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.InvalidModelStateResponseFactory = context =>
+    {
+        var errors = context.ModelState
+            .Where(e => e.Value?.Errors.Count > 0)
+            .ToDictionary(
+                kvp => kvp.Key,
+                kvp => kvp.Value!.Errors.Select(e => e.ErrorMessage).ToArray()
+            );
+        
+        var remappedErrors = errors.ToDictionary(
+            kvp => kvp.Key switch
+            {
+                "$" => "json",
+                "requestDto" => "requestDto",
+                _ => kvp.Key
+            },
+            kvp => kvp.Value
+        );
+        
+        var result = new
+        {
+            status = 422,
+            message = "Validation failed",
+            errors = remappedErrors
+        };
+
+        return new ObjectResult(result)
+        {
+            StatusCode = 422
+        };
+    };
+});
+
+#endregion
+
+
+#endregion
+
 var app = builder.Build();
 
 // HTTP request pipeline.
@@ -67,19 +111,3 @@ app.MapControllers();
 
 app.Run();
 
-#region DEBUG // todo: remove
-Console.WriteLine("##########");
-
-app.Lifetime.ApplicationStarted.Register(() =>
-{
-    Console.WriteLine("########## Routes ##########");
-    var endpointSources = app.Services.GetRequiredService<IEnumerable<EndpointDataSource>>();
-
-    foreach (var endpoint in endpointSources.SelectMany(es => es.Endpoints).OfType<RouteEndpoint>())
-    {
-        var methods = endpoint.Metadata.OfType<HttpMethodMetadata>().FirstOrDefault()?.HttpMethods;
-        Console.WriteLine($"Route: {endpoint.RoutePattern.RawText}, Methods: {string.Join(", ", methods ?? new List<string>())}");
-    }
-});
-
-#endregion

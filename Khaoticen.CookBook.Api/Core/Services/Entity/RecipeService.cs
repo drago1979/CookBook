@@ -17,10 +17,11 @@ public class RecipeService : BaseEntityService<
     RecipeUpdateDto
 >
 {
-    private readonly RecipeFactory _recipeFactory;
+    private readonly RecipeFactory _factory;
     private readonly ReviewFactory _reviewFactory;
-    private readonly RecipeRepository _recipeRepository;
+    private readonly RecipeRepository _repository;
     private readonly CategoryRepository _categoryRepository;
+    private readonly ReviewRepository _reviewRepository;
     private readonly IMapper _mapper;
 
     public RecipeService(
@@ -29,41 +30,66 @@ public class RecipeService : BaseEntityService<
         ReviewFactory reviewFactory,
         RecipeRepository recipeRepository,
         CategoryRepository categoryRepository,
+        ReviewRepository reviewRepository,
         IMapper mapper
     )
         : base(db, factory)
     {
-        _recipeFactory = factory;
+        _factory = factory;
         _reviewFactory = reviewFactory;
-        _recipeRepository = recipeRepository;
+        _repository = recipeRepository;
         _categoryRepository = categoryRepository;
+        _reviewRepository = reviewRepository;
         _mapper = mapper;
     }
 
     #region CRUD
 
-    public override async Task<Recipe> CreateAndSave(RecipeCreateDto createDto)
+    public async Task<Recipe> CreateAndSaveAsync(RecipeCreateDto dto)
     {
-        var (nonExisting, toAdd) = await CategoryIdsStatusWhenCreateAsync(createDto.Categories);
+        var (nonExistingIds, idsToAdd) = await CategoryIdsStatusWhenCreateAsync(dto.Categories);
 
-        ValidateCategories(nonExisting);
+        EnsureCategoriesExist(nonExistingIds);
 
-        var recipe = _mapper.Map<Recipe>(createDto);
+        var entity = Factory.Create(dto);
 
-        await SyncRecipeCategories(recipe, toAdd);
+        await SyncRecipeCategories(entity, idsToAdd); // todo: async?
 
-        Db.Recipes.Add(recipe); // todo!! ??? i sledece posle add?
+        _repository.Add(entity);
 
-        ValidateRecipe(recipe);
+        EnsureRecipeHasCategory(entity);
 
         await Db.SaveChangesAsync();
 
-        return recipe;
+        return entity;
     }
 
-    public override async Task<Recipe?> Get(Guid id)
+    public async Task<Recipe?> GetAsync(Guid id)
     {
-        return await _recipeRepository.GetByIdIncludeAllRelatedAsync(id);
+        return await _repository.GetByIdIncludeAllRelatedAsync(id);
+    }
+
+    public async Task<List<Recipe>> GetAllAsync()
+    {
+        return await _repository.GetAllAsync();
+    }
+
+    public async Task UpdateAsync(RecipeUpdateDto dto, Recipe entity)
+    {
+        _mapper.Map(dto, entity);
+
+        _repository.Update(entity);
+
+        await Db.SaveChangesAsync();
+    }
+
+    public async Task DeleteAsync(Recipe entity)
+    {
+        entity.SoftDelete();
+        
+        _repository.Update(entity);
+
+        await Db.SaveChangesAsync();
     }
 
     #endregion
@@ -71,20 +97,20 @@ public class RecipeService : BaseEntityService<
 
     #region RELATIONSHIPS
 
-    public async Task UpdateCategories(Recipe recipe, RecipeCategoriesDto categories)
+    public async Task UpdateCategoriesAsync(Recipe recipe, RecipeCategoriesDto categories)
     {
         var (nonExisting, toAdd, toRemove) = await CategoryIdsStatusWhenUpdateAsync(categories, recipe);
 
-        ValidateCategories(nonExisting);
+        EnsureCategoriesExist(nonExisting);
 
         await SyncRecipeCategories(recipe, toAdd, toRemove);
 
-        ValidateRecipe(recipe);
+        EnsureRecipeHasCategory(recipe);
 
         await Db.SaveChangesAsync();
     }
 
-    public async Task<Review> AddReview(Recipe recipe, ReviewCreateDto entityCreateDto)
+    public async Task<Review> AddReviewAsync(Recipe recipe, ReviewCreateDto entityCreateDto)
     {
         var review = _reviewFactory.CreateForRecipe(entityCreateDto, recipe);
 
@@ -100,18 +126,18 @@ public class RecipeService : BaseEntityService<
 
     #region VALIDATION
 
-    private void ValidateRecipe(Recipe recipe)
+    private void EnsureRecipeHasCategory(Recipe recipe)
     {
         if (recipe.Categories.Count == 0)
-            throw new DomainValidationException("Recipe must have at least one category.");
+            throw new InvalidRecipeException("Recipe must have at least one category.");
     }
 
-    private void ValidateCategories(List<Guid> nonExisting)
+    private void EnsureCategoriesExist(List<Guid> nonExisting)
     {
         if (nonExisting.Count == 0) return;
 
         var ids = string.Join(", ", nonExisting);
-        throw new DomainValidationException($"Following categories do not exist: {ids}");
+        throw new ValueNotAllowedException($"Following categories do not exist: {ids}");
     }
 
     #endregion
@@ -126,7 +152,7 @@ public class RecipeService : BaseEntityService<
         var existingIds = await _categoryRepository.GetExistingIdsAsync(submittedIds);
         var nonExisting = submittedIds.Except(existingIds).ToList();
 
-        var currentlyOwns = await _recipeRepository.GetOwnCategoryIdsAsync(recipe);
+        var currentlyOwns = await _repository.GetOwnCategoryIdsAsync(recipe);
         var dontTouch = existingIds.Intersect(currentlyOwns).ToList();
 
         var toAdd = existingIds.Except(dontTouch).ToList();
@@ -138,11 +164,7 @@ public class RecipeService : BaseEntityService<
     private async Task<(List<Guid> nonExisting, List<Guid> toAdd)> CategoryIdsStatusWhenCreateAsync(
         RecipeCategoriesDto dto)
     {
-        var x = dto;
-        
-        // var toAdd = await _categoryRepository.GetExistingIdsAsync(dto.CategoryIds);
         var categoryIds = dto.CategoryIds.Distinct().ToList();
-
         var toAdd = await _categoryRepository.GetExistingIdsAsync(categoryIds);
         var nonExisting = categoryIds.Except(toAdd).ToList();
 

@@ -1,56 +1,57 @@
-﻿using System.Net;
-using System.Text.Json;
-using Khaoticen.CookBook.Api.Core.Exceptions;
+﻿using Khaoticen.CookBook.Api.Core.Exceptions;
+using Khaoticen.CookBook.Api.Core.Exceptions.Base;
 
 namespace Khaoticen.CookBook.Api.Api.Middleware;
 
-public class ExceptionHandlingMiddleware
+public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
 {
-    private readonly RequestDelegate _next;
-    private readonly ILogger<ExceptionHandlingMiddleware> _logger;
-
-    public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
-    {
-        _next = next;
-        _logger = logger;
-    }
-
-    public async Task InvokeAsync(HttpContext context)
+    public async Task Invoke(HttpContext context)
     {
         try
         {
-            await _next(context);
+            await next(context);
         }
-        catch (DomainValidationException ex)
+        catch (DomainException ex)
         {
-            _logger.LogWarning(ex, "Validation error: {Message}", ex.Message);
-            await HandleExceptionAsync(context, ex.Message, HttpStatusCode.BadRequest);
-        }
-        catch (KeyNotFoundException ex)
-        {
-            _logger.LogWarning(ex, "Not found: {Message}", ex.Message);
-            await HandleExceptionAsync(context, ex.Message, HttpStatusCode.NotFound);
+            await HandleDomainExceptionAsync(context, ex);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Unexpected error");
-            await HandleExceptionAsync(context, "An unexpected error occurred.", HttpStatusCode.InternalServerError);
+            logger.LogError(ex, "Unhandled exception");
+            
+            var result = new
+            {
+                status = 500,
+                message = "Internal server error",
+                errors = new { }
+            };
+
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+            await context.Response.WriteAsJsonAsync(result);
         }
     }
 
-    private static async Task HandleExceptionAsync(HttpContext context, string message, HttpStatusCode statusCode)
+    private static Task HandleDomainExceptionAsync(HttpContext context, DomainException ex)
     {
-        context.Response.ContentType = "application/json";
-        context.Response.StatusCode = (int)statusCode;
-
-        var payload = new
+        var statusCode = ex switch
         {
-            type = "https://tools.ietf.org/html/rfc9110#section-15.5",
-            title = message,
-            status = (int)statusCode,
-            traceId = context.TraceIdentifier
+            ValueNotAllowedException => 409,
+            _ => 400
         };
+        
+        var result = new
+        {
+            status = statusCode,
+            message = "Validation failed",
+            errors = new Dictionary<string, string[]>
+            {
+                { "error", [ex.Message] }
+            }
+        };
+        
 
-        await context.Response.WriteAsync(JsonSerializer.Serialize(payload));
+        context.Response.StatusCode = statusCode;
+        return context.Response.WriteAsJsonAsync(result);
     }
 }

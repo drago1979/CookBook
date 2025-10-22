@@ -28,31 +28,32 @@ public class RecipesController(RecipeService entityService, IMapper mapper) : Ap
     /// <param name="requestDto"></param>
     /// <returns></returns>
     [HttpPost(Name = "RecipeCreate")]
-    public async Task<ActionResult> Create([FromBody] RecipeCreateRequestDto requestDto)
+    public async Task<ActionResult> CreateAsync([FromBody] RecipeCreateRequestDto requestDto)
     {
         var createDto = TransformToCreateDto(requestDto);
 
-        var entity = await entityService.CreateAndSave(createDto);
+        var entity = await entityService.CreateAndSaveAsync(createDto);
 
-        return CreatedAtAction(
-            nameof(Get),
+        return CreatedAtRoute(
+            "RecipeGet",
             new { id = entity.Id },
             TransformEntityToResponse(entity)
         );
     }
 
     [HttpGet(Name = "RecipeGetAll")]
-    public async Task<ActionResult> GetAll()
+    public async Task<ActionResult> GetAllAsync()
     {
-        var entities = await entityService.GetAll();
+        var entities = await entityService.GetAllAsync();
 
         return Ok(TransformEntitiesToResponse(entities));
     }
 
-    [HttpGet("{id:guid}", Name = "RecipeGetByGuid")]
-    public async Task<ActionResult> Get(Guid id)
+    [HttpGet("{id:guid}", Name = "RecipeGet")]
+    
+    public async Task<ActionResult> GetAsync(Guid id)
     {
-        var entity = await entityService.Get(id);
+        var entity = await entityService.GetAsync(id);
 
         if (entity == null)
         {
@@ -63,10 +64,10 @@ public class RecipesController(RecipeService entityService, IMapper mapper) : Ap
     }
 
     [HttpPatch("{id:guid}", Name = "RecipePatch")]
-    public async Task<ActionResult> Patch(Guid id, [FromBody] RecipeUpdateRequestDto requestDto,
+    public async Task<ActionResult> PatchAsync(Guid id, [FromBody] RecipeUpdateRequestDto requestDto,
         bool returnUpdated = false)
     {
-        var entity = await entityService.Get(id);
+        var entity = await entityService.GetAsync(id);
 
         if (entity == null)
         {
@@ -74,8 +75,8 @@ public class RecipesController(RecipeService entityService, IMapper mapper) : Ap
         }
 
         var updateEntityDto = TransformToUpdateDto(requestDto);
-
-        await entityService.Update(entity, updateEntityDto);
+    
+        await entityService.UpdateAsync(updateEntityDto, entity);
 
         if (returnUpdated)
         {
@@ -86,16 +87,16 @@ public class RecipesController(RecipeService entityService, IMapper mapper) : Ap
     }
 
     [HttpDelete("{id:guid}", Name = "RecipeDelete")]
-    public async Task<ActionResult> Delete(Guid id)
+    public async Task<ActionResult> DeleteAsync(Guid id)
     {
-        var entity = await entityService.Get(id);
+        var entity = await entityService.GetAsync(id);
 
         if (entity == null)
         {
             return NotFound();
         }
 
-        await entityService.Delete(entity);
+        await entityService.DeleteAsync(entity);
 
         return NoContent();
     }
@@ -105,10 +106,10 @@ public class RecipesController(RecipeService entityService, IMapper mapper) : Ap
     #region RELATIONSHIPS
 
     [HttpPut("{id:guid}/categories", Name = "RecipeUpdateCategories")]
-    public async Task<ActionResult> UpdateCategories(Guid id, [FromBody] CategoriesUpdateRecipeRequestDto requestDto,
+    public async Task<ActionResult> UpdateCategoriesAsync(Guid id, [FromBody] CategoriesUpdateRecipeRequestDto requestDto,
         bool returnUpdated = false)
     {
-        var entity = await entityService.Get(id);
+        var entity = await entityService.GetAsync(id);
 
         if (entity == null)
         {
@@ -117,7 +118,7 @@ public class RecipesController(RecipeService entityService, IMapper mapper) : Ap
 
         var updateCategoriesDto = TransformToRecipeCategoriesCreateDto(requestDto);
 
-        await entityService.UpdateCategories(entity, updateCategoriesDto);
+        await entityService.UpdateCategoriesAsync(entity, updateCategoriesDto);
 
         if (returnUpdated)
         {
@@ -129,9 +130,9 @@ public class RecipesController(RecipeService entityService, IMapper mapper) : Ap
 
 
     [HttpPost("{id:guid}/reviews", Name = "RecipeAddReview")]
-    public async Task<ActionResult> AddReview(Guid id, [FromBody] ReviewCreateRequestDto createRequestDto)
+    public async Task<ActionResult> AddReviewAsync(Guid id, [FromBody] ReviewCreateRequestDto createRequestDto)
     {
-        var recipe = await entityService.Get(id);
+        var recipe = await entityService.GetAsync(id);
 
         if (recipe == null)
         {
@@ -140,10 +141,10 @@ public class RecipesController(RecipeService entityService, IMapper mapper) : Ap
 
         var createDto = mapper.Map<ReviewCreateDto>(createRequestDto);
 
-        var review = await entityService.AddReview(recipe, createDto);
+        var review = await entityService.AddReviewAsync(recipe, createDto);
 
         return CreatedAtRoute(
-            routeName: "ReviewGetByGuid",
+            routeName: "ReviewGet",
             routeValues: new { id = review.Id },
             value: Transform(review)
         );

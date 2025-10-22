@@ -20,17 +20,17 @@ public class ReviewsController(ReviewService entityService, IMapper mapper) : Ap
     #region CRUD
 
     [HttpGet(Name = "ReviewGetAll")]
-    public async Task<ActionResult> GetAll()
+    public async Task<ActionResult> GetAllAsync()
     {
-        var entities = await entityService.GetAll();
+        var entities = await entityService.GetAllAsync();
 
         return Ok(TransformEntitiesToResponse(entities));
     }
     
-    [HttpGet("{id:guid}", Name = "ReviewGetByGuid")]
-    public async Task<ActionResult> Get(Guid id)
+    [HttpGet("{id:guid}", Name = "ReviewGet")]
+    public async Task<ActionResult> GetAsync(Guid id)
     {
-        var entity = await entityService.Get(id);
+        var entity = await entityService.GetAsync(id);
 
         if (entity == null)
         {
@@ -41,10 +41,10 @@ public class ReviewsController(ReviewService entityService, IMapper mapper) : Ap
     }
     
     [HttpPatch("{id:guid}", Name = "ReviewPatch")]
-    public async Task<ActionResult> Patch(Guid id, [FromBody] ReviewUpdateRequestDto requestDto,
+    public async Task<ActionResult> PatchAsync(Guid id, [FromBody] ReviewUpdateRequestDto requestDto,
         bool returnUpdated = false)
     {
-        var entity = await entityService.Get(id);
+        var entity = await entityService.GetAsync(id);
 
         if (entity == null)
         {
@@ -53,7 +53,7 @@ public class ReviewsController(ReviewService entityService, IMapper mapper) : Ap
 
         var updateEntityDto =  TransformToUpdateDto(requestDto);
         
-        await entityService.Update(entity, updateEntityDto);
+        await entityService.UpdateAsync(updateEntityDto, entity);
 
         if (returnUpdated)
         {
@@ -64,16 +64,16 @@ public class ReviewsController(ReviewService entityService, IMapper mapper) : Ap
     }
 
     [HttpDelete("{id:guid}", Name = "ReviewDelete")]
-    public async Task<ActionResult> Delete(Guid id)
+    public async Task<ActionResult> DeleteAsync(Guid id)
     {
-        var entity = await entityService.Get(id);
+        var entity = await entityService.GetAsync(id);
 
         if (entity == null)
         {
             return NotFound();
         }
 
-        await entityService.Delete(entity);
+        await entityService.DeleteAsync(entity);
 
         return NoContent();
     }

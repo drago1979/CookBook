@@ -24,47 +24,47 @@ public class BaseEntityService<
         Factory = factory;
     }
 
-    public virtual TEntity Create(TCreateDto dto)
-    {
-        var entity = Factory.Create(dto);
+    // public virtual TEntity Create(TCreateDto dto)
+    // {
+    //     var entity = Factory.Create(dto);
+    //
+    //     Db.Set<TEntity>().Add(entity);
+    //
+    //     return entity;
+    // }
 
-        Db.Set<TEntity>().Add(entity);
+    // public virtual async Task<TEntity> CreateAndSave(TCreateDto dto)
+    // {
+    //     var entity = Create(dto);
+    //     
+    //     await Db.SaveChangesAsync();
+    //
+    //     return entity;
+    // }
 
-        return entity;
-    }
+    // public virtual async Task<TEntity?> Get(Guid id)
+    // {
+    //     return await Db.Set<TEntity>().FindAsync(id);
+    // }
 
-    public virtual async Task<TEntity> CreateAndSave(TCreateDto dto)
-    {
-        var entity = Create(dto);
-        
-        await Db.SaveChangesAsync();
+    // public virtual async Task<List<TEntity>> GetAll()
+    // {
+    //     return await Db.Set<TEntity>().ToListAsync();
+    // }
 
-        return entity;
-    }
+    // public virtual async Task<TEntity> Update(TEntity entity, TUpdateDto dto)
+    // {
+    //     Factory.Update(dto, entity);
+    //
+    //     await Db.SaveChangesAsync();
+    //
+    //     return entity;
+    // }
 
-    public virtual async Task<TEntity?> Get(Guid id)
-    {
-        return await Db.Set<TEntity>().FindAsync(id);
-    }
-
-    public virtual async Task<List<TEntity>> GetAll()
-    {
-        return await Db.Set<TEntity>().ToListAsync();
-    }
-
-    public virtual async Task<TEntity> Update(TEntity entity, TUpdateDto dto)
-    {
-        Factory.Update(dto, entity);
-
-        await Db.SaveChangesAsync();
-
-        return entity;
-    }
-
-    public virtual async Task Delete(TEntity entity)
-    {
-        Db.Set<TEntity>().Remove(entity);
-
-        await Db.SaveChangesAsync();
-    }
+//     public virtual async Task Delete(TEntity entity) // todo!!! : move to concrete service or pull evrthng here
+//     {
+//         Db.Set<TEntity>().Remove(entity);
+//
+//         await Db.SaveChangesAsync();
+//     }
 }

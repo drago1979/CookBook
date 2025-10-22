@@ -12,13 +12,5 @@ public abstract class BaseFactory<TEntity, TCreateDto, TUpdateDto>(IMapper mappe
     // TODO: Domain rules / overrides
     // recipe.Title = dto.Title.Trim();          // normalization
     // recipe.CreatedAt = DateTime.UtcNow;       // system-set field
-
-    public virtual void Update(TUpdateDto dto, TEntity entity)
-    {
-        mapper.Map(dto, entity);
-
-        // Domain rules / overrides
-        // entity.Title = dto.Title.Trim();          // normalization
-        // entity.CreatedAt = DateTime.UtcNow;       // system-set field
-    }
+    
 }
