@@ -49,8 +49,15 @@ public class RecipesController(RecipeService entityService, IMapper mapper) : Ap
         return Ok(TransformEntitiesToResponse(entities));
     }
 
-    [HttpGet("{id:guid}", Name = "RecipeGet")]
+    [HttpGet("all", Name = "RecipeGetAllWithDeleted")]
+    public async Task<ActionResult> GetAllWithDeletedAsync()
+    {
+        var entities = await entityService.GetAllWithDeletedAsync();
+
+        return Ok(TransformEntitiesToResponse(entities));
+    }
     
+    [HttpGet("{id:guid}", Name = "RecipeGet")]
     public async Task<ActionResult> GetAsync(Guid id)
     {
         var entity = await entityService.GetAsync(id);

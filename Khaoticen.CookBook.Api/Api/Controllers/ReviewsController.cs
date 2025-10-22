@@ -27,6 +27,14 @@ public class ReviewsController(ReviewService entityService, IMapper mapper) : Ap
         return Ok(TransformEntitiesToResponse(entities));
     }
     
+    [HttpGet("all", Name = "ReviewGetAllWithDeleted")]
+    public async Task<ActionResult> GetAllWithDeletedAsync()
+    {
+        var entities = await entityService.GetAllWithDeletedAsync();
+
+        return Ok(TransformEntitiesToResponse(entities));
+    }
+    
     [HttpGet("{id:guid}", Name = "ReviewGet")]
     public async Task<ActionResult> GetAsync(Guid id)
     {

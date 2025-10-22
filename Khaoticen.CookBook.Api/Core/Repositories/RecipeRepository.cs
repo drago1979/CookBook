@@ -5,9 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Khaoticen.CookBook.Api.Core.Repositories;
 
-public class RecipeRepository(AppDbContext db): BaseRepository<Recipe>(db)
+public class RecipeRepository(AppDbContext db) : BaseRepository<Recipe>(db)
 {
-    
+    public async Task<List<Recipe>> GetAllWithDeletedAsync() =>
+        await db.Recipes.IgnoreQueryFilters().ToListAsync();
+
     public async Task<Recipe?> GetByIdIncludeAllRelatedAsync(Guid id) =>
         await db.Recipes
             .Include(r => r.Reviews)

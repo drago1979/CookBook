@@ -73,6 +73,11 @@ public class RecipeService : BaseEntityService<
     {
         return await _repository.GetAllAsync();
     }
+    
+    public async Task<List<Recipe>> GetAllWithDeletedAsync()
+    {
+        return await _repository.GetAllWithDeletedAsync();
+    }
 
     public async Task UpdateAsync(RecipeUpdateDto dto, Recipe entity)
     {

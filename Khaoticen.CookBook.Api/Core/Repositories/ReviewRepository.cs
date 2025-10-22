@@ -5,4 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Khaoticen.CookBook.Api.Core.Repositories;
 
-public class ReviewRepository(AppDbContext db): BaseRepository<Review>(db);
+public class ReviewRepository(AppDbContext db) : BaseRepository<Review>(db)
+{
+    public async Task<List<Review>> GetAllWithDeletedAsync() =>
+        await db.Reviews.IgnoreQueryFilters().ToListAsync();
+}

@@ -36,6 +36,11 @@ public class ReviewService : BaseEntityService<
     {
         return await _repository.GetAllAsync();
     }
+    
+    public async Task<List<Review>> GetAllWithDeletedAsync()
+    {
+        return await _repository.GetAllWithDeletedAsync();
+    }
 
     public async Task UpdateAsync(ReviewUpdateDto dto, Review entity)
     {
