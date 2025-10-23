@@ -1,5 +1,4 @@
 ﻿using System;
-using Khaoticen.CookBook.Api.Shared.Constants;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -9,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Khaoticen.CookBook.Api.Migrations
 {
     /// <inheritdoc />
-    public partial class SeedBasicCategories : Migration
+    public partial class SeedCategories : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -19,7 +18,7 @@ namespace Khaoticen.CookBook.Api.Migrations
                 columns: new[] { "Id", "CreatedAt", "Name", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { CategoryConstants.DefaultCategoryId, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), CategoryConstants.DefaultCategoryName, null },
+                    { new Guid("11111111-1111-1111-1111-111111111111"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Default", null },
                     { new Guid("22222222-2222-2222-2222-222222222222"), new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Sweets", null }
                 });
         }

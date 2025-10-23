@@ -90,10 +90,8 @@ public class ReviewsController(ReviewService entityService, IMapper mapper) : Ap
 
     #region HELPERS
 
-    private ReviewUpdateDto TransformToUpdateDto(ReviewUpdateRequestDto requestDto)
-    {
-        return mapper.Map<ReviewUpdateDto>(requestDto);
-    }
+    private ReviewUpdateDto TransformToUpdateDto(ReviewUpdateRequestDto requestDto) =>
+        Mapper.Map<ReviewUpdateDto>(requestDto);
 
     #endregion
 }

@@ -12,7 +12,7 @@ public class Category : BaseEntity
      [MaxLength(100)]
      public required string Name { get; set; }
      
-     public ICollection<Recipe> Recipes { get; } = []; // todo!!!: Cascading? (soft delete?)
+     public ICollection<Recipe> Recipes { get; } = [];
 }
 
 

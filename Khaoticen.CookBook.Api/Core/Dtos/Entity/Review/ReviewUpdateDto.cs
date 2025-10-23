@@ -1,13 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Khaoticen.CookBook.Api.Core.Dtos.Entity.Shared.Interface;
 
 namespace Khaoticen.CookBook.Api.Core.Dtos.Entity.Review;
 
-public class ReviewUpdateDto
+public class ReviewUpdateDto: IUpdateDto
 {
     public required  string Comment { get; set; }
-    
-    
-    // public required  Recipe Recipe { get; set; } // todo: check?
-    
-    // public Recipe Recipe { get; set; } // todo: needed?
 }

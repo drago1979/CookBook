@@ -8,54 +8,24 @@ using Khaoticen.CookBook.Api.Infrastructure.Db;
 
 namespace Khaoticen.CookBook.Api.Core.Services.Entity;
 
-public class ReviewService : BaseEntityService<
-    Review,
-    Factories.ReviewFactory,
-    ReviewCreateDto,
-    ReviewUpdateDto
->
+public class ReviewService(
+    AppDbContext db,
+    ReviewFactory factory,
+    ReviewRepository repository,
+    IMapper mapper
+)
+    : BaseEntityService<
+        Review,
+        ReviewRepository,
+        ReviewFactory,
+        ReviewCreateDto,
+        ReviewUpdateDto
+    >(db, mapper, repository, factory)
 {
-    private readonly ReviewRepository _repository;
-    private readonly IMapper _mapper;
-
-    public ReviewService(AppDbContext db, Factories.ReviewFactory factory, ReviewRepository repository, IMapper mapper)
-        : base(db, factory)
-    {
-        _repository = repository;
-        _mapper = mapper;
-    }
-
     #region CRUD
 
-    public async Task<Review?> GetAsync(Guid id)
-    {
-        return await _repository.GetByIdAsync(id);
-    }
+    public async Task<List<Review>> GetAllWithDeletedAsync() =>
+        await Repository.GetAllWithDeletedAsync();
 
-    public async Task<List<Review>> GetAllAsync()
-    {
-        return await _repository.GetAllAsync();
-    }
-    
-    public async Task<List<Review>> GetAllWithDeletedAsync()
-    {
-        return await _repository.GetAllWithDeletedAsync();
-    }
-
-    public async Task UpdateAsync(ReviewUpdateDto dto, Review entity)
-    {
-        _mapper.Map(dto, entity);
-        
-        _repository.Update(entity);
-        
-        await Db.SaveChangesAsync();
-    }
-
-    public virtual async Task DeleteAsync(Review entity)
-    {
-        _repository.Delete(entity);
-
-        await Db.SaveChangesAsync();
-    }
     #endregion
 }

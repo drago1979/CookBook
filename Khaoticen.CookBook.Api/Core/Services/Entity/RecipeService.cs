@@ -10,39 +10,22 @@ using Khaoticen.CookBook.Api.Infrastructure.Db;
 
 namespace Khaoticen.CookBook.Api.Core.Services.Entity;
 
-public class RecipeService : BaseEntityService<
-    Recipe,
-    RecipeFactory,
-    RecipeCreateDto,
-    RecipeUpdateDto
->
+public class RecipeService(
+    AppDbContext db,
+    RecipeFactory factory,
+    ReviewFactory reviewFactory,
+    RecipeRepository repository,
+    CategoryRepository categoryRepository,
+    IMapper mapper
+)
+    : BaseEntityService<
+        Recipe,
+        RecipeRepository,
+        RecipeFactory,
+        RecipeCreateDto,
+        RecipeUpdateDto
+    >(db, mapper, repository, factory)
 {
-    private readonly RecipeFactory _factory;
-    private readonly ReviewFactory _reviewFactory;
-    private readonly RecipeRepository _repository;
-    private readonly CategoryRepository _categoryRepository;
-    private readonly ReviewRepository _reviewRepository;
-    private readonly IMapper _mapper;
-
-    public RecipeService(
-        AppDbContext db,
-        RecipeFactory factory,
-        ReviewFactory reviewFactory,
-        RecipeRepository recipeRepository,
-        CategoryRepository categoryRepository,
-        ReviewRepository reviewRepository,
-        IMapper mapper
-    )
-        : base(db, factory)
-    {
-        _factory = factory;
-        _reviewFactory = reviewFactory;
-        _repository = recipeRepository;
-        _categoryRepository = categoryRepository;
-        _reviewRepository = reviewRepository;
-        _mapper = mapper;
-    }
-
     #region CRUD
 
     public async Task<Recipe> CreateAndSaveAsync(RecipeCreateDto dto)
@@ -55,7 +38,7 @@ public class RecipeService : BaseEntityService<
 
         await SyncRecipeCategories(entity, idsToAdd); // todo: async?
 
-        _repository.Add(entity);
+        Repository.Add(entity);
 
         EnsureRecipeHasCategory(entity);
 
@@ -64,41 +47,28 @@ public class RecipeService : BaseEntityService<
         return entity;
     }
 
-    public async Task<Recipe?> GetAsync(Guid id)
-    {
-        return await _repository.GetByIdIncludeAllRelatedAsync(id);
-    }
-
-    public async Task<List<Recipe>> GetAllAsync()
-    {
-        return await _repository.GetAllAsync();
-    }
-    
     public async Task<List<Recipe>> GetAllWithDeletedAsync()
     {
-        return await _repository.GetAllWithDeletedAsync();
+        return await Repository.GetAllWithDeletedAsync();
+    }
+    
+    public async Task<Recipe?> GetWithRelatedAsync(Guid id)
+    {
+        return await Repository.GetByIdIncludeAllRelatedAsync(id);
     }
 
-    public async Task UpdateAsync(RecipeUpdateDto dto, Recipe entity)
+    public override async Task DeleteAsync(Recipe entity)
     {
-        _mapper.Map(dto, entity);
-
-        _repository.Update(entity);
-
-        await Db.SaveChangesAsync();
-    }
-
-    public async Task DeleteAsync(Recipe entity)
-    {
-        entity.SoftDelete();
+        await Repository.GetByIdIncludeAllRelatedAsync(entity.Id);
         
-        _repository.Update(entity);
+        entity.SoftDelete();
+
+        Repository.Update(entity);
 
         await Db.SaveChangesAsync();
     }
 
     #endregion
-
 
     #region RELATIONSHIPS
 
@@ -117,12 +87,9 @@ public class RecipeService : BaseEntityService<
 
     public async Task<Review> AddReviewAsync(Recipe recipe, ReviewCreateDto entityCreateDto)
     {
-        var review = _reviewFactory.CreateForRecipe(entityCreateDto, recipe);
+        var review = reviewFactory.CreateForRecipe(entityCreateDto, recipe);
 
         await Db.SaveChangesAsync();
-
-        var result = review;
-
 
         return review;
     }
@@ -154,10 +121,10 @@ public class RecipeService : BaseEntityService<
     {
         var submittedIds = dto.CategoryIds.Distinct().ToList();
 
-        var existingIds = await _categoryRepository.GetExistingIdsAsync(submittedIds);
+        var existingIds = await categoryRepository.GetExistingIdsAsync(submittedIds);
         var nonExisting = submittedIds.Except(existingIds).ToList();
 
-        var currentlyOwns = await _repository.GetOwnCategoryIdsAsync(recipe);
+        var currentlyOwns = await GetOwnCategoryIdsAsync(recipe);
         var dontTouch = existingIds.Intersect(currentlyOwns).ToList();
 
         var toAdd = existingIds.Except(dontTouch).ToList();
@@ -170,7 +137,7 @@ public class RecipeService : BaseEntityService<
         RecipeCategoriesDto dto)
     {
         var categoryIds = dto.CategoryIds.Distinct().ToList();
-        var toAdd = await _categoryRepository.GetExistingIdsAsync(categoryIds);
+        var toAdd = await categoryRepository.GetExistingIdsAsync(categoryIds);
         var nonExisting = categoryIds.Except(toAdd).ToList();
 
         return (nonExisting, toAdd);
@@ -178,7 +145,7 @@ public class RecipeService : BaseEntityService<
 
     private async Task SyncRecipeCategories(Recipe recipe, List<Guid> toAdd, List<Guid>? toRemove = null)
     {
-        var categoriesToAdd = await _categoryRepository
+        var categoriesToAdd = await categoryRepository
             .GetAllByIdsAsync(toAdd);
 
         foreach (var category in categoriesToAdd)
@@ -188,7 +155,7 @@ public class RecipeService : BaseEntityService<
 
         if (toRemove != null)
         {
-            var categoriesToRemove = await _categoryRepository
+            var categoriesToRemove = await categoryRepository
                 .GetAllByIdsAsync(toRemove);
 
             foreach (var category in categoriesToRemove)
@@ -196,6 +163,13 @@ public class RecipeService : BaseEntityService<
                 recipe.Categories.Remove(category);
             }
         }
+    }
+
+    private async Task<List<Guid>> GetOwnCategoryIdsAsync(Recipe recipe)
+    {
+        var recipeWithRelations = await Repository.GetByIdIncludeAllRelatedAsync(recipe.Id);
+
+        return recipeWithRelations?.Categories.Select(c => c.Id).ToList() ?? [];
     }
 
     #endregion

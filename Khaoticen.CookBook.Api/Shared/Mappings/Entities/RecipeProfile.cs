@@ -20,7 +20,7 @@ public class RecipeProfile : BaseEntityProfile<
     {
         // REQUESTS => DTOs
         CreateMap<RecipeCreateRequestDto, RecipeCreateDto>();
-        CreateMap<CategoriesUpdateRecipeRequestDto, RecipeCategoriesDto>();
+        CreateMap<RecipeCategoriesUpdateRequestDto, RecipeCategoriesDto>();
         
         // DTOs => ENTITIES
         CreateMap<RecipeCreateDto, Recipe>()

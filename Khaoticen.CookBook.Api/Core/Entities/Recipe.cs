@@ -9,19 +9,20 @@ namespace Khaoticen.CookBook.Api.Core.Entities;
 public class Recipe : BaseSoftDeletableEntity
 {
     [MaxLength(100)]
-    public required string Title { get; set; }
+    public required string Title { get; init; }
 
     [MaxLength(1000)]
-    public required string Description { get; set; }
+    public required string Description { get; init; }
 
     [MaxLength(200)]
-    public string? ImageUrl { get; set; }
+    public string? ImageUrl { get; init; }
     
-    public ICollection<Category> Categories { get; } = [];
-    public ICollection<Review> Reviews { get; set; } = new List<Review>(); // todo!!: proveri
+    public ICollection<Category> Categories { get; init; } = [];
+
+    public ICollection<Review> Reviews { get; init; } = [];
     
 
-    public override void SoftDelete()
+    public override void SoftDelete() // todo!!!: u IF?
     {
         DeletedAt = DateTime.UtcNow;
 
@@ -30,10 +31,4 @@ public class Recipe : BaseSoftDeletableEntity
             review.SoftDelete();
         }
     }
-
-    
-
-    //
-    // // 
-    // public ICollection<Review>? Reviews { get; set; } // 12M // todo: nullable?
 }

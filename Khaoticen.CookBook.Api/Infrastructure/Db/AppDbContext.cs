@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
 using Khaoticen.CookBook.Api.Core.Entities;
-using Khaoticen.CookBook.Api.Core.Entities.Shared.Base;
 using Khaoticen.CookBook.Api.Core.Entities.Shared.Interfaces;
+using Khaoticen.CookBook.Api.Shared.Constants;
 using Microsoft.EntityFrameworkCore;
 
 namespace Khaoticen.CookBook.Api.Infrastructure.Db;
@@ -14,21 +14,26 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // todo: note-po konkretnom tipu
-        // modelBuilder.Base<Recipe>().HasQueryFilter(r => !r.IsDeleted);
-
-
-        // modelBuilder.Base<ISoftDeletable>().HasQueryFilter(r => r.DeletedAt == null);
-        // modelBuilder.Base<BaseSoftDeletableEntity>().HasQueryFilter(r => r.DeletedAt == null);
-        // todo: note-po interfejsu
-
         base.OnModelCreating(modelBuilder);
+        
+        // Global filter - soft deletable
+        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+        {
+            if (!typeof(ISoftDeletable).IsAssignableFrom(entityType.ClrType)) continue;
+
+            var parameter = Expression.Parameter(entityType.ClrType, "e");
+            var prop = Expression.Property(parameter, nameof(ISoftDeletable.DeletedAt));
+            var condition = Expression.Equal(prop, Expression.Constant(null, typeof(DateTime?)));
+            var lambda = Expression.Lambda(condition, parameter);
+
+            modelBuilder.Entity(entityType.ClrType).HasQueryFilter(lambda);
+        }
         
         // Data seeding
         modelBuilder.Entity<Category>().HasData(
             new Category {
-                Id = Guid.Parse("11111111-1111-1111-1111-111111111111"),
-                Name = "Default" 
+                Id = CategoryConstants.DefaultCategoryId,
+                Name = CategoryConstants.DefaultCategoryName
             },
             new Category
             {
@@ -36,18 +41,5 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
                 Name = "Sweets"
             }
         );
-        
-        // Apply global filter to all BaseSoftDeletableEntity descendants
-        foreach (var entityType in modelBuilder.Model.GetEntityTypes())
-        {
-            if (!typeof(ISoftDeletable).IsAssignableFrom(entityType.ClrType)) continue;
-
-            var parameter = Expression.Parameter(entityType.ClrType, "e");
-            var prop = Expression.Property(parameter, nameof(BaseSoftDeletableEntity.DeletedAt));
-            var condition = Expression.Equal(prop, Expression.Constant(null, typeof(DateTime?)));
-            var lambda = Expression.Lambda(condition, parameter);
-
-            modelBuilder.Entity(entityType.ClrType).HasQueryFilter(lambda);
-        }
     }
 }

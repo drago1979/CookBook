@@ -10,10 +10,5 @@ public class Review : BaseSoftDeletableEntity
 
     public required Guid RecipeId { get; set; }
     
-    // todo!! [DeleteBehavior(DeleteBehavior.Restrict)]
-    public required Recipe Recipe { get; set; }  // todo!! Proveri da li / kako kaskadira (Recipe-Review) + soft deletion
-    
-    // public required  Recipe Recipe { get; set; }
-
-    // public Recipe Recipe { get; set; } // todo: needed?
+    public required Recipe Recipe { get; set; }
 }

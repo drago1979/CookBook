@@ -4,10 +4,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Khaoticen.CookBook.Api.Core.Repositories.Shared;
 
-public class BaseRepository<TEntity>(AppDbContext db)
+public abstract class BaseRepository<TEntity>(AppDbContext db)
     where TEntity : BaseEntity
 {
-    private DbSet<TEntity> Table => db.Set<TEntity>();
+    protected DbSet<TEntity> Table => db.Set<TEntity>();
 
     public void Add(TEntity entity)
     {

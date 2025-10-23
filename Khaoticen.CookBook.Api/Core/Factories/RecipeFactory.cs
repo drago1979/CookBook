@@ -5,20 +5,4 @@ using Khaoticen.CookBook.Api.Core.Factories.Shared.Base;
 
 namespace Khaoticen.CookBook.Api.Core.Factories;
 
-public class RecipeFactory : BaseFactory<Recipe, RecipeCreateDto, RecipeUpdateDto>
-{
-    public RecipeFactory(IMapper mapper): base(mapper) // todo: primary constr?
-    {
-    }
-    
-    public Recipe CreateForCategory(RecipeCreateDto dto, Category category)
-    {
-        var recipe = Create(dto);
-    
-        // review.RecipeId = category.Id;
-        // review.Recipe = category;
-        category.Recipes.Add(recipe);
-    
-        return recipe;
-    }
-}
+public class RecipeFactory(IMapper mapper) : BaseFactory<Recipe, RecipeCreateDto>(mapper);

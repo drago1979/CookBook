@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Khaoticen.CookBook.Api.Core.Validation;
+namespace Khaoticen.CookBook.Api.Api.ValidationAttributes;
 
 public class StringGuidCollectionAttribute : ValidationAttribute
 {

@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Khaoticen.CookBook.Api.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251006175610_CreateCategoriesAndCategoryRecipesTable")]
-    partial class CreateCategoriesAndCategoryRecipesTable
+    [Migration("20251022195358_SeedCategories")]
+    partial class SeedCategories
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -58,6 +58,20 @@ namespace Khaoticen.CookBook.Api.Migrations
                         .IsUnique();
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("11111111-1111-1111-1111-111111111111"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Default"
+                        },
+                        new
+                        {
+                            Id = new Guid("22222222-2222-2222-2222-222222222222"),
+                            CreatedAt = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Sweets"
+                        });
                 });
 
             modelBuilder.Entity("Khaoticen.CookBook.Api.Core.Entities.Recipe", b =>
@@ -106,6 +120,9 @@ namespace Khaoticen.CookBook.Api.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("RecipeId")

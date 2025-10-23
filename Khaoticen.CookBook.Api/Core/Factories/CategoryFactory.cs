@@ -5,7 +5,4 @@ using Khaoticen.CookBook.Api.Core.Factories.Shared.Base;
 
 namespace Khaoticen.CookBook.Api.Core.Factories;
 
-public class CategoryFactory(IMapper mapper) : BaseFactory<Category, CategoryCreateDto, CategoryUpdateDto>(mapper)
-{
-    
-}
+public class CategoryFactory(IMapper mapper) : BaseFactory<Category, CategoryCreateDto>(mapper);

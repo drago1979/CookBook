@@ -2,6 +2,5 @@
 
 public interface ISoftDeletable
 {
-    public bool IsDeleted { get; }
     DateTime? DeletedAt { get; set; }
 }

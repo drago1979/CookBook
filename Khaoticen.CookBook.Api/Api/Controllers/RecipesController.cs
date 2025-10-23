@@ -18,7 +18,7 @@ public class RecipesController(RecipeService entityService, IMapper mapper) : Ap
     Recipe,
     RecipeResponseDto,
     RecipesResponseDto
->(mapper) // todo!!
+>(mapper)
 {
     #region CRUD
 
@@ -60,7 +60,11 @@ public class RecipesController(RecipeService entityService, IMapper mapper) : Ap
     [HttpGet("{id:guid}", Name = "RecipeGet")]
     public async Task<ActionResult> GetAsync(Guid id)
     {
-        var entity = await entityService.GetAsync(id);
+        var entity = await entityService.GetWithRelatedAsync(id);
+
+        var reviews = entity.Reviews;
+        
+        var categories = entity.Categories;
 
         if (entity == null)
         {
@@ -113,7 +117,7 @@ public class RecipesController(RecipeService entityService, IMapper mapper) : Ap
     #region RELATIONSHIPS
 
     [HttpPut("{id:guid}/categories", Name = "RecipeUpdateCategories")]
-    public async Task<ActionResult> UpdateCategoriesAsync(Guid id, [FromBody] CategoriesUpdateRecipeRequestDto requestDto,
+    public async Task<ActionResult> UpdateCategoriesAsync(Guid id, [FromBody] RecipeCategoriesUpdateRequestDto requestDto,
         bool returnUpdated = false)
     {
         var entity = await entityService.GetAsync(id);
@@ -146,7 +150,7 @@ public class RecipesController(RecipeService entityService, IMapper mapper) : Ap
             return NotFound();
         }
 
-        var createDto = mapper.Map<ReviewCreateDto>(createRequestDto);
+        var createDto = Mapper.Map<ReviewCreateDto>(createRequestDto);
 
         var review = await entityService.AddReviewAsync(recipe, createDto);
 
@@ -162,14 +166,14 @@ public class RecipesController(RecipeService entityService, IMapper mapper) : Ap
     #region HELPERS
 
     private RecipeCreateDto TransformToCreateDto(RecipeCreateRequestDto requestDto) =>
-        mapper.Map<RecipeCreateDto>(requestDto);
+        Mapper.Map<RecipeCreateDto>(requestDto);
 
     private RecipeUpdateDto TransformToUpdateDto(RecipeUpdateRequestDto requestDto) =>
-        mapper.Map<RecipeUpdateDto>(requestDto);
+        Mapper.Map<RecipeUpdateDto>(requestDto);
 
 
-    private RecipeCategoriesDto TransformToRecipeCategoriesCreateDto(CategoriesUpdateRecipeRequestDto requestDto) =>
-        mapper.Map<RecipeCategoriesDto>(requestDto);
+    private RecipeCategoriesDto TransformToRecipeCategoriesCreateDto(RecipeCategoriesUpdateRequestDto requestDto) =>
+        Mapper.Map<RecipeCategoriesDto>(requestDto);
 
     private ReviewResponseDto Transform(Review entity) =>
         Mapper.Map<ReviewResponseDto>(entity);

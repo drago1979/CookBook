@@ -5,20 +5,14 @@ using Khaoticen.CookBook.Api.Core.Factories.Shared.Base;
 
 namespace Khaoticen.CookBook.Api.Core.Factories;
 
-public class ReviewFactory : BaseFactory<Review, ReviewCreateDto, ReviewUpdateDto>
+public class ReviewFactory(IMapper mapper) : BaseFactory<Review, ReviewCreateDto>(mapper)
 {
-    public ReviewFactory(IMapper mapper): base(mapper) // todo: primary constr?
-    {
-    }
-    
     public Review CreateForRecipe(ReviewCreateDto dto, Recipe recipe)
     {
         var review = Create(dto);
-    
-        // review.RecipeId = recipe.Id;
-        // review.Recipe = recipe;
+
         recipe.Reviews.Add(review);
-    
+
         return review;
     }
 }

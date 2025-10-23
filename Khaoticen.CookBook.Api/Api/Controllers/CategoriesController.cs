@@ -98,10 +98,10 @@ public class CategoriesController(CategoryService entityService, IMapper mapper)
     #region HELPERS
 
     private CategoryCreateDto TransformToCreateDto(CategoryCreateRequestDto requestDto) =>
-        mapper.Map<CategoryCreateDto>(requestDto);
+        Mapper.Map<CategoryCreateDto>(requestDto);
 
     private CategoryUpdateDto TransformToUpdateDto(CategoryUpdateRequestDto requestDto) =>
-        mapper.Map<CategoryUpdateDto>(requestDto);
+        Mapper.Map<CategoryUpdateDto>(requestDto);
 
     #endregion
 
