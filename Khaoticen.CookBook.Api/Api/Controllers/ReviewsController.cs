@@ -38,7 +38,7 @@ public class ReviewsController(ReviewService entityService, IMapper mapper) : Ap
     [HttpGet("{id:guid}", Name = "ReviewGet")]
     public async Task<ActionResult> GetAsync(Guid id)
     {
-        var entity = await entityService.GetAsync(id);
+        var entity = await entityService.GetWithRelatedAsync(id);
 
         if (entity == null)
         {

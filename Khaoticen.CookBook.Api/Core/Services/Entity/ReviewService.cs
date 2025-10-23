@@ -24,6 +24,11 @@ public class ReviewService(
 {
     #region CRUD
 
+    public async Task<Review?> GetWithRelatedAsync(Guid id)
+    {
+        return await Repository.GetByIdIncludeAllRelatedAsync(id);
+    }
+    
     public async Task<List<Review>> GetAllWithDeletedAsync() =>
         await Repository.GetAllWithDeletedAsync();
 

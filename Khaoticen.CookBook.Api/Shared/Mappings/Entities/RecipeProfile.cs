@@ -27,9 +27,13 @@ public class RecipeProfile : BaseEntityProfile<
             .ForMember(dest => dest.Categories, opt => opt.Ignore());
         
         // ENTITIES => RESPONSES
-        // Reviews - include
+        // RELATIONSHIPS - include
         CreateMap<Recipe, RecipeResponseDto>()
-            .ForMember(dest => dest.Reviews, opt => opt.MapFrom(src => src.Reviews));
+            .ForMember(dest => dest.Reviews, opt => opt.MapFrom(src => src.Reviews))
+            .ForMember(dest => dest.Categories, opt => opt.MapFrom(src => src.Categories));
+        
+        // Entity in relationship
+        CreateMap<Recipe, RecipeInRelatedResponseDto>();
 
     }
 }

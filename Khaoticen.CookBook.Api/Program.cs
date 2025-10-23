@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Khaoticen.CookBook.Api.Api.Middleware;
 using Khaoticen.CookBook.Api.Core.Services.Entity;
 using Khaoticen.CookBook.Api.Infrastructure.Db;
@@ -7,7 +8,14 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+// Init version
+// builder.Services.AddControllers();
+
+// Changed: Suppress circular refs.in responses // todo!!: confirm circ.refs in responeses sit.
+builder.Services.AddControllers().AddJsonOptions(options =>
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
+
 
 builder.Services.AddOpenApi();
 
@@ -87,6 +95,13 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
         };
     };
 });
+
+// builder.Services.Configure<JsonOptions>(options =>
+// {
+//     options.JsonSerializerOptions.MaxDepth = 1;
+//     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+// });
+
 
 #endregion
 

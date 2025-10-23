@@ -12,7 +12,7 @@ public class CategoryRepository(AppDbContext db) : BaseRepository<Category>(db)
         return await Table.FirstOrDefaultAsync(c => c.Name == name);
     }
 
-    public async Task<Category?> GetByIdWithRecipesAndCategoriesAsync(Guid id) =>
+    public async Task<Category?> GetByIdIncludeAllRelatedAsync(Guid id) =>
         await Table
             .Include(c => c.Recipes)
             .ThenInclude(r => r.Categories)

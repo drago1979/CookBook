@@ -5,6 +5,6 @@ namespace Khaoticen.CookBook.Api.Api.ResponseDtos.Category;
 
 public class CategoryResponseDto: BaseEntityResponseDto
 {
-    public required string Name { get; set; }
-    public List<RecipeResponseDto> Recipes { get; init; } = []; // todo!! Circular ref?
+    public required string Name { get; init; }
+    public List<RecipeInRelatedResponseDto> Recipes { get; init; } = [];
 }

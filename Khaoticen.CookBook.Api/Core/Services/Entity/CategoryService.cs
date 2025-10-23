@@ -42,6 +42,11 @@ public class CategoryService(
         return entity;
     }
 
+    public async Task<Category?> GetWithRelatedAsync(Guid id)
+    {
+        return await Repository.GetByIdIncludeAllRelatedAsync(id);
+    }
+    
     public override async Task DeleteAsync(Category entity)
     {
         var defaultCategory = await GetDefaultCategoryOrThrowAsync();
@@ -73,7 +78,7 @@ public class CategoryService(
         throw new EntityNotFoundException($"{CategoryConstants.DefaultCategoryName} category not found.");
 
     private async Task<Category> GetWithRelationsOrThrowAsync(Category entity) =>
-        await Repository.GetByIdWithRecipesAndCategoriesAsync(entity.Id) ??
+        await Repository.GetByIdIncludeAllRelatedAsync(entity.Id) ??
         throw new EntityNotFoundException($"Category ID: {entity.Id} not found");
 
     private void EnsureNotDefaultCategory(Category entity)

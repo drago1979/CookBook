@@ -2,7 +2,7 @@
 
 namespace Khaoticen.CookBook.Api.Api.ResponseDtos.Category;
 
-public class CategoriesResponseDto: BaseEntitiesResponseDto
+public class CategoryInRelatedResponseDto : BaseEntityInRelatedResponseDto
 {
-    public required string Name { get; set; } 
+    public required string Name { get; set; }
 }

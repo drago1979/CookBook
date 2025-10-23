@@ -44,7 +44,7 @@ public class CategoriesController(CategoryService entityService, IMapper mapper)
     [HttpGet("{id:guid}", Name = "CategoryGet")]
     public async Task<ActionResult> GetAsync(Guid id)
     {
-        var entity = await entityService.GetAsync(id);
+        var entity = await entityService.GetWithRelatedAsync(id);
 
         if (entity == null)
         {

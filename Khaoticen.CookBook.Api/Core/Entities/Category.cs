@@ -9,11 +9,8 @@ namespace Khaoticen.CookBook.Api.Core.Entities;
 [Index(nameof(Name), IsUnique = true)]
 public class Category : BaseEntity
 {
-     [MaxLength(100)]
-     public required string Name { get; set; }
-     
-     public ICollection<Recipe> Recipes { get; } = [];
+    [MaxLength(100)]
+    public required string Name { get; set; }
+
+    public ICollection<Recipe> Recipes { get; set; } = [];
 }
-
-
-

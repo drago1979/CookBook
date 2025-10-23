@@ -62,10 +62,6 @@ public class RecipesController(RecipeService entityService, IMapper mapper) : Ap
     {
         var entity = await entityService.GetWithRelatedAsync(id);
 
-        var reviews = entity.Reviews;
-        
-        var categories = entity.Categories;
-
         if (entity == null)
         {
             return NotFound();
