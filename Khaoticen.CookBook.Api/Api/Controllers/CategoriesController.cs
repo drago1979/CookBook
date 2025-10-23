@@ -58,7 +58,7 @@ public class CategoriesController(CategoryService entityService, IMapper mapper)
     public async Task<ActionResult> PatchAsync(Guid id, [FromBody] CategoryUpdateRequestDto requestDto,
         bool returnUpdated = false)
     {
-        var entity = await entityService.GetAsync(id);
+        var entity = await entityService.GetWithRelatedAsync(id);
 
         if (entity == null)
         {

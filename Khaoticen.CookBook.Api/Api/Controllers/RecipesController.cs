@@ -74,7 +74,7 @@ public class RecipesController(RecipeService entityService, IMapper mapper) : Ap
     public async Task<ActionResult> PatchAsync(Guid id, [FromBody] RecipeUpdateRequestDto requestDto,
         bool returnUpdated = false)
     {
-        var entity = await entityService.GetAsync(id);
+        var entity = await entityService.GetWithRelatedAsync(id);
 
         if (entity == null)
         {

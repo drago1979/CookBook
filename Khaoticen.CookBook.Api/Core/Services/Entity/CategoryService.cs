@@ -47,6 +47,13 @@ public class CategoryService(
         return await Repository.GetByIdIncludeAllRelatedAsync(id);
     }
     
+    public override async Task<Category> UpdateAsync(CategoryUpdateDto dto, Category entity)
+    {
+        EnsureNotDefaultCategory(entity);
+
+        return await base.UpdateAsync(dto, entity);
+    }
+    
     public override async Task DeleteAsync(Category entity)
     {
         var defaultCategory = await GetDefaultCategoryOrThrowAsync();
@@ -84,7 +91,7 @@ public class CategoryService(
     private void EnsureNotDefaultCategory(Category entity)
     {
         if (entity.Id == CategoryConstants.DefaultCategoryId)
-            throw new ValueNotAllowedException($"{CategoryConstants.DefaultCategoryName} category cannot be deleted.");
+            throw new ValueNotAllowedException($"{CategoryConstants.DefaultCategoryName} category cannot be updated or deleted.");
     }
 
     private void ReassignRecipes(Category entity, Category defaultCategory)

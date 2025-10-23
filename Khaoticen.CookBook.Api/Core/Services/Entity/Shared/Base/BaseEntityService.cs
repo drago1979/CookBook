@@ -47,8 +47,6 @@ public abstract class BaseEntityService<
     {
         Mapper.Map(dto, entity);
 
-        Repository.Update(entity);
-
         await Db.SaveChangesAsync();
 
         return entity;
