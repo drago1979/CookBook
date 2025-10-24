@@ -4,14 +4,14 @@ using Khaoticen.CookBook.Api.Api.RequestDtos.Review;
 using Khaoticen.CookBook.Api.Api.ResponseDtos.Review;
 using Khaoticen.CookBook.Api.Core.Dtos.Entity.Review;
 using Khaoticen.CookBook.Api.Core.Entities;
-using Khaoticen.CookBook.Api.Core.Services.Entity;
+using Khaoticen.CookBook.Api.Core.Services.Entity.Shared.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Khaoticen.CookBook.Api.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class ReviewsController(ReviewService entityService, IMapper mapper) : AppControllerBase<
+public class ReviewsController(IReviewService entityService, IMapper mapper) : AppControllerBase<
     Review,
     ReviewResponseDto,
     ReviewsResponseDto

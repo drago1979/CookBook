@@ -6,6 +6,7 @@ using Khaoticen.CookBook.Api.Core.Exceptions;
 using Khaoticen.CookBook.Api.Core.Factories;
 using Khaoticen.CookBook.Api.Core.Repositories;
 using Khaoticen.CookBook.Api.Core.Services.Entity.Shared.Base;
+using Khaoticen.CookBook.Api.Core.Services.Entity.Shared.Interfaces;
 using Khaoticen.CookBook.Api.Infrastructure.Db;
 
 namespace Khaoticen.CookBook.Api.Core.Services.Entity;
@@ -24,7 +25,7 @@ public class RecipeService(
         RecipeFactory,
         RecipeCreateDto,
         RecipeUpdateDto
-    >(db, mapper, repository, factory)
+    >(db, mapper, repository, factory), IRecipeService
 {
     #region CRUD
 

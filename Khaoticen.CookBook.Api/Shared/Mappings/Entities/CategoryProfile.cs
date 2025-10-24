@@ -1,9 +1,8 @@
 ﻿using Khaoticen.CookBook.Api.Api.RequestDtos.Category;
 using Khaoticen.CookBook.Api.Api.ResponseDtos.Category;
-using Khaoticen.CookBook.Api.Api.ResponseDtos.Recipe;
 using Khaoticen.CookBook.Api.Core.Dtos.Entity.Category;
-using Khaoticen.CookBook.Api.Core.Entities;
 using Khaoticen.CookBook.Api.Shared.Mappings.Entities.Shared;
+using Khaoticen.CookBook.Api.Core.Entities;
 
 namespace Khaoticen.CookBook.Api.Shared.Mappings.Entities;
 
@@ -26,9 +25,5 @@ public class CategoryProfile : BaseEntityProfile<
         
         // Entity in relationship
         CreateMap<Category, CategoryInRelatedResponseDto>();
-        
-        // Related count
-        CreateMap<Category, int>()
-            .ConvertUsing(src => src.Recipes.Count);
     }
 }

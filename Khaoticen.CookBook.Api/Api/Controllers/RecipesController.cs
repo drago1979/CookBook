@@ -7,14 +7,14 @@ using Khaoticen.CookBook.Api.Api.ResponseDtos.Review;
 using Khaoticen.CookBook.Api.Core.Dtos.Entity.Recipe;
 using Khaoticen.CookBook.Api.Core.Dtos.Entity.Review;
 using Khaoticen.CookBook.Api.Core.Entities;
-using Khaoticen.CookBook.Api.Core.Services.Entity;
+using Khaoticen.CookBook.Api.Core.Services.Entity.Shared.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Khaoticen.CookBook.Api.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class RecipesController(RecipeService entityService, IMapper mapper) : AppControllerBase<
+public class RecipesController(IRecipeService entityService, IMapper mapper) : AppControllerBase<
     Recipe,
     RecipeResponseDto,
     RecipesResponseDto

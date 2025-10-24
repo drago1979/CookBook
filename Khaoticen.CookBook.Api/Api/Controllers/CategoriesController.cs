@@ -4,14 +4,14 @@ using Khaoticen.CookBook.Api.Api.RequestDtos.Category;
 using Khaoticen.CookBook.Api.Api.ResponseDtos.Category;
 using Khaoticen.CookBook.Api.Core.Dtos.Entity.Category;
 using Khaoticen.CookBook.Api.Core.Entities;
-using Khaoticen.CookBook.Api.Core.Services.Entity;
+using Khaoticen.CookBook.Api.Core.Services.Entity.Shared.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Khaoticen.CookBook.Api.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class CategoriesController(CategoryService entityService, IMapper mapper) : AppControllerBase<
+public class CategoriesController(ICategoryService entityService, IMapper mapper) : AppControllerBase<
     Category,
     CategoryResponseDto,
     CategoriesResponseDto

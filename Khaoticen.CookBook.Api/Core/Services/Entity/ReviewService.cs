@@ -4,6 +4,7 @@ using Khaoticen.CookBook.Api.Core.Entities;
 using Khaoticen.CookBook.Api.Core.Factories;
 using Khaoticen.CookBook.Api.Core.Repositories;
 using Khaoticen.CookBook.Api.Core.Services.Entity.Shared.Base;
+using Khaoticen.CookBook.Api.Core.Services.Entity.Shared.Interfaces;
 using Khaoticen.CookBook.Api.Infrastructure.Db;
 
 namespace Khaoticen.CookBook.Api.Core.Services.Entity;
@@ -20,7 +21,7 @@ public class ReviewService(
         ReviewFactory,
         ReviewCreateDto,
         ReviewUpdateDto
-    >(db, mapper, repository, factory)
+    >(db, mapper, repository, factory), IReviewService
 {
     #region CRUD
 

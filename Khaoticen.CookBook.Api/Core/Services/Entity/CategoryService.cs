@@ -5,6 +5,7 @@ using Khaoticen.CookBook.Api.Core.Exceptions;
 using Khaoticen.CookBook.Api.Core.Factories;
 using Khaoticen.CookBook.Api.Core.Repositories;
 using Khaoticen.CookBook.Api.Core.Services.Entity.Shared.Base;
+using Khaoticen.CookBook.Api.Core.Services.Entity.Shared.Interfaces;
 using Khaoticen.CookBook.Api.Infrastructure.Db;
 using Khaoticen.CookBook.Api.Shared.Constants;
 
@@ -22,7 +23,7 @@ public class CategoryService(
         CategoryFactory,
         CategoryCreateDto,
         CategoryUpdateDto
-    >(db, mapper, repository, factory)
+    >(db, mapper, repository, factory), ICategoryService
 {
     #region CRUD
 

@@ -1,0 +1,23 @@
+﻿using Khaoticen.CookBook.Api.Core.Dtos.Entity.Review;
+using Khaoticen.CookBook.Api.Core.Entities;
+
+namespace Khaoticen.CookBook.Api.Core.Services.Entity.Shared.Interfaces;
+
+public interface IReviewService
+{
+    #region BASE-SERVICE-implemented methods
+
+    public Task<List<Review>> GetAllAsync();
+
+    public Task<Review> UpdateAsync(ReviewUpdateDto dto, Review entity);
+
+    public Task<Review?> GetAsync(Guid id);
+    
+    public Task DeleteAsync(Review entity);
+
+    #endregion
+
+    public Task<Review?> GetWithRelatedAsync(Guid id);
+    public Task<List<Review>> GetAllWithDeletedAsync();
+
+}
