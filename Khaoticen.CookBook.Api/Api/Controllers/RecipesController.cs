@@ -14,10 +14,10 @@ namespace Khaoticen.CookBook.Api.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class RecipesController(IRecipeService entityService, IMapper mapper) : AppControllerBase<
+public class RecipesController(IRecipeService entityService, IMapper mapper) : BaseAppController<
     Recipe,
     RecipeResponseDto,
-    RecipesResponseDto
+    RecipeInListResponseDto
 >(mapper)
 {
     #region CRUD
@@ -56,7 +56,7 @@ public class RecipesController(IRecipeService entityService, IMapper mapper) : A
 
         return Ok(TransformEntitiesToResponse(entities));
     }
-    
+
     [HttpGet("{id:guid}", Name = "RecipeGet")]
     public async Task<ActionResult> GetAsync(Guid id)
     {
@@ -82,7 +82,7 @@ public class RecipesController(IRecipeService entityService, IMapper mapper) : A
         }
 
         var updateEntityDto = TransformToUpdateDto(requestDto);
-    
+
         await entityService.UpdateAsync(updateEntityDto, entity);
 
         if (returnUpdated)
@@ -113,7 +113,8 @@ public class RecipesController(IRecipeService entityService, IMapper mapper) : A
     #region RELATIONSHIPS
 
     [HttpPut("{id:guid}/categories", Name = "RecipeUpdateCategories")]
-    public async Task<ActionResult> UpdateCategoriesAsync(Guid id, [FromBody] RecipeCategoriesUpdateRequestDto requestDto,
+    public async Task<ActionResult> UpdateCategoriesAsync(Guid id,
+        [FromBody] RecipeCategoriesUpdateRequestDto requestDto,
         bool returnUpdated = false)
     {
         var entity = await entityService.GetAsync(id);

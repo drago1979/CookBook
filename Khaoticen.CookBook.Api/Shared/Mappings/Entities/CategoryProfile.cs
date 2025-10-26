@@ -13,7 +13,7 @@ public class CategoryProfile : BaseEntityProfile<
     CategoryCreateDto,
     CategoryUpdateDto,
     CategoryResponseDto,
-    CategoriesResponseDto
+    CategoryInListResponseDto
 >
 {
     public CategoryProfile()

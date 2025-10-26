@@ -2,7 +2,7 @@
 
 namespace Khaoticen.CookBook.Api.Api.ResponseDtos.Review;
 
-public class ReviewsResponseDto : BaseEntitiesResponseDto
+public class ReviewInListResponseDto : BaseEntityInListResponseDto
 {
     public required string Comment { get; init; }
     public required Guid RecipeId { get; init; }

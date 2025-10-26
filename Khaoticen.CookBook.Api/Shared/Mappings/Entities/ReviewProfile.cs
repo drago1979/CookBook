@@ -14,7 +14,7 @@ public class ReviewProfile : BaseEntityProfile<
     ReviewCreateDto,
     ReviewUpdateDto,
     ReviewResponseDto,
-    ReviewsResponseDto
+    ReviewInListResponseDto
 >
 {
     public ReviewProfile()

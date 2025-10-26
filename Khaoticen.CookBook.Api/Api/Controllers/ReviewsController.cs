@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Khaoticen.CookBook.Api.Api.Controllers.Shared.Base;
 using Khaoticen.CookBook.Api.Api.RequestDtos.Review;
+using Khaoticen.CookBook.Api.Api.ResponseDtos.Recipe;
 using Khaoticen.CookBook.Api.Api.ResponseDtos.Review;
 using Khaoticen.CookBook.Api.Core.Dtos.Entity.Review;
 using Khaoticen.CookBook.Api.Core.Entities;
@@ -11,10 +12,10 @@ namespace Khaoticen.CookBook.Api.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class ReviewsController(IReviewService entityService, IMapper mapper) : AppControllerBase<
+public class ReviewsController(IReviewService entityService, IMapper mapper) : BaseAppController<
     Review,
     ReviewResponseDto,
-    ReviewsResponseDto
+    ReviewInListResponseDto
 >(mapper)
 {
     #region CRUD
@@ -26,7 +27,7 @@ public class ReviewsController(IReviewService entityService, IMapper mapper) : A
 
         return Ok(TransformEntitiesToResponse(entities));
     }
-    
+
     [HttpGet("all", Name = "ReviewGetAllWithDeleted")]
     public async Task<ActionResult> GetAllWithDeletedAsync()
     {
@@ -34,7 +35,7 @@ public class ReviewsController(IReviewService entityService, IMapper mapper) : A
 
         return Ok(TransformEntitiesToResponse(entities));
     }
-    
+
     [HttpGet("{id:guid}", Name = "ReviewGet")]
     public async Task<ActionResult> GetAsync(Guid id)
     {
@@ -47,7 +48,7 @@ public class ReviewsController(IReviewService entityService, IMapper mapper) : A
 
         return Ok(TransformEntityToResponse(entity));
     }
-    
+
     [HttpPatch("{id:guid}", Name = "ReviewPatch")]
     public async Task<ActionResult> PatchAsync(Guid id, [FromBody] ReviewUpdateRequestDto requestDto,
         bool returnUpdated = false)
@@ -59,8 +60,8 @@ public class ReviewsController(IReviewService entityService, IMapper mapper) : A
             return NotFound();
         }
 
-        var updateEntityDto =  TransformToUpdateDto(requestDto);
-        
+        var updateEntityDto = TransformToUpdateDto(requestDto);
+
         await entityService.UpdateAsync(updateEntityDto, entity);
 
         if (returnUpdated)

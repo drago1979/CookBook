@@ -13,7 +13,7 @@ public class RecipeProfile : BaseEntityProfile<
     RecipeCreateDto,
     RecipeUpdateDto,
     RecipeResponseDto,
-    RecipesResponseDto
+    RecipeInListResponseDto
 >
 {
     public RecipeProfile()
