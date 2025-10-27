@@ -15,7 +15,9 @@ namespace Khaoticen.CookBook.Api.Api.Controllers;
 public class CategoriesController(ICategoryService entityService, IMapper mapper) : BaseAppController<
     Category,
     CategoryResponseDto,
-    CategoryInListResponseDto
+    CategoryInListResponseDto,
+    CategoriesPaginatedResponseDto<CategoryInListResponseDto>,
+    CategoriesAllRequest
 >(mapper)
 {
     #region CRUD
@@ -34,33 +36,13 @@ public class CategoriesController(ICategoryService entityService, IMapper mapper
         );
     }
 
-    [HttpGet(Name = "CategoryGetAll")]
+    [HttpGet(Name = "CategoryGetAll")] // todo!! : remove
     public async Task<ActionResult> GetAllAsync()
     {
         var entities = await entityService.GetAllAsync();
 
         return Ok(TransformEntitiesToResponse(entities));
     }
-
-    protected CategoriesPaginatedResponseDto<CategoryInListResponseDto> TransformToPaginated(
-        CategoriesAllRequest request,
-        List<Category> items,
-        int total
-    )
-    {
-        var itemsDto = TransformEntitiesToResponse(items);
-    
-        var response = new CategoriesPaginatedResponseDto<CategoryInListResponseDto>
-        {
-            Items = itemsDto,
-            Page = request.Page,
-            PageSize = request.PageSize,
-            TotalCount = total
-        };
-    
-        return response;
-    }
-
 
     [HttpGet("paginated", Name = "CategoryGetAllPaginated")]
     public async Task<ActionResult> GetAllPaginatedAsync([FromQuery] CategoriesAllRequest request)

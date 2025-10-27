@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Khaoticen.CookBook.Api.Api.RequestDtos.Recipe;
 using Khaoticen.CookBook.Api.Core.Dtos.Entity.Recipe;
 using Khaoticen.CookBook.Api.Core.Dtos.Entity.Review;
 using Khaoticen.CookBook.Api.Core.Entities;
@@ -48,10 +49,13 @@ public class RecipeService(
         return entity;
     }
 
-    public async Task<List<Recipe>> GetAllWithDeletedAsync()
+    public async Task<List<Recipe>> GetAllWithDeletedAsync() // todo!!!: zameniti-dodati
     {
         return await Repository.GetAllWithDeletedAsync();
     }
+    
+    public Task<(List<Recipe> Items, int TotalCount)> GetWithCountAsync(RecipesAllRequest request)
+        => base.GetWithCountAsync(request);
     
     public async Task<Recipe?> GetWithRelatedAsync(Guid id)
     {

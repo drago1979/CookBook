@@ -47,6 +47,9 @@ public class CategoryService(
 
         return entity;
     }
+    
+    public Task<(List<Category> Items, int TotalCount)> GetWithCountAsync(CategoriesAllRequest request)
+        => base.GetWithCountAsync(request);
 
     public async Task<Category?> GetWithRelatedAsync(Guid id)
     {
@@ -118,48 +121,4 @@ public class CategoryService(
     }
 
     #endregion
-
-    // public async Task<PaginatedResult<CategoryResponseDto>> GetPaginatedAsync(CategoriesAllRequest request)
-    // {
-    //     var (items, total) = await Repository.GetAllPaginatedAsync(
-    //         request.Page,
-    //         request.PageSize,
-    //         request.SortBy,
-    //         request.SortDirection,
-    //         request.SearchColumn,
-    //         request.SearchValue
-    //     );
-    //
-    //     return new PaginatedResult<CategoryResponseDto>
-    //     {
-    //         Items = Mapper.Map<List<CategoryResponseDto>>(items),
-    //         Page = request.Page,
-    //         PageSize = request.PageSize,
-    //         TotalCount = total
-    //     };
-    // }
-    
-    // public async Task<BasePaginatedResponse<Category>> GetWithCountAsync(CategoriesAllRequest request)
-    public async Task<(List<Category> Items, int TotalCount)> GetWithCountAsync(CategoriesAllRequest request)
-    {
-        var (items, total) = await Repository.GetAllPaginatedAsync(
-            request.Page,
-            request.PageSize,
-            request.SortBy,
-            request.SortDirection,
-            request.SearchColumn,
-            request.SearchValue
-        );
-
-        return (items, total);
-        
-        // return new BasePaginatedResponse<Category> // todo:!!! good location?
-        // {
-        //     Items = items,
-        //     Page = request.Page,
-        //     PageSize = request.PageSize,
-        //     TotalCount = total
-        // };
-    }
-
 }

@@ -1,4 +1,5 @@
-﻿using Khaoticen.CookBook.Api.Core.Dtos.Entity.Review;
+﻿using Khaoticen.CookBook.Api.Api.RequestDtos.Review;
+using Khaoticen.CookBook.Api.Core.Dtos.Entity.Review;
 using Khaoticen.CookBook.Api.Core.Entities;
 
 namespace Khaoticen.CookBook.Api.Core.Services.Entity.Shared.Interfaces;
@@ -20,4 +21,5 @@ public interface IReviewService
     public Task<Review?> GetWithRelatedAsync(Guid id);
     public Task<List<Review>> GetAllWithDeletedAsync();
 
+    public Task<(List<Review> Items, int TotalCount)> GetWithCountAsync(ReviewsAllRequest request);
 }

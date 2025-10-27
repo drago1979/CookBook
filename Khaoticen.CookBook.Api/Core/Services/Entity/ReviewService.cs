@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using System.Reflection;
+using AutoMapper;
+using Khaoticen.CookBook.Api.Api.RequestDtos.Review;
 using Khaoticen.CookBook.Api.Core.Dtos.Entity.Review;
 using Khaoticen.CookBook.Api.Core.Entities;
 using Khaoticen.CookBook.Api.Core.Factories;
@@ -32,6 +34,9 @@ public class ReviewService(
     
     public async Task<List<Review>> GetAllWithDeletedAsync() =>
         await Repository.GetAllWithDeletedAsync();
+    
+    public Task<(List<Review> Items, int TotalCount)> GetWithCountAsync(ReviewsAllRequest request)
+        => base.GetWithCountAsync(request);
 
     #endregion
 }

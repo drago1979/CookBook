@@ -15,7 +15,9 @@ namespace Khaoticen.CookBook.Api.Api.Controllers;
 public class ReviewsController(IReviewService entityService, IMapper mapper) : BaseAppController<
     Review,
     ReviewResponseDto,
-    ReviewInListResponseDto
+    ReviewInListResponseDto,
+    ReviewsPaginatedResponseDto<ReviewInListResponseDto>,
+    ReviewsAllRequest
 >(mapper)
 {
     #region CRUD
@@ -28,6 +30,14 @@ public class ReviewsController(IReviewService entityService, IMapper mapper) : B
         return Ok(TransformEntitiesToResponse(entities));
     }
 
+    [HttpGet("paginated", Name = "ReviewGetAllPaginated")]
+    public async Task<ActionResult> GetAllPaginatedAsync([FromQuery] ReviewsAllRequest request)
+    {
+        var (items, total) = await entityService.GetWithCountAsync(request);
+        
+        return Ok(TransformToPaginated(request, items, total));
+    }
+    
     [HttpGet("all", Name = "ReviewGetAllWithDeleted")]
     public async Task<ActionResult> GetAllWithDeletedAsync()
     {

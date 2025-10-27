@@ -23,10 +23,12 @@ public class AllowedValuesFromMetadataAttribute: ValidationAttribute
         if (member == null) 
             return new ValidationResult($"Metadata '{_fieldOrPropName}' not found on {_metadataType.Name}");
 
+        var target = Activator.CreateInstance(_metadataType);
+
         var dict = member switch
         {
-            FieldInfo fi => fi.GetValue(null),
-            PropertyInfo pi => pi.GetValue(null),
+            FieldInfo fi => fi.GetValue(null),        // static fields still work
+            PropertyInfo pi => pi.GetValue(target),   // instance properties need target
             _ => null
         } as IDictionary;
 

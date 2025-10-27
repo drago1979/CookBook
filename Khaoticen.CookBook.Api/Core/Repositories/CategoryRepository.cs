@@ -6,11 +6,13 @@ using Khaoticen.CookBook.Api.Core.Repositories.Shared;
 using Khaoticen.CookBook.Api.Infrastructure.Db;
 using Khaoticen.CookBook.Api.Shared.Query;
 using Khaoticen.CookBook.Api.Shared.Query.Metadata;
+using Khaoticen.CookBook.Api.Shared.Query.Metadata.Shared.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace Khaoticen.CookBook.Api.Core.Repositories;
 
-public class CategoryRepository(AppDbContext db) : BaseRepository<Category>(db)
+public class CategoryRepository(AppDbContext db, ICategoryQueryMetadata metadata) : 
+    BaseRepository<Category>(db, metadata)
 {
     public async Task<Category?> GetByNameAsync(string name) 
         => await Table.FirstOrDefaultAsync(c => c.Name == name);
@@ -45,69 +47,69 @@ public class CategoryRepository(AppDbContext db) : BaseRepository<Category>(db)
             .ToListAsync();
     }
     
- // todo!!! : cleaner ?
-    // public async Task<(List<Category> Items, int TotalCount)> GetAllPaginatedAsync(CategoriesAllRequest request)
+ // // todo!!! : cleaner ?
+ //    // public async Task<(List<Category> Items, int TotalCount)> GetAllPaginatedAsync(CategoriesAllRequest request)
+ //    // {
+ //    public async Task<(List<Category> Items, int TotalCount)> GetAllPaginatedAsync(
+ //        int page = QueryConstants.InitPageNumber,
+ //        int pageSize = QueryConstants.MaxPageSize,
+ //        string sortBy = QueryConstants.DefaultSortBy,
+ //        SortDirection sortDirection = SortDirection.Asc,
+ //        string? searchColumn = null,
+ //        string? searchValue = null
+ //        )
+ //    {
+ //        var query = Table.AsQueryable();
+ //
+ //        if (!string.IsNullOrWhiteSpace(searchColumn) && !string.IsNullOrWhiteSpace(searchValue))
+ //            query = ApplyFiltering(query, searchColumn, searchValue);
+ //
+ //
+ //        query = ApplySorting(query, sortBy, sortDirection);
+ //
+ //        var totalCount = await query.CountAsync();
+ //
+ //        var items = await query
+ //            .Skip((page - 1) * pageSize)
+ //            .Take(pageSize)
+ //            .ToListAsync();
+ //
+ //        return (items, totalCount);
+ //    }
+    
+    // protected IQueryable<Category> ApplyFiltering(
+    //     IQueryable<Category> query,
+    //     string searchColumn,
+    //     string searchValue)
     // {
-    public async Task<(List<Category> Items, int TotalCount)> GetAllPaginatedAsync(
-        int page = QueryConstants.InitPageNumber,
-        int pageSize = QueryConstants.MaxPageSize,
-        string sortBy = QueryConstants.DefaultSortBy,
-        SortDirection sortDirection = SortDirection.Asc,
-        string? searchColumn = null,
-        string? searchValue = null
-        )
-    {
-        var query = Table.AsQueryable();
-
-        if (!string.IsNullOrWhiteSpace(searchColumn) && !string.IsNullOrWhiteSpace(searchValue))
-            query = ApplyFiltering(query, searchColumn, searchValue);
-
-
-        query = ApplySorting(query, sortBy, sortDirection);
-
-        var totalCount = await query.CountAsync();
-
-        var items = await query
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .ToListAsync();
-
-        return (items, totalCount);
-    }
-    
-    private IQueryable<Category> ApplyFiltering(
-        IQueryable<Category> query,
-        string searchColumn,
-        string searchValue)
-    {
-        if (!CategoryQueryMetadata.Filters.TryGetValue(searchColumn, out var propertyExpr))
-            throw new ArgumentException($"Unknown search column '{searchColumn}'");
-
-        var parameter = propertyExpr.Parameters[0]; // Category c
-        var propertyAccess = propertyExpr.Body;    // c.Name or c.Description
-
-        // EF.Functions.Like(c.Prop, "%value%")
-        var likeMethod = typeof(DbFunctionsExtensions).GetMethod(
-            nameof(DbFunctionsExtensions.Like),
-            new[] { typeof(DbFunctions), typeof(string), typeof(string) })!;
-
-        var efFunctions = Expression.Property(null, typeof(EF), nameof(EF.Functions));
-        var pattern = Expression.Constant($"%{searchValue.Trim()}%");
-
-        var likeCall = Expression.Call(likeMethod, efFunctions, propertyAccess, pattern);
-
-        var lambda = Expression.Lambda<Func<Category, bool>>(likeCall, parameter);
-
-        return query.Where(lambda);
-    }
-
-    
-    private IQueryable<Category> ApplySorting(IQueryable<Category> query, string sortBy, SortDirection sortDirection)
-    {
-        var sortExpr = CategoryQueryMetadata.Sorts[sortBy];
-
-        return sortDirection == SortDirection.Asc
-            ? query.OrderBy(sortExpr)
-            : query.OrderByDescending(sortExpr);
-    }   
+    //     if (!CategoryQueryMetadata.Filters.TryGetValue(searchColumn, out var propertyExpr))
+    //         throw new ArgumentException($"Unknown search column '{searchColumn}'");
+    //
+    //     var parameter = propertyExpr.Parameters[0]; // Category c
+    //     var propertyAccess = propertyExpr.Body;    // c.Name or c.Description
+    //
+    //     // EF.Functions.Like(c.Prop, "%value%")
+    //     var likeMethod = typeof(DbFunctionsExtensions).GetMethod(
+    //         nameof(DbFunctionsExtensions.Like),
+    //         new[] { typeof(DbFunctions), typeof(string), typeof(string) })!;
+    //
+    //     var efFunctions = Expression.Property(null, typeof(EF), nameof(EF.Functions));
+    //     var pattern = Expression.Constant($"%{searchValue.Trim()}%");
+    //
+    //     var likeCall = Expression.Call(likeMethod, efFunctions, propertyAccess, pattern);
+    //
+    //     var lambda = Expression.Lambda<Func<Category, bool>>(likeCall, parameter);
+    //
+    //     return query.Where(lambda);
+    // }
+    //
+    //
+    // protected IQueryable<Category> ApplySorting(IQueryable<Category> query, string sortBy, SortDirection sortDirection)
+    // {
+    //     var sortExpr = CategoryQueryMetadata.Sorts[sortBy];
+    //
+    //     return sortDirection == SortDirection.Asc
+    //         ? query.OrderBy(sortExpr)
+    //         : query.OrderByDescending(sortExpr);
+    // }   
 }

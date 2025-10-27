@@ -49,6 +49,11 @@ builder.Services.Scan(scan => scan
     .AddClasses(classes => classes.Where(c => c.Name.EndsWith("Repository")))
     .AsSelfWithInterfaces()
     .WithScopedLifetime()
+
+    // Metadata
+    .AddClasses(classes => classes.Where(c => c.Name.EndsWith("Metadata")))
+    .AsSelfWithInterfaces()
+    .WithScopedLifetime()
 );
 #endregion
 

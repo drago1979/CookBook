@@ -5,21 +5,43 @@ using Khaoticen.CookBook.Api.Shared.Query.Metadata;
 
 namespace Khaoticen.CookBook.Api.Api.RequestDtos.Shared.Base;
 
+/// <summary>
+///     A) SORTING:
+///     Simply extend this class.
+///
+///     B) DEFAULT-SORTING:
+///     Must add the sorting-column-name to specific EntityQueryMetadataClass (eg. CategoryQueryMetadata)
+/// 
+///     C) FILTERING
+///
+///         1 - In EntityQueryMetadataClass:
+///             * Add the field.
+///             * If you want validation too, do the "2"
+/// 
+///         2 - on child classes, add:
+///
+///         [AllowedValuesFromMetadata(typeof(CategoryQueryMetadata), nameof(CategoryQueryMetadata.Filters))]
+///         [DependsOn(nameof(SearchValue))]
+///         public string? SearchColumn { get; set; }
+/// 
+///         [DependsOn(nameof(SearchColumn))]
+///         public string? SearchValue { get; set; }
+///
+/// </summary>
 public abstract class BasePaginatedSortedRequest
 {
     protected const int MaxPageSize = QueryConstants.MaxPageSize;
-    protected const int InitPageNumber = QueryConstants.InitPageNumber;
-    protected const string DefaultSortBy = QueryConstants.DefaultSortBy;
+    private const int InitPageNumber = QueryConstants.InitPageNumber;
+    private const string DefaultSortBy = QueryConstants.DefaultSortBy;
 
 
     [Range(1, int.MaxValue)]
-    public int Page { get; set; } = InitPageNumber;
+    public virtual int Page { get; set; } = InitPageNumber;
 
     [Range(1, MaxPageSize)]
-    public int PageSize { get; set; } = MaxPageSize;
-    
+    public virtual int PageSize { get; set; } = MaxPageSize;
 
     [AllowedValuesFromMetadata(typeof(CategoryQueryMetadata), nameof(CategoryQueryMetadata.Sorts))]
-    public string SortBy { get; set; } = DefaultSortBy;
-    public SortDirection SortDirection { get; set; } = SortDirection.Asc;
+    public virtual string SortBy { get; set; } = DefaultSortBy;
+    public virtual SortDirection SortDirection { get; set; } = SortDirection.Asc;
 }

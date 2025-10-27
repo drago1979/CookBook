@@ -17,7 +17,9 @@ namespace Khaoticen.CookBook.Api.Api.Controllers;
 public class RecipesController(IRecipeService entityService, IMapper mapper) : BaseAppController<
     Recipe,
     RecipeResponseDto,
-    RecipeInListResponseDto
+    RecipeInListResponseDto,
+    RecipesPaginatedResponseDto<RecipeInListResponseDto>,
+    RecipesAllRequest
 >(mapper)
 {
     #region CRUD
@@ -47,6 +49,14 @@ public class RecipesController(IRecipeService entityService, IMapper mapper) : B
         var entities = await entityService.GetAllAsync();
 
         return Ok(TransformEntitiesToResponse(entities));
+    }
+    
+    [HttpGet("paginated", Name = "RecipeGetAllPaginated")]
+    public async Task<ActionResult> GetAllPaginatedAsync([FromQuery] RecipesAllRequest request)
+    {
+        var (items, total) = await entityService.GetWithCountAsync(request);
+    
+        return Ok(TransformToPaginated(request, items, total));
     }
 
     [HttpGet("all", Name = "RecipeGetAllWithDeleted")]

@@ -1,4 +1,5 @@
-﻿using Khaoticen.CookBook.Api.Core.Dtos.Entity.Recipe;
+﻿using Khaoticen.CookBook.Api.Api.RequestDtos.Recipe;
+using Khaoticen.CookBook.Api.Core.Dtos.Entity.Recipe;
 using Khaoticen.CookBook.Api.Core.Dtos.Entity.Review;
 using Khaoticen.CookBook.Api.Core.Entities;
 
@@ -17,6 +18,7 @@ public interface IRecipeService
     #endregion
 
     public Task<Recipe> CreateAndSaveAsync(RecipeCreateDto dto);
+    public Task<(List<Recipe> Items, int TotalCount)> GetWithCountAsync(RecipesAllRequest request);
     public Task<List<Recipe>> GetAllWithDeletedAsync();
     public Task<Recipe?> GetWithRelatedAsync(Guid id);
 
