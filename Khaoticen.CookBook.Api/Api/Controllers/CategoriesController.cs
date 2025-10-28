@@ -5,6 +5,7 @@ using Khaoticen.CookBook.Api.Api.RequestDtos.Category;
 using Khaoticen.CookBook.Api.Api.ResponseDtos.Category;
 using Khaoticen.CookBook.Api.Core.Dtos.Entity.Category;
 using Khaoticen.CookBook.Api.Core.Entities;
+using Khaoticen.CookBook.Api.Core.Exceptions;
 using Khaoticen.CookBook.Api.Core.Services.Entity.Shared.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,7 +41,7 @@ public class CategoriesController(ICategoryService entityService, IMapper mapper
     public async Task<ActionResult> GetAllAsync([FromQuery] CategoriesAllRequest request)
     {
         var (items, total) = await entityService.GetWithCountAsync(request);
-
+    
         return Ok(TransformToPaginated(request, items, total));
     }
 
@@ -63,10 +64,10 @@ public class CategoriesController(ICategoryService entityService, IMapper mapper
     {
         var entity = await entityService.GetWithRelatedAsync(id);
 
-        if (entity == null)
-        {
-            return NotFound();
-        }
+        if (entity is null) throw new EntityNotFoundException("Category not found.");
+        // {
+        //     return NotFound();
+        // }
 
         var updateEntityDto = TransformToUpdateDto(requestDto);
 

@@ -38,7 +38,7 @@ public class RecipeService(
 
         var entity = Factory.Create(dto);
 
-        await SyncRecipeCategories(entity, idsToAdd); // todo: async?
+        await SyncRecipeCategories(entity, idsToAdd);
 
         Repository.Add(entity);
 
@@ -49,22 +49,13 @@ public class RecipeService(
         return entity;
     }
 
-    public async Task<(List<Recipe> Items, int TotalCount)> GetWithCountAsync(RecipesAllRequest request)
+    public async Task<(List<Recipe> Items, int TotalCount)> GetWithCountAsync(RecipesAllRequest request,
+        bool withDeleted = false)
     {
         if (request.CategoryId is { } categoryId) await EnsureCategoryExistsAsync(categoryId);
-
-        var (items, total) = await Repository.GetAllPaginatedAsync(request);
-
-        return (items, total);
-    }
-
-    public async Task<(List<Recipe> Items, int TotalCount)> GetWithDeletedAndCountAsync(RecipesAllRequest request)
-    {
-        if (request.CategoryId is { } categoryId) await EnsureCategoryExistsAsync(categoryId);
-
-
-        var (items, total) = await Repository.GetAllWithDeletedPaginatedAsync(request);
-
+        
+        var (items, total) = await Repository.GetAllPaginatedAsync(request, withDeleted);
+        
         return (items, total);
     }
 

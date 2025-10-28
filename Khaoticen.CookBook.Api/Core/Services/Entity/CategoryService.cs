@@ -48,8 +48,11 @@ public class CategoryService(
         return entity;
     }
     
-    public Task<(List<Category> Items, int TotalCount)> GetWithCountAsync(CategoriesAllRequest request)
-        => base.GetWithCountAsync(request);
+    public async Task<(List<Category> Items, int TotalCount)> GetWithCountAsync(CategoriesAllRequest request)
+    { 
+        return await Repository.GetAllPaginatedAsync(request);
+    }
+    
 
     public async Task<Category?> GetWithRelatedAsync(Guid id)
     {

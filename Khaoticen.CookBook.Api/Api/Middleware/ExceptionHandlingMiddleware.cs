@@ -37,6 +37,8 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, ILogger<Exception
         var statusCode = ex switch
         {
             ValueNotAllowedException => 409,
+            EntityNotFoundException => 404,
+            InvalidRecipeException => 422,
             _ => 400
         };
         

@@ -8,8 +8,6 @@ public interface IReviewService
 {
     #region BASE-SERVICE-implemented methods
 
-    public Task<List<Review>> GetAllAsync();
-
     public Task<Review> UpdateAsync(ReviewUpdateDto dto, Review entity);
 
     public Task<Review?> GetAsync(Guid id);

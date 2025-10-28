@@ -54,7 +54,7 @@ public class RecipesController(IRecipeService entityService, IMapper mapper) : B
     [HttpGet("all", Name = "RecipeGetAllWithDeleted")]
     public async Task<ActionResult> GetAllWithDeletedAsync([FromQuery] RecipesAllRequest request)
     {
-        var (items, total) = await entityService.GetWithDeletedAndCountAsync(request);
+        var (items, total) = await entityService.GetWithCountAsync(request, true);
         
         return Ok(TransformToPaginated(request, items, total));
     }

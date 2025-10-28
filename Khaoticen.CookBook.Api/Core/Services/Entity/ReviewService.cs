@@ -31,12 +31,17 @@ public class ReviewService(
     {
         return await Repository.GetByIdIncludeAllRelatedAsync(id);
     }
-    
+
     public async Task<List<Review>> GetAllWithDeletedAsync() =>
         await Repository.GetAllWithDeletedAsync();
-    
-    public Task<(List<Review> Items, int TotalCount)> GetWithCountAsync(ReviewsAllRequest request)
-        => base.GetWithCountAsync(request);
+
+    // public Task<(List<Review> Items, int TotalCount)> GetWithCountAsync(ReviewsAllRequest request)
+    //     => base.GetWithCountAsync(request);
+
+    public async Task<(List<Review> Items, int TotalCount)> GetWithCountAsync(ReviewsAllRequest request)
+    {
+        return await Repository.GetAllPaginatedAsync(request);
+    }
 
     #endregion
 }

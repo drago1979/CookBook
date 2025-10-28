@@ -9,7 +9,3 @@ public interface IEntityQueryMetadata<TEntity>
     IReadOnlyDictionary<string, Expression<Func<TEntity, object>>> Sorts { get; }
     IReadOnlyDictionary<string, Expression<Func<TEntity, string>>>? Filters { get; }
 }
-
-// todo: note-for-self: diff compared to prev
-// public static abstract IReadOnlyDictionary<string, Expression<Func<TEntity, object>>> Sorts { get; } 
-// static virtual IReadOnlyDictionary<string, Expression<Func<TEntity, object>>>? Filters => null;

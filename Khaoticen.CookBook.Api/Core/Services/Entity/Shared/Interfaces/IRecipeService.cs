@@ -8,8 +8,7 @@ namespace Khaoticen.CookBook.Api.Core.Services.Entity.Shared.Interfaces;
 public interface IRecipeService
 {
     #region BASE-SERVICE-implemented methods
-
-    public Task<List<Recipe>> GetAllAsync();
+    
     public Task<Recipe?> GetAsync(Guid id);
     public Task<Recipe> UpdateAsync(RecipeUpdateDto dto, Recipe entity);
 
@@ -19,9 +18,7 @@ public interface IRecipeService
 
     public Task<Recipe> CreateAndSaveAsync(RecipeCreateDto dto);
     
-    public Task<(List<Recipe> Items, int TotalCount)> GetWithCountAsync(RecipesAllRequest request);
-    
-    public Task<(List<Recipe> Items, int TotalCount)> GetWithDeletedAndCountAsync(RecipesAllRequest request);
+    public Task<(List<Recipe> Items, int TotalCount)> GetWithCountAsync(RecipesAllRequest request, bool withDeleted = false);
     
     public Task<Recipe?> GetWithRelatedAsync(Guid id);
 

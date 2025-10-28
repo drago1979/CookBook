@@ -12,8 +12,6 @@ public interface ICategoryService
 {
     #region BASE-SERVICE-implemented methods
 
-    public Task<List<Category>> GetAllAsync();
-
     public Task<Category> UpdateAsync(CategoryUpdateDto dto, Category entity);
 
     public Task<Category?> GetAsync(Guid id);
