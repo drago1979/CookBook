@@ -49,14 +49,25 @@ public class RecipeService(
         return entity;
     }
 
-    public async Task<List<Recipe>> GetAllWithDeletedAsync() // todo!!!: zameniti-dodati
+    public async Task<(List<Recipe> Items, int TotalCount)> GetWithCountAsync(RecipesAllRequest request)
     {
-        return await Repository.GetAllWithDeletedAsync();
+        if (request.CategoryId is { } categoryId) await EnsureCategoryExistsAsync(categoryId);
+
+        var (items, total) = await Repository.GetAllPaginatedAsync(request);
+
+        return (items, total);
     }
-    
-    public Task<(List<Recipe> Items, int TotalCount)> GetWithCountAsync(RecipesAllRequest request)
-        => base.GetWithCountAsync(request);
-    
+
+    public async Task<(List<Recipe> Items, int TotalCount)> GetWithDeletedAndCountAsync(RecipesAllRequest request)
+    {
+        if (request.CategoryId is { } categoryId) await EnsureCategoryExistsAsync(categoryId);
+
+
+        var (items, total) = await Repository.GetAllWithDeletedPaginatedAsync(request);
+
+        return (items, total);
+    }
+
     public async Task<Recipe?> GetWithRelatedAsync(Guid id)
     {
         return await Repository.GetByIdIncludeAllRelatedAsync(id);
@@ -65,7 +76,7 @@ public class RecipeService(
     public override async Task DeleteAsync(Recipe entity)
     {
         await Repository.GetByIdIncludeAllRelatedAsync(entity.Id);
-        
+
         entity.SoftDelete();
 
         Repository.Update(entity);
@@ -115,6 +126,12 @@ public class RecipeService(
 
         var ids = string.Join(", ", nonExisting);
         throw new ValueNotAllowedException($"Following categories do not exist: {ids}");
+    }
+
+    private async Task EnsureCategoryExistsAsync(Guid categoryId)
+    {
+        if (await categoryRepository.GetByIdAsync(categoryId) is null)
+            throw new EntityNotFoundException($"Category ID: {categoryId} not found");
     }
 
     #endregion

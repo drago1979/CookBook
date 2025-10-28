@@ -36,16 +36,8 @@ public class CategoriesController(ICategoryService entityService, IMapper mapper
         );
     }
 
-    [HttpGet(Name = "CategoryGetAll")] // todo!! : remove
-    public async Task<ActionResult> GetAllAsync()
-    {
-        var entities = await entityService.GetAllAsync();
-
-        return Ok(TransformEntitiesToResponse(entities));
-    }
-
-    [HttpGet("paginated", Name = "CategoryGetAllPaginated")]
-    public async Task<ActionResult> GetAllPaginatedAsync([FromQuery] CategoriesAllRequest request)
+    [HttpGet(Name = "CategoryGetAll")]
+    public async Task<ActionResult> GetAllAsync([FromQuery] CategoriesAllRequest request)
     {
         var (items, total) = await entityService.GetWithCountAsync(request);
 
@@ -105,6 +97,18 @@ public class CategoriesController(ICategoryService entityService, IMapper mapper
 
     #endregion
 
+    #region OTHER
+
+    [HttpGet("check-name", Name = "CategoryCheckName")]
+    public async Task<ActionResult> CheckNameAsync(string name)
+    {
+        var entity = await entityService.GetByNameAsync(name);
+
+        return Ok(entity != null);
+    }
+
+    #endregion
+
 
     #region HELPERS
 
@@ -113,18 +117,6 @@ public class CategoriesController(ICategoryService entityService, IMapper mapper
 
     private CategoryUpdateDto TransformToUpdateDto(CategoryUpdateRequestDto requestDto) =>
         Mapper.Map<CategoryUpdateDto>(requestDto);
-
-    #endregion
-
-    #region OTHER
-
-    [HttpGet("/check-name", Name = "CategoryCheckName")]
-    public async Task<ActionResult> CheckNameAsync(string name)
-    {
-        var entity = await entityService.GetByNameAsync(name);
-
-        return Ok(entity != null);
-    }
 
     #endregion
 }

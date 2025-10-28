@@ -9,6 +9,9 @@ public class RecipesAllRequest : BasePaginatedSortedRequest
 {
     [Range(1, MaxPageSize)]
     public override int PageSize { get; set; } = 10;
+    
+    [AllowedValuesFromMetadata(typeof(RecipeQueryMetadata), nameof(RecipeQueryMetadata.Sorts))]
+    public override string SortBy { get; set; } = DefaultSortBy;
 
     [AllowedValuesFromMetadata(typeof(RecipeQueryMetadata), nameof(RecipeQueryMetadata.Filters))]
     [DependsOn(nameof(SearchValue))]
@@ -16,4 +19,9 @@ public class RecipesAllRequest : BasePaginatedSortedRequest
 
     [DependsOn(nameof(SearchColumn))]
     public string? SearchValue { get; set; }
+
+    // [Required]
+    // [StringGuid]
+    // public required string? CategoryId { get; set; } // todo!!!: check why was string
+    public required Guid? CategoryId { get; set; }
 }

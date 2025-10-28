@@ -37,12 +37,12 @@ public abstract class BaseEntityService<
 
     #region CRUD
 
-    public virtual async Task<List<TEntity>> GetAllAsync()
+    public virtual async Task<List<TEntity>> GetAllAsync() // todo!! remove?
     {
         return await Repository.GetAllAsync();
     }
 
-    private static string? TryGetOptionalStringProperty(object request, string propName)
+    private static string? TryGetOptionalStringProperty(object request, string propName) // todo!!! remove?
     {
         if (request == null) return null;
 
@@ -52,8 +52,9 @@ public abstract class BaseEntityService<
         return pi == null ? null : pi.GetValue(request) as string;
     }
 
-    // The base implementation that derived services will call (Option B)
-    public virtual async Task<(List<TEntity> Items, int TotalCount)> GetWithCountAsync<TRequest>(TRequest request)
+
+    public (int page, int pageSize, string sortBy, SortDirection sortDirection, string? searchColumn, string?
+        searchValue) GetPaginationParams<TRequest>(TRequest request) // todo!!! remove?
         where TRequest : BasePaginatedSortedRequest
     {
         if (request == null) throw new ArgumentNullException(nameof(request));
@@ -75,7 +76,17 @@ public abstract class BaseEntityService<
             searchColumn = null;
             searchValue = null;
         }
-
+        
+        return (page, pageSize, sortBy, sortDirection, searchColumn, searchValue);
+    }
+    
+    
+    // The base implementation that derived services will call (Option B)
+    public virtual async Task<(List<TEntity> Items, int TotalCount)> GetWithCountAsync<TRequest>(TRequest request)
+        where TRequest : BasePaginatedSortedRequest
+    {
+        var (page, pageSize, sortBy, sortDirection, searchColumn, searchValue) = GetPaginationParams(request);
+        
         var (items, total) = await Repository.GetAllPaginatedAsync(
             page,
             pageSize,
@@ -84,6 +95,7 @@ public abstract class BaseEntityService<
             searchColumn,
             searchValue
         );
+        
 
         return (items, total);
     }

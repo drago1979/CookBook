@@ -44,27 +44,19 @@ public class RecipesController(IRecipeService entityService, IMapper mapper) : B
     }
 
     [HttpGet(Name = "RecipeGetAll")]
-    public async Task<ActionResult> GetAllAsync()
-    {
-        var entities = await entityService.GetAllAsync();
-
-        return Ok(TransformEntitiesToResponse(entities));
-    }
-    
-    [HttpGet("paginated", Name = "RecipeGetAllPaginated")]
-    public async Task<ActionResult> GetAllPaginatedAsync([FromQuery] RecipesAllRequest request)
+    public async Task<ActionResult> GetAllAsync([FromQuery] RecipesAllRequest request)
     {
         var (items, total) = await entityService.GetWithCountAsync(request);
-    
+
         return Ok(TransformToPaginated(request, items, total));
     }
-
+    
     [HttpGet("all", Name = "RecipeGetAllWithDeleted")]
-    public async Task<ActionResult> GetAllWithDeletedAsync()
+    public async Task<ActionResult> GetAllWithDeletedAsync([FromQuery] RecipesAllRequest request)
     {
-        var entities = await entityService.GetAllWithDeletedAsync();
-
-        return Ok(TransformEntitiesToResponse(entities));
+        var (items, total) = await entityService.GetWithDeletedAndCountAsync(request);
+        
+        return Ok(TransformToPaginated(request, items, total));
     }
 
     [HttpGet("{id:guid}", Name = "RecipeGet")]
@@ -166,6 +158,19 @@ public class RecipesController(IRecipeService entityService, IMapper mapper) : B
             routeValues: new { id = review.Id },
             value: Transform(review)
         );
+    }
+
+    [HttpGet("{id:guid}/reviews", Name = "RecipeGetReviews")]
+    public async Task<ActionResult> GetReviewsAsync(Guid id)
+    {
+        var entity = await entityService.GetWithRelatedAsync(id);
+
+        if (entity == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(TransformEntityToResponse(entity));
     }
 
     #endregion

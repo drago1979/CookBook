@@ -18,8 +18,11 @@ public interface IRecipeService
     #endregion
 
     public Task<Recipe> CreateAndSaveAsync(RecipeCreateDto dto);
+    
     public Task<(List<Recipe> Items, int TotalCount)> GetWithCountAsync(RecipesAllRequest request);
-    public Task<List<Recipe>> GetAllWithDeletedAsync();
+    
+    public Task<(List<Recipe> Items, int TotalCount)> GetWithDeletedAndCountAsync(RecipesAllRequest request);
+    
     public Task<Recipe?> GetWithRelatedAsync(Guid id);
 
     public Task UpdateCategoriesAsync(Recipe recipe, RecipeCategoriesDto categories);

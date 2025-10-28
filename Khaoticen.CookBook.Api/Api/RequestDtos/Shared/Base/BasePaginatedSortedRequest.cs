@@ -31,8 +31,8 @@ namespace Khaoticen.CookBook.Api.Api.RequestDtos.Shared.Base;
 public abstract class BasePaginatedSortedRequest
 {
     protected const int MaxPageSize = QueryConstants.MaxPageSize;
-    private const int InitPageNumber = QueryConstants.InitPageNumber;
-    private const string DefaultSortBy = QueryConstants.DefaultSortBy;
+    protected const int InitPageNumber = QueryConstants.InitPageNumber;
+    protected const string DefaultSortBy = QueryConstants.DefaultSortBy;
 
 
     [Range(1, int.MaxValue)]
@@ -41,7 +41,7 @@ public abstract class BasePaginatedSortedRequest
     [Range(1, MaxPageSize)]
     public virtual int PageSize { get; set; } = MaxPageSize;
 
-    [AllowedValuesFromMetadata(typeof(CategoryQueryMetadata), nameof(CategoryQueryMetadata.Sorts))]
+    [AllowedValuesFromMetadata(typeof(CategoryQueryMetadata), nameof(CategoryQueryMetadata.Sorts))] // todo: change this? => define BaseMeta....
     public virtual string SortBy { get; set; } = DefaultSortBy;
     public virtual SortDirection SortDirection { get; set; } = SortDirection.Asc;
 }

@@ -4,5 +4,6 @@ namespace Khaoticen.CookBook.Api.Core.Dtos.Entity.Review;
 
 public class ReviewCreateDto: ICreateDto
 {
+    public required string Nickname { get; set; }
     public required string Comment { get; set; }
 }

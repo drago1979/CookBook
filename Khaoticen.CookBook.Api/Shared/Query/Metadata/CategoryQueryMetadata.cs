@@ -20,16 +20,3 @@ public class CategoryQueryMetadata : ICategoryQueryMetadata
             ["name"] = c => c.Name
         };
 }
-
-// public static IReadOnlyDictionary<string, Expression<Func<Category, object>>> Sorts =>
-//     new Dictionary<string, Expression<Func<Category, object>>>(StringComparer.OrdinalIgnoreCase)
-//     {
-//         ["name"] = c => c.Name,
-//         ["createdAt"] = c => c.CreatedAt,
-//     };
-//
-// public static IReadOnlyDictionary<string, Expression<Func<Category, string>>> Filters =>
-//     new Dictionary<string, Expression<Func<Category, string>>>(StringComparer.OrdinalIgnoreCase)
-//     {
-//         ["name"] = c => c.Name,
-//     };

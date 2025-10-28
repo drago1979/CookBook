@@ -10,11 +10,11 @@ public class RecipeQueryMetadata : IRecipeQueryMetadata
         new Dictionary<string, Expression<Func<Recipe, object>>>(StringComparer.OrdinalIgnoreCase)
         {
             ["id"] = r => r.Id,
-            ["createdAt"] = r => r.CreatedAt
+            ["createdAt"] = r => r.CreatedAt,
+            ["title"] = r => r.Title
         };
-    
-    // public IReadOnlyDictionary<string, Expression<Func<Recipe, string>>>? Filters => null; // todo!!!: check this
-    
+
+
     public IReadOnlyDictionary<string, Expression<Func<Recipe, string>>> Filters { get; } =
         new Dictionary<string, Expression<Func<Recipe, string>>>(StringComparer.OrdinalIgnoreCase)
         {

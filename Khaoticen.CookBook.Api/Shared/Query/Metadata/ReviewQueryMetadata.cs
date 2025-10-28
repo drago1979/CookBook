@@ -13,5 +13,9 @@ public class ReviewQueryMetadata: IReviewQueryMetadata
             ["createdAt"] = r => r.CreatedAt
         };
     
-    public IReadOnlyDictionary<string, Expression<Func<Review, string>>>? Filters => null; // todo!!!: check this
+    public IReadOnlyDictionary<string, Expression<Func<Review, string>>> Filters { get; } =
+        new Dictionary<string, Expression<Func<Review, string>>>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["nickname"] = r => r.Nickname
+        };
 }

@@ -4,6 +4,9 @@ namespace Khaoticen.CookBook.Api.Api.RequestDtos.Review;
 
 public class ReviewCreateRequestDto
 {
+    [StringLength(100, MinimumLength = 5)]
+    public required string Nickname { get; set; }
+    
     [StringLength(100, MinimumLength = 10)]
     public required  string Comment { get; set; }
 }

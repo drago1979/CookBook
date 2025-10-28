@@ -21,42 +21,13 @@ public class ReviewsController(IReviewService entityService, IMapper mapper) : B
 >(mapper)
 {
     #region CRUD
-
+    
     [HttpGet(Name = "ReviewGetAll")]
-    public async Task<ActionResult> GetAllAsync()
-    {
-        var entities = await entityService.GetAllAsync();
-
-        return Ok(TransformEntitiesToResponse(entities));
-    }
-
-    [HttpGet("paginated", Name = "ReviewGetAllPaginated")]
-    public async Task<ActionResult> GetAllPaginatedAsync([FromQuery] ReviewsAllRequest request)
+    public async Task<ActionResult> GetAllAsync([FromQuery] ReviewsAllRequest request)
     {
         var (items, total) = await entityService.GetWithCountAsync(request);
         
         return Ok(TransformToPaginated(request, items, total));
-    }
-    
-    [HttpGet("all", Name = "ReviewGetAllWithDeleted")]
-    public async Task<ActionResult> GetAllWithDeletedAsync()
-    {
-        var entities = await entityService.GetAllWithDeletedAsync();
-
-        return Ok(TransformEntitiesToResponse(entities));
-    }
-
-    [HttpGet("{id:guid}", Name = "ReviewGet")]
-    public async Task<ActionResult> GetAsync(Guid id)
-    {
-        var entity = await entityService.GetWithRelatedAsync(id);
-
-        if (entity == null)
-        {
-            return NotFound();
-        }
-
-        return Ok(TransformEntityToResponse(entity));
     }
 
     [HttpPatch("{id:guid}", Name = "ReviewPatch")]
