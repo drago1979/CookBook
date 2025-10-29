@@ -210,8 +210,8 @@ public class RecipesController(IRecipeService entityService, IMapper mapper) : B
         var review = await entityService.AddReviewAsync(entity, createDto);
 
         return CreatedAtRoute(
-            routeName: "ReviewGet",
-            routeValues: new { id = review.Id },
+            routeName: "RecipeGet",
+            routeValues: new { id = entity.Id },
             value: Transform(review)
         );
     }

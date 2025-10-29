@@ -7,6 +7,9 @@ namespace Khaoticen.CookBook.Api.Api.RequestDtos.Category;
 
 public class CategoriesAllRequest : BasePaginatedSortedRequest, IHasSearchColumn
 {
+    [AllowedValuesFromMetadata(typeof(CategoryQueryMetadata), nameof(CategoryQueryMetadata.Sorts))]
+    public override string SortBy { get; set; } = DefaultSortBy;
+    
     [AllowedValuesFromMetadata(typeof(CategoryQueryMetadata), nameof(CategoryQueryMetadata.Filters))]
     [DependsOn(nameof(SearchValue))]
     public string? SearchColumn { get; set; }

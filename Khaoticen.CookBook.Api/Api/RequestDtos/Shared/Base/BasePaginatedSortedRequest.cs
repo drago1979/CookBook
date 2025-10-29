@@ -41,7 +41,9 @@ public abstract class BasePaginatedSortedRequest
     [Range(1, MaxPageSize)]
     public virtual int PageSize { get; set; } = MaxPageSize;
 
-    [AllowedValuesFromMetadata(typeof(CategoryQueryMetadata), nameof(CategoryQueryMetadata.Sorts))]
+    // Note: this property must be overriden in order to choose adequate Metadata-Class for validation.
+    // Example:
+    // [AllowedValuesFromMetadata(typeof(CategoryQueryMetadata), nameof(CategoryQueryMetadata.Sorts))]
     public virtual string SortBy { get; set; } = DefaultSortBy;
     public virtual SortDirection SortDirection { get; set; } = SortDirection.Asc;
 }
