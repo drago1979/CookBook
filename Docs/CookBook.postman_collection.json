@@ -1,0 +1,758 @@
+{
+	"info": {
+		"_postman_id": "ded9500b-ff80-4525-bdb6-a8f70b6640a4",
+		"name": "CookBook",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15539919",
+		"_collection_link": "https://bum444-8747.postman.co/workspace/C%2523-Recipes~510d4ab9-89d0-452c-943f-e5edd731d31a/collection/15539919-ded9500b-ff80-4525-bdb6-a8f70b6640a4?action=share&source=collection_link&creator=15539919"
+	},
+	"item": [
+		{
+			"name": "Categories",
+			"item": [
+				{
+					"name": "CRUD",
+					"item": [
+						{
+							"name": "CREATE",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"Name\":\"Pastry-1\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base-url}}/categories",
+									"host": [
+										"{{base-url}}"
+									],
+									"path": [
+										"categories"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET ALL",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base-url}}categories",
+									"host": [
+										"{{base-url}}categories"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "GET ALL with query params",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base-url}}/categories?Page=1&PageSize=1&SortBy=Id&SortDirection=desc&SearchColumn=name&SearchValue=default",
+											"host": [
+												"{{base-url}}"
+											],
+											"path": [
+												"categories"
+											],
+											"query": [
+												{
+													"key": "Page",
+													"value": "1"
+												},
+												{
+													"key": "PageSize",
+													"value": "1"
+												},
+												{
+													"key": "SortBy",
+													"value": "Id"
+												},
+												{
+													"key": "SortDirection",
+													"value": "desc"
+												},
+												{
+													"key": "SearchColumn",
+													"value": "name"
+												},
+												{
+													"key": "SearchValue",
+													"value": "default"
+												}
+											]
+										}
+									},
+									"_postman_previewlanguage": null,
+									"header": null,
+									"cookie": [],
+									"body": null
+								}
+							]
+						},
+						{
+							"name": "GET",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base-url}}/categories/22222222-2222-2222-2222-222222222222",
+									"host": [
+										"{{base-url}}"
+									],
+									"path": [
+										"categories",
+										"22222222-2222-2222-2222-222222222222"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "PATCH",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"Name\":\"Sweets 1\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base-url}}/categories/22222222-2222-2222-2222-22222222222?returnUpdated=true?returnUpdated=true",
+									"host": [
+										"{{base-url}}"
+									],
+									"path": [
+										"categories",
+										"22222222-2222-2222-2222-22222222222"
+									],
+									"query": [
+										{
+											"key": "returnUpdated",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DELETE",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base-url}}/categories/22222222-2222-2222-2222-222222222223",
+									"host": [
+										"{{base-url}}"
+									],
+									"path": [
+										"categories",
+										"22222222-2222-2222-2222-222222222223"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "CHECK NAME",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base-url}}/categories/check-name?name=Pastry-1?name=Pastry-1",
+							"host": [
+								"{{base-url}}"
+							],
+							"path": [
+								"categories",
+								"check-name"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Pastry-1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Recipes",
+			"item": [
+				{
+					"name": "CRUD",
+					"item": [
+						{
+							"name": "CREATE",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"Title\":\"33333333333333333333333333333333333333\",\n  \"Description\":\"rrrrrrrrrrrr\",\n  \"ImageUrl\":\"url-111111111111\",  \n  \"Categories\":\n  {\n     \"CategoryIds\":[\n      \"11111111-1111-1111-1111-111111111111\",\n      \"22222222-2222-2222-2222-222222222222\"\n    ]\n  }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base-url}}/recipes",
+									"host": [
+										"{{base-url}}"
+									],
+									"path": [
+										"recipes"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GET ALL",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base-url}}/recipes",
+									"host": [
+										"{{base-url}}"
+									],
+									"path": [
+										"recipes"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "GET ALL with query params",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base-url}}/recipes?Page=1&PageSize=1&SortBy=Id&SortDirection=desc&SearchColumn=Title&SearchValue=default&CategoryId=11111111-1111-1111-1111-111111111111",
+											"host": [
+												"{{base-url}}"
+											],
+											"path": [
+												"recipes"
+											],
+											"query": [
+												{
+													"key": "Page",
+													"value": "1"
+												},
+												{
+													"key": "PageSize",
+													"value": "1"
+												},
+												{
+													"key": "SortBy",
+													"value": "Id"
+												},
+												{
+													"key": "SortDirection",
+													"value": "desc"
+												},
+												{
+													"key": "SearchColumn",
+													"value": "Title"
+												},
+												{
+													"key": "SearchValue",
+													"value": "default"
+												},
+												{
+													"key": "CategoryId",
+													"value": "11111111-1111-1111-1111-111111111111"
+												}
+											]
+										}
+									},
+									"_postman_previewlanguage": null,
+									"header": null,
+									"cookie": [],
+									"body": null
+								}
+							]
+						},
+						{
+							"name": "GET",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base-url}}/recipes/694EB548-00FF-46C8-8FA9-1E244CFB10E3",
+									"host": [
+										"{{base-url}}"
+									],
+									"path": [
+										"recipes",
+										"694EB548-00FF-46C8-8FA9-1E244CFB10E3"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "PATCH",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"Title\":\"9999999999999999999999999999999999999999\",\n  \"Description\":\"rrrrrrrrrrrr\",\n  \"ImageUrl\":\"url-111111111111\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base-url}}/recipes/694EB548-00FF-46C8-8FA9-1E244CFB10E3?returnUpdated=true?returnUpdated=true",
+									"host": [
+										"{{base-url}}"
+									],
+									"path": [
+										"recipes",
+										"694EB548-00FF-46C8-8FA9-1E244CFB10E3"
+									],
+									"query": [
+										{
+											"key": "returnUpdated",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DELETE",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base-url}}/recipes/694eb548-00ff-46c8-8fa9-1e244cfb10e3",
+									"host": [
+										"{{base-url}}"
+									],
+									"path": [
+										"recipes",
+										"694eb548-00ff-46c8-8fa9-1e244cfb10e3"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "CRUD with deleted",
+					"item": [
+						{
+							"name": "GET ALL WITH DELETED",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base-url}}/recipes/with-deleted",
+									"host": [
+										"{{base-url}}"
+									],
+									"path": [
+										"recipes",
+										"with-deleted"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "GET ALL WITH DELETED with query params",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base-url}}/recipes/with-deleted?Page=1&PageSize=1&SortBy=Id&SortDirection=desc&SearchColumn=Title&SearchValue=default&CategoryId=11111111-1111-1111-1111-111111111111",
+											"host": [
+												"{{base-url}}"
+											],
+											"path": [
+												"recipes",
+												"with-deleted"
+											],
+											"query": [
+												{
+													"key": "Page",
+													"value": "1"
+												},
+												{
+													"key": "PageSize",
+													"value": "1"
+												},
+												{
+													"key": "SortBy",
+													"value": "Id"
+												},
+												{
+													"key": "SortDirection",
+													"value": "desc"
+												},
+												{
+													"key": "SearchColumn",
+													"value": "Title"
+												},
+												{
+													"key": "SearchValue",
+													"value": "default"
+												},
+												{
+													"key": "CategoryId",
+													"value": "11111111-1111-1111-1111-111111111111"
+												}
+											]
+										}
+									},
+									"_postman_previewlanguage": null,
+									"header": null,
+									"cookie": [],
+									"body": null
+								}
+							]
+						},
+						{
+							"name": "GET WITH DELETED",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base-url}}/recipes/694EB548-00FF-46C8-8FA9-1E244CFB10E3/with-deleted",
+									"host": [
+										"{{base-url}}"
+									],
+									"path": [
+										"recipes",
+										"694EB548-00FF-46C8-8FA9-1E244CFB10E3",
+										"with-deleted"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "PATCH WITH DELETED",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"Title\":\"9999999999999999999999999999999999999999\",\n  \"Description\":\"rrrrrrrrrrrr\",\n  \"ImageUrl\":\"url-111111111111\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base-url}}/recipes/694EB548-00FF-46C8-8FA9-1E244CFB10E3/with-deleted?returnUpdated=true?returnUpdated=true",
+									"host": [
+										"{{base-url}}"
+									],
+									"path": [
+										"recipes",
+										"694EB548-00FF-46C8-8FA9-1E244CFB10E3",
+										"with-deleted"
+									],
+									"query": [
+										{
+											"key": "returnUpdated",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Relationships",
+					"item": [
+						{
+							"name": "Categories",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"CategoryIds\": \n        [\n            \"11111111-1111-1111-1111-11111111111\"\n            ,\n            \"22222222-2222-2222-2222-2222222222223\"\n        ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base-url}}/recipes/0f611005-54f0-4fe1-9162-8262827a1b50/categories",
+									"host": [
+										"{{base-url}}"
+									],
+									"path": [
+										"recipes",
+										"0f611005-54f0-4fe1-9162-8262827a1b50",
+										"categories"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Review",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"Comment\":\"Some comment 3\",\n    \"Nickname\":\"username\"  \n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base-url}}/recipes/0f611005-54f0-4fe1-9162-8262827a1b50/reviews",
+									"host": [
+										"{{base-url}}"
+									],
+									"path": [
+										"recipes",
+										"0f611005-54f0-4fe1-9162-8262827a1b50",
+										"reviews"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Reviews",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base-url}}/recipes/694eb548-00ff-46c8-8fa9-1e244cfb10e3/reviews",
+									"host": [
+										"{{base-url}}"
+									],
+									"path": [
+										"recipes",
+										"694eb548-00ff-46c8-8fa9-1e244cfb10e3",
+										"reviews"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Reviews",
+			"item": [
+				{
+					"name": "CRUD",
+					"item": [
+						{
+							"name": "GET ALL",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base-url}}/reviews?PageSize=10&Page=1&sortby=createdat&sortDirection=asc&SearchColumn=nickname&SearchValue=username?PageSize=10&Page=1&sortby=createdat&sortDirection=asc&SearchColumn=nickname&SearchValue=username",
+									"host": [
+										"{{base-url}}"
+									],
+									"path": [
+										"reviews"
+									],
+									"query": [
+										{
+											"key": "PageSize",
+											"value": "10"
+										},
+										{
+											"key": "Page",
+											"value": "1"
+										},
+										{
+											"key": "sortby",
+											"value": "createdat"
+										},
+										{
+											"key": "sortDirection",
+											"value": "asc"
+										},
+										{
+											"key": "SearchColumn",
+											"value": "nickname"
+										},
+										{
+											"key": "SearchValue",
+											"value": "username"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "PATCH",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"Comment\":\"5555555555555555555555555555555555555555\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base-url}}/reviews/9b90ccdd-e6a5-47ea-88bc-53f67f05cc61?returnUpdated=true?returnUpdated=true",
+									"host": [
+										"{{base-url}}"
+									],
+									"path": [
+										"reviews",
+										"9b90ccdd-e6a5-47ea-88bc-53f67f05cc61"
+									],
+									"query": [
+										{
+											"key": "returnUpdated",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DELETE",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base-url}}/reviews/b42f973f-9125-49f2-b5f1-67bff8a0d062",
+									"host": [
+										"{{base-url}}"
+									],
+									"path": [
+										"reviews",
+										"b42f973f-9125-49f2-b5f1-67bff8a0d062"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base-url",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "api-host",
+			"value": "",
+			"type": "default"
+		}
+	]
+}
