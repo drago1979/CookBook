@@ -4,10 +4,10 @@ namespace Khaoticen.CookBook.Api.Core.Entities.Shared.Base;
 
 public abstract class BaseSoftDeletableEntity : BaseEntity, ISoftDeletable
 {
-    public DateTime? DeletedAt { get; set; }
+    public DateTimeOffset? DeletedAt { get; set; }
 
     public virtual void SoftDelete()
     {
-        DeletedAt = DateTime.UtcNow;
+        DeletedAt = DateTimeOffset.UtcNow;
     }
 }

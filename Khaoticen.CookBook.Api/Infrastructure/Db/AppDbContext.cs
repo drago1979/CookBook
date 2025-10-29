@@ -23,7 +23,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
             var parameter = Expression.Parameter(entityType.ClrType, "e");
             var prop = Expression.Property(parameter, nameof(ISoftDeletable.DeletedAt));
-            var condition = Expression.Equal(prop, Expression.Constant(null, typeof(DateTime?)));
+            var condition = Expression.Equal(prop, Expression.Constant(null, typeof(DateTimeOffset?)));
             var lambda = Expression.Lambda(condition, parameter);
 
             modelBuilder.Entity(entityType.ClrType).HasQueryFilter(lambda);

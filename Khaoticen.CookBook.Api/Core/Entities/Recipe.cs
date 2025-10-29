@@ -26,7 +26,7 @@ public class Recipe : BaseSoftDeletableEntity
 
     public override void SoftDelete()
     {
-        DeletedAt = DateTime.UtcNow;
+        DeletedAt = DateTimeOffset.UtcNow;
 
         foreach (var review in Reviews)
         {
