@@ -19,8 +19,8 @@ public class RecipeProfile : BaseEntityProfile<
     public RecipeProfile()
     {
         // REQUESTS => DTOs
-        CreateMap<RecipeCreateRequestDto, RecipeCreateDto>(); // todo!!: to base class?
-        CreateMap<RecipeCategoriesUpdateRequestDto, RecipeCategoriesDto>(); // todo!!: to base class?
+        CreateMap<RecipeCreateRequestDto, RecipeCreateDto>(); // todo: to base class?
+        CreateMap<RecipeCategoriesUpdateRequestDto, RecipeCategoriesDto>(); // todo: to base class?
         
         // DTOs => ENTITIES
         CreateMap<RecipeCreateDto, Recipe>()

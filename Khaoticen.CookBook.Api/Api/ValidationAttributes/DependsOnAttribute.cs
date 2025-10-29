@@ -13,6 +13,18 @@ public class DependsOnAttribute: ValidationAttribute
         ErrorMessage = "{0} requires a non-empty value in {1}.";
     }
 
+    /// <summary>
+    /// Validates the current property based on the value of another property specified by name.
+    /// Ensures that a non-empty value in the current property requires a non-empty value in the specified related property.
+    /// </summary>
+    /// <param name="value">The value of the current property to validate.</param>
+    /// <param name="validationContext">Contextual information about the validation operation,
+    /// including the instance and metadata of the object being validated.</param>
+    /// <returns>
+    /// A <see cref="ValidationResult"/> indicating validation success or failure.
+    /// Returns <see cref="ValidationResult.Success"/> if validation is successful,
+    /// or a <see cref="ValidationResult"/> with an error message if validation fails.
+    /// </returns>
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
         var instance = validationContext.ObjectInstance;

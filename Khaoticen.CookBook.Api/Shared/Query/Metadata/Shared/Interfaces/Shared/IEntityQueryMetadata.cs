@@ -1,7 +1,7 @@
 ﻿using System.Linq.Expressions;
 using Khaoticen.CookBook.Api.Core.Entities.Shared.Base;
 
-namespace Khaoticen.CookBook.Api.Shared.Query.Metadata.Shared.Interfaces;
+namespace Khaoticen.CookBook.Api.Shared.Query.Metadata.Shared.Interfaces.Shared;
 
 public interface IEntityQueryMetadata<TEntity>
     where TEntity : BaseEntity

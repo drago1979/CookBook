@@ -30,6 +30,11 @@ public class RecipeService(
 {
     #region CRUD
 
+    /// <summary>
+    /// Creates a new recipe entity based on the provided data transfer object (DTO) and saves it to the database.
+    /// </summary>
+    /// <param name="dto">The data transfer object containing the details required to create a new recipe.</param>
+    /// <returns>The created and saved recipe entity.</returns>
     public async Task<Recipe> CreateAndSaveAsync(RecipeCreateDto dto)
     {
         var (nonExistingIds, idsToAdd) = await CategoryIdsStatusWhenCreateAsync(dto.Categories);
@@ -49,6 +54,12 @@ public class RecipeService(
         return entity;
     }
 
+    /// <summary>
+    /// Retrieves a list of recipes along with the total count, based on the specified request parameters.
+    /// </summary>
+    /// <param name="request">The request parameters for retrieving and filtering recipes, including pagination, sorting, and optional category filtering.</param>
+    /// <param name="withDeleted">Specifies whether to include deleted recipes in the results. Defaults to false.</param>
+    /// <returns>A tuple containing a list of recipes and the total count of matching recipes.</returns>
     public async Task<(List<Recipe> Items, int TotalCount)> GetWithCountAsync(RecipesAllRequest request,
         bool withDeleted = false)
     {
@@ -59,11 +70,22 @@ public class RecipeService(
         return (items, total);
     }
 
+    /// <summary>
+    /// Retrieves a single recipe entity by its identifier, including all related data.
+    /// </summary>
+    /// <param name="id">The unique identifier of the recipe to retrieve.</param>
+    /// <param name="withDeleted">A boolean flag indicating whether to include soft-deleted entities in the result.</param>
+    /// <returns>The requested recipe entity with all related data, or null if not found.</returns>
     public async Task<Recipe?> GetWithRelatedAsync(Guid id, bool withDeleted = false)
     {
         return await Repository.GetByIdIncludeAllRelatedAsync(id, withDeleted);
     }
 
+    /// <summary>
+    /// Marks the specified recipe entity as soft deleted and updates it in the database.
+    /// </summary>
+    /// <param name="entity">The recipe entity to be deleted.</param>
+    /// <returns>A task representing the asynchronous operation.</returns>
     public override async Task DeleteAsync(Recipe entity)
     {
         await Repository.GetByIdIncludeAllRelatedAsync(entity.Id);
@@ -79,6 +101,16 @@ public class RecipeService(
 
     #region RELATIONSHIPS
 
+    /// Updates the categories associated with a recipe.
+    /// <param name="recipe">
+    /// The recipe entity whose categories are to be updated.
+    /// </param>
+    /// <param name="categories">
+    /// The data transfer object containing the updated list of category IDs.
+    /// </param>
+    /// <returns>
+    /// A task representing the asynchronous operation.
+    /// </returns>
     public async Task UpdateCategoriesAsync(Recipe recipe, RecipeCategoriesDto categories)
     {
         var (nonExisting, toAdd, toRemove) = await CategoryIdsStatusWhenUpdateAsync(categories, recipe);
@@ -92,6 +124,12 @@ public class RecipeService(
         await Db.SaveChangesAsync();
     }
 
+    /// <summary>
+    /// Adds a new review to the specified recipe and saves it in the database.
+    /// </summary>
+    /// <param name="recipe">The recipe to which the review will be added.</param>
+    /// <param name="entityCreateDto">The data transfer object containing the review details to be created.</param>
+    /// <returns>Returns the newly created review.</returns>
     public async Task<Review> AddReviewAsync(Recipe recipe, ReviewCreateDto entityCreateDto)
     {
         var review = reviewFactory.CreateForRecipe(entityCreateDto, recipe);

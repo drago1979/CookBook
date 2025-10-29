@@ -41,7 +41,7 @@ public abstract class BasePaginatedSortedRequest
     [Range(1, MaxPageSize)]
     public virtual int PageSize { get; set; } = MaxPageSize;
 
-    [AllowedValuesFromMetadata(typeof(CategoryQueryMetadata), nameof(CategoryQueryMetadata.Sorts))] // todo: change this? => define BaseMeta....
+    [AllowedValuesFromMetadata(typeof(CategoryQueryMetadata), nameof(CategoryQueryMetadata.Sorts))]
     public virtual string SortBy { get; set; } = DefaultSortBy;
     public virtual SortDirection SortDirection { get; set; } = SortDirection.Asc;
 }

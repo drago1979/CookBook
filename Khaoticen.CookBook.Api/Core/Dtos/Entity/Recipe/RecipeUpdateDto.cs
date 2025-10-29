@@ -8,5 +8,5 @@ public class RecipeUpdateDto: IUpdateDto
 {
     public required string Title { get; set; }
     public required string Description { get; set; }
-    public string? ImageUrl { get; set; } // todo: finish this
+    public string? ImageUrl { get; set; }
 }

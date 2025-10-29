@@ -9,7 +9,6 @@ public interface IRecipeService
 {
     #region BASE-SERVICE-implemented methods
     
-    public Task<Recipe?> GetAsync(Guid id);
     public Task<Recipe> UpdateAsync(RecipeUpdateDto dto, Recipe entity);
 
     public Task DeleteAsync(Recipe entity);

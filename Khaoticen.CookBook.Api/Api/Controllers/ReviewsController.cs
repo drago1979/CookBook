@@ -22,6 +22,11 @@ public class ReviewsController(IReviewService entityService, IMapper mapper) : B
 {
     #region CRUD
 
+    /// <summary>
+    /// Retrieves a paginated list of reviews based on the specified request.
+    /// </summary>
+    /// <param name="request">The request object containing filtering, sorting, and pagination parameters.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains an <see cref="ActionResult"/> with the paginated list of reviews.</returns>
     [HttpGet(Name = "ReviewGetAll")]
     public async Task<ActionResult> GetAllAsync([FromQuery] ReviewsAllRequest request)
     {
@@ -30,6 +35,16 @@ public class ReviewsController(IReviewService entityService, IMapper mapper) : B
         return Ok(TransformToPaginated(request, items, total));
     }
 
+    /// <summary>
+    /// Updates an existing review with new data identified by its unique identifier.
+    /// </summary>
+    /// <param name="id">The unique identifier of the review to update.</param>
+    /// <param name="requestDto">The data used to update the review.</param>
+    /// <param name="returnUpdated">Indicates whether the updated review should be returned in the response.</param>
+    /// <returns>
+    /// Returns <see cref="OkObjectResult"/> containing the updated review if <paramref name="returnUpdated"/> is true.
+    /// Otherwise returns <see cref="NoContentResult"/> after successful update.
+    /// </returns>
     [HttpPatch("{id}", Name = "ReviewPatch")]
     public async Task<ActionResult> PatchAsync(Guid id, [FromBody] ReviewUpdateRequestDto requestDto,
         bool returnUpdated = false)
@@ -48,6 +63,11 @@ public class ReviewsController(IReviewService entityService, IMapper mapper) : B
         return NoContent();
     }
 
+    /// <summary>
+    /// Deletes a review identified by its unique identifier.
+    /// </summary>
+    /// <param name="id">The unique identifier of the review to be deleted.</param>
+    /// <returns>An <see cref="ActionResult"/> indicating the result of the operation.</returns>
     [HttpDelete("{id}", Name = "ReviewDelete")]
     public async Task<ActionResult> DeleteAsync(Guid id)
     {
@@ -64,7 +84,7 @@ public class ReviewsController(IReviewService entityService, IMapper mapper) : B
 
     private ReviewUpdateDto TransformToUpdateDto(ReviewUpdateRequestDto requestDto) =>
         Mapper.Map<ReviewUpdateDto>(requestDto);
-
+    
     private async Task<Review> GetOrThrowAsync(Guid id)
     {
         var entity = await entityService.GetAsync(id);

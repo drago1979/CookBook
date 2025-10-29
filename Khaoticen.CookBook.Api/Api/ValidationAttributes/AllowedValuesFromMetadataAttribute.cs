@@ -15,20 +15,32 @@ public class AllowedValuesFromMetadataAttribute: ValidationAttribute
         _fieldOrPropName = fieldOrPropName;
     }
 
+    /// <summary>
+    /// Validates if the provided value exists as a key in the dictionary specified
+    /// by metadata type and member name.
+    /// </summary>
+    /// <param name="value">The value to validate.</param>
+    /// <param name="validationContext">
+    /// Context information about the validation operation, such as the instance being validated.
+    /// </param>
+    /// <returns>
+    /// Returns <see cref="ValidationResult.Success"/> if the value is valid or null. Otherwise,
+    /// returns a <see cref="ValidationResult"/> describing the validation failure.
+    /// </returns>
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
         var member = _metadataType.GetField(_fieldOrPropName)
                      ?? (MemberInfo?)_metadataType.GetProperty(_fieldOrPropName);
 
-        if (member == null) 
+        if (member is null) 
             return new ValidationResult($"Metadata '{_fieldOrPropName}' not found on {_metadataType.Name}");
 
         var target = Activator.CreateInstance(_metadataType);
 
         var dict = member switch
         {
-            FieldInfo fi => fi.GetValue(null),        // static fields still work
-            PropertyInfo pi => pi.GetValue(target),   // instance properties need target
+            FieldInfo fi => fi.GetValue(null),
+            PropertyInfo pi => pi.GetValue(target),
             _ => null
         } as IDictionary;
 

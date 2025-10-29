@@ -15,9 +15,6 @@ public interface IReviewService
     public Task DeleteAsync(Review entity);
 
     #endregion
-
-    public Task<Review?> GetWithRelatedAsync(Guid id);
-    public Task<List<Review>> GetAllWithDeletedAsync();
-
+    
     public Task<(List<Review> Items, int TotalCount)> GetWithCountAsync(ReviewsAllRequest request);
 }

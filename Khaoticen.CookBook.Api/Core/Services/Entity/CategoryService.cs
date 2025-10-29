@@ -1,9 +1,5 @@
 ﻿using AutoMapper;
-using Khaoticen.CookBook.Api.Api.RequestDtos;
 using Khaoticen.CookBook.Api.Api.RequestDtos.Category;
-using Khaoticen.CookBook.Api.Api.ResponseDtos;
-using Khaoticen.CookBook.Api.Api.ResponseDtos.Category;
-using Khaoticen.CookBook.Api.Api.ResponseDtos.Shared.Base;
 using Khaoticen.CookBook.Api.Core.Dtos.Entity.Category;
 using Khaoticen.CookBook.Api.Core.Entities;
 using Khaoticen.CookBook.Api.Core.Exceptions;
@@ -32,6 +28,14 @@ public class CategoryService(
 {
     #region CRUD
 
+    /// <summary>
+    /// Creates a new category entity from the provided data transfer object (DTO) and saves it to the database.
+    /// </summary>
+    /// <param name="dto">The data transfer object containing the details for the new category.</param>
+    /// <returns>The newly created and saved category entity.</returns>
+    /// <exception cref="ValueNotAllowedException">
+    /// Thrown when a category with the same name already exists.
+    /// </exception>
     public async Task<Category> CreateAndSaveAsync(CategoryCreateDto dto)
     {
         if (await Repository.GetByNameAsync(dto.Name) != null)
@@ -47,18 +51,34 @@ public class CategoryService(
 
         return entity;
     }
-    
+
+    /// <summary>
+    /// Retrieves a paginated and sorted list of categories along with the total count of items.
+    /// </summary>
+    /// <param name="request">The request containing pagination, sorting, and filtering details.</param>
+    /// <returns>A tuple containing the list of categories and the total count of items.</returns>
     public async Task<(List<Category> Items, int TotalCount)> GetWithCountAsync(CategoriesAllRequest request)
     { 
         return await Repository.GetAllPaginatedAsync(request);
     }
-    
 
+
+    /// <summary>
+    /// Retrieves a category with all its related data by its unique identifier.
+    /// </summary>
+    /// <param name="id">The unique identifier of the category to retrieve.</param>
+    /// <returns>Returns the category entity with all related data, or null if not found.</returns>
     public async Task<Category?> GetWithRelatedAsync(Guid id)
     {
         return await Repository.GetByIdIncludeAllRelatedAsync(id);
     }
 
+    /// <summary>
+    /// Updates a category entity using the provided update data transfer object and ensures the category is not a default category.
+    /// </summary>
+    /// <param name="dto">The data transfer object containing updated category data.</param>
+    /// <param name="entity">The category entity to be updated.</param>
+    /// <returns>The updated category entity.</returns>
     public override async Task<Category> UpdateAsync(CategoryUpdateDto dto, Category entity)
     {
         EnsureNotDefaultCategory(entity);
@@ -66,6 +86,12 @@ public class CategoryService(
         return await base.UpdateAsync(dto, entity);
     }
 
+    /// <summary>
+    /// Deletes the specified category entity asynchronously. Ensures that the category being deleted is not
+    /// the default category and reassigns related recipes to the default category before deletion.
+    /// </summary>
+    /// <param name="entity">The category entity to be deleted.</param>
+    /// <returns>A task representing the asynchronous delete operation.</returns>
     public override async Task DeleteAsync(Category entity)
     {
         var defaultCategory = await GetDefaultCategoryOrThrowAsync();
@@ -85,6 +111,12 @@ public class CategoryService(
 
     #region MISC
 
+    /// <summary>
+    /// Retrieves a <see cref="Category"/> entity by its unique name.
+    /// </summary>
+    /// <param name="name">The name of the category to retrieve.</param>
+    /// <returns>A task representing the asynchronous operation.
+    /// The task result contains the <see cref="Category"/> entity if found; otherwise, null.</returns>
     public async Task<Category?> GetByNameAsync(string name) =>
         await Repository.GetByNameAsync(name);
 

@@ -15,5 +15,5 @@ public class RecipeCreateRequestDto
     public required RecipeCategoriesUpdateRequestDto Categories { get; set; }
     
     [StringLength(100, MinimumLength = 10)]
-    public string? ImageUrl { get; set; } // todo: finish this
+    public string? ImageUrl { get; set; }
 }

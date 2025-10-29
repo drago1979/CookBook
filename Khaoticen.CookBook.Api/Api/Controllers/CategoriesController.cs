@@ -22,6 +22,13 @@ public class CategoriesController(ICategoryService entityService, IMapper mapper
 {
     #region CRUD
 
+    /// <summary>
+    /// Creates a new category from the provided request data and saves it to the database.
+    /// Returns a response indicating the resource creation status.
+    /// </summary>
+    /// <param name="requestDto">The data required to create a new category.</param>
+    /// <returns>An action result containing the details of the created category,
+    /// or an appropriate status code if an error occurs.</returns>
     [HttpPost(Name = "CategoryCreate")]
     public async Task<ActionResult> CreateAsync([FromBody] CategoryCreateRequestDto requestDto)
     {
@@ -36,6 +43,11 @@ public class CategoriesController(ICategoryService entityService, IMapper mapper
         );
     }
 
+    /// <summary>
+    /// Retrieves a paginated and optionally filtered list of categories based on the provided request parameters.
+    /// </summary>
+    /// <param name="request">The request object containing pagination, sorting, and filtering criteria for retrieving the categories.</param>
+    /// <returns>An action result containing the paginated list of categories and the total count of matched items.</returns>
     [HttpGet(Name = "CategoryGetAll")]
     public async Task<ActionResult> GetAllAsync([FromQuery] CategoriesAllRequest request)
     {
@@ -44,6 +56,11 @@ public class CategoriesController(ICategoryService entityService, IMapper mapper
         return Ok(TransformToPaginated(request, items, total));
     }
 
+    /// <summary>
+    /// Retrieves a single category by its unique identifier.
+    /// </summary>
+    /// <param name="id">The unique identifier of the category to retrieve.</param>
+    /// <returns>An <see cref="ActionResult"/> containing the details of the category if found, or an appropriate status code if not.</returns>
     [HttpGet("{id}", Name = "CategoryGet")]
     public async Task<ActionResult> GetAsync(Guid id)
     {
@@ -52,6 +69,14 @@ public class CategoriesController(ICategoryService entityService, IMapper mapper
         return Ok(TransformEntityToResponse(entity));
     }
 
+    /// <summary>
+    /// Updates an existing category with the provided data.
+    /// </summary>
+    /// <param name="id">The unique identifier of the category to be updated.</param>
+    /// <param name="requestDto">The data transfer object containing the updated values for the category.</param>
+    /// <param name="returnUpdated">Indicates whether the response should include the updated category data. Defaults to false.</param>
+    /// <returns>An <see cref="ActionResult"/> indicating the result of the operation.
+    /// If <paramref name="returnUpdated"/> is true, returns the updated category data. Otherwise, returns a no-content result.</returns>
     [HttpPatch("{id}", Name = "CategoryPatch")]
     public async Task<ActionResult> PatchAsync(Guid id, [FromBody] CategoryUpdateRequestDto requestDto,
         bool returnUpdated = false)
@@ -70,6 +95,11 @@ public class CategoriesController(ICategoryService entityService, IMapper mapper
         return NoContent();
     }
 
+    /// <summary>
+    /// Deletes a category identified by the specified ID from the database.
+    /// </summary>
+    /// <param name="id">The unique identifier of the category to be deleted.</param>
+    /// <returns>A no-content response indicating successful deletion, or an appropriate error response if the category is not found or cannot be deleted.</returns>
     [HttpDelete("{id}", Name = "CategoryDelete")]
     public async Task<ActionResult> DeleteAsync(Guid id)
     {
@@ -84,6 +114,11 @@ public class CategoriesController(ICategoryService entityService, IMapper mapper
 
     #region OTHER
 
+    /// <summary>
+    /// Checks if a category with the specified name exists.
+    /// </summary>
+    /// <param name="name">The name of the category to check for existence.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a boolean indicating whether a category with the specified name exists (true) or not (false).</returns>
     [HttpGet("check-name", Name = "CategoryCheckName")]
     public async Task<ActionResult> CheckNameAsync(string name)
     {
@@ -96,13 +131,13 @@ public class CategoriesController(ICategoryService entityService, IMapper mapper
 
 
     #region HELPERS
-
+    
     private CategoryCreateDto TransformToCreateDto(CategoryCreateRequestDto requestDto) =>
         Mapper.Map<CategoryCreateDto>(requestDto);
 
     private CategoryUpdateDto TransformToUpdateDto(CategoryUpdateRequestDto requestDto) =>
         Mapper.Map<CategoryUpdateDto>(requestDto);
-
+    
     private async Task<Category> GetOrThrowAsync(Guid id)
     {
         var entity = await entityService.GetWithRelatedAsync(id);

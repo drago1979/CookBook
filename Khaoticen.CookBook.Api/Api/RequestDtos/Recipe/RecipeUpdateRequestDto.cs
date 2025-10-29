@@ -15,5 +15,5 @@ public class RecipeUpdateRequestDto
 
     [StringLength(100, MinimumLength = 10)]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string? ImageUrl { get; set; } // todo: finish this
+    public string? ImageUrl { get; set; }
 }

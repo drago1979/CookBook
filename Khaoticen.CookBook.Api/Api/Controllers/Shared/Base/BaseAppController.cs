@@ -19,14 +19,27 @@ public abstract class BaseAppController<
     where TEntityPaginatedResponse : BasePaginatedResponse<TEntityInListResponseDto>, new()
     where TEntityAllRequest : BasePaginatedSortedRequest
 {
+
     protected readonly IMapper Mapper = mapper;
-    
+
     protected TEntityResponseDto TransformEntityToResponse(TEntity entity) =>
         Mapper.Map<TEntityResponseDto>(entity);
-    
+
+    /// <summary>
+    /// Transforms a collection of entities into a list of response DTOs.
+    /// </summary>
+    /// <param name="entities">The collection of entities to be transformed.</param>
+    /// <returns>A list of response DTOs corresponding to the input entities.</returns>
     protected List<TEntityInListResponseDto> TransformEntitiesToResponse(IEnumerable<TEntity?> entities) =>
         Mapper.Map<List<TEntityInListResponseDto>>(entities);
-    
+
+    /// <summary>
+    /// Transforms a list of entities along with pagination details into a paginated response object.
+    /// </summary>
+    /// <param name="request">The request object containing pagination and sorting information.</param>
+    /// <param name="items">The list of entities to include in the response.</param>
+    /// <param name="total">The total count of entities available.</param>
+    /// <returns>A paginated response object containing the entities and pagination details.</returns>
     protected TEntityPaginatedResponse TransformToPaginated(
         TEntityAllRequest request,
         List<TEntity> items,

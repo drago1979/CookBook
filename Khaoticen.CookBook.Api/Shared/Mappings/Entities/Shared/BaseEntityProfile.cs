@@ -13,11 +13,11 @@ public abstract class BaseEntityProfile<
     TEntitiesResponseDto
 >: Profile
     where TEntity : BaseEntity
-    where TCreateRequest : class // todo: IF?
-    where TUpdateRequest : class // todo: IF?
-    where TCreateDto : class // todo: IF?
-    where TUpdateDto : class // todo: IF?
-    where TEntityResponseDto: class // todo: IF?
+    where TCreateRequest : class
+    where TUpdateRequest : class
+    where TCreateDto : class
+    where TUpdateDto : class
+    where TEntityResponseDto: class
 {
     protected BaseEntityProfile()
     {

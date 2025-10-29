@@ -1,11 +1,6 @@
-﻿using System.Linq.Expressions;
-using Khaoticen.CookBook.Api.Api.RequestDtos;
-using Khaoticen.CookBook.Api.Api.RequestDtos.Category;
-using Khaoticen.CookBook.Api.Core.Entities;
+﻿using Khaoticen.CookBook.Api.Core.Entities;
 using Khaoticen.CookBook.Api.Core.Repositories.Shared;
 using Khaoticen.CookBook.Api.Infrastructure.Db;
-using Khaoticen.CookBook.Api.Shared.Query;
-using Khaoticen.CookBook.Api.Shared.Query.Metadata;
 using Khaoticen.CookBook.Api.Shared.Query.Metadata.Shared.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,15 +9,31 @@ namespace Khaoticen.CookBook.Api.Core.Repositories;
 public class CategoryRepository(AppDbContext db, ICategoryQueryMetadata metadata) : 
     BaseRepository<Category>(db, metadata)
 {
+    /// <summary>
+    /// Fetches a category entity by its name asynchronously.
+    /// </summary>
+    /// <param name="name">The name of the category to retrieve.</param>
+    /// <returns>A <see cref="Category"/> entity if found; otherwise, null.</returns>
     public async Task<Category?> GetByNameAsync(string name) 
         => await Table.FirstOrDefaultAsync(c => c.Name == name);
 
+    /// <summary>
+    /// Retrieves a category entity based on the given ID and includes all related entities such as recipes
+    /// and their associated categories.
+    /// </summary>
+    /// <param name="id">The unique identifier of the category to retrieve.</param>
+    /// <returns>The category entity with its related entities, or null if no category is found with the specified ID.</returns>
     public async Task<Category?> GetByIdIncludeAllRelatedAsync(Guid id) =>
         await Table
             .Include(c => c.Recipes)
             .ThenInclude(r => r.Categories)
             .FirstOrDefaultAsync(r => r.Id == id);
 
+    /// <summary>
+    /// Retrieves a list of categories based on the provided collection of category IDs.
+    /// </summary>
+    /// <param name="ids">The collection of unique identifiers for the categories to retrieve.</param>
+    /// <returns>A task representing the asynchronous operation. The task result contains a list of categories matching the specified IDs.</returns>
     public async Task<List<Category>> GetAllByIdsAsync(IEnumerable<Guid> ids)
     {
         var idList = ids.Distinct().ToList();
@@ -35,6 +46,11 @@ public class CategoryRepository(AppDbContext db, ICategoryQueryMetadata metadata
             .ToListAsync();
     }
 
+    /// <summary>
+    /// Retrieves a list of existing category IDs from the database that match the provided IDs.
+    /// </summary>
+    /// <param name="ids">A collection of category IDs to check for existence in the database.</param>
+    /// <returns>A list of GUIDs representing the IDs that exist in the database.</returns>
     public async Task<List<Guid>> GetExistingIdsAsync(IEnumerable<Guid> ids)
     {
         var idList = ids.Distinct().ToList();
@@ -46,70 +62,4 @@ public class CategoryRepository(AppDbContext db, ICategoryQueryMetadata metadata
             .Select(c => c.Id)
             .ToListAsync();
     }
-    
- // // todo!!! : cleaner ?
- //    // public async Task<(List<Category> Items, int TotalCount)> GetAllPaginatedAsync(CategoriesAllRequest request)
- //    // {
- //    public async Task<(List<Category> Items, int TotalCount)> GetAllPaginatedAsync(
- //        int page = QueryConstants.InitPageNumber,
- //        int pageSize = QueryConstants.MaxPageSize,
- //        string sortBy = QueryConstants.DefaultSortBy,
- //        SortDirection sortDirection = SortDirection.Asc,
- //        string? searchColumn = null,
- //        string? searchValue = null
- //        )
- //    {
- //        var query = Table.AsQueryable();
- //
- //        if (!string.IsNullOrWhiteSpace(searchColumn) && !string.IsNullOrWhiteSpace(searchValue))
- //            query = ApplyFiltering(query, searchColumn, searchValue);
- //
- //
- //        query = ApplySorting(query, sortBy, sortDirection);
- //
- //        var totalCount = await query.CountAsync();
- //
- //        var items = await query
- //            .Skip((page - 1) * pageSize)
- //            .Take(pageSize)
- //            .ToListAsync();
- //
- //        return (items, totalCount);
- //    }
-    
-    // protected IQueryable<Category> ApplyFiltering(
-    //     IQueryable<Category> query,
-    //     string searchColumn,
-    //     string searchValue)
-    // {
-    //     if (!CategoryQueryMetadata.Filters.TryGetValue(searchColumn, out var propertyExpr))
-    //         throw new ArgumentException($"Unknown search column '{searchColumn}'");
-    //
-    //     var parameter = propertyExpr.Parameters[0]; // Category c
-    //     var propertyAccess = propertyExpr.Body;    // c.Name or c.Description
-    //
-    //     // EF.Functions.Like(c.Prop, "%value%")
-    //     var likeMethod = typeof(DbFunctionsExtensions).GetMethod(
-    //         nameof(DbFunctionsExtensions.Like),
-    //         new[] { typeof(DbFunctions), typeof(string), typeof(string) })!;
-    //
-    //     var efFunctions = Expression.Property(null, typeof(EF), nameof(EF.Functions));
-    //     var pattern = Expression.Constant($"%{searchValue.Trim()}%");
-    //
-    //     var likeCall = Expression.Call(likeMethod, efFunctions, propertyAccess, pattern);
-    //
-    //     var lambda = Expression.Lambda<Func<Category, bool>>(likeCall, parameter);
-    //
-    //     return query.Where(lambda);
-    // }
-    //
-    //
-    // protected IQueryable<Category> ApplySorting(IQueryable<Category> query, string sortBy, SortDirection sortDirection)
-    // {
-    //     var sortExpr = CategoryQueryMetadata.Sorts[sortBy];
-    //
-    //     return sortDirection == SortDirection.Asc
-    //         ? query.OrderBy(sortExpr)
-    //         : query.OrderByDescending(sortExpr);
-    // }   
 }

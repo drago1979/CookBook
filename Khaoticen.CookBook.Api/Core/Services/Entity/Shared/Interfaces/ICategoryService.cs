@@ -1,8 +1,4 @@
-﻿using Khaoticen.CookBook.Api.Api.RequestDtos;
-using Khaoticen.CookBook.Api.Api.RequestDtos.Category;
-using Khaoticen.CookBook.Api.Api.ResponseDtos;
-using Khaoticen.CookBook.Api.Api.ResponseDtos.Category;
-using Khaoticen.CookBook.Api.Api.ResponseDtos.Shared.Base;
+﻿using Khaoticen.CookBook.Api.Api.RequestDtos.Category;
 using Khaoticen.CookBook.Api.Core.Dtos.Entity.Category;
 using Khaoticen.CookBook.Api.Core.Entities;
 
@@ -14,8 +10,6 @@ public interface ICategoryService
 
     public Task<Category> UpdateAsync(CategoryUpdateDto dto, Category entity);
 
-    public Task<Category?> GetAsync(Guid id);
-
     public Task DeleteAsync(Category entity);
 
     #endregion
@@ -26,8 +20,6 @@ public interface ICategoryService
     public Task<Category?> GetWithRelatedAsync(Guid id);
 
     public Task<Category?> GetByNameAsync(string name);
-    
-    // public Task<BasePaginatedResponse<Category>> GetWithCountAsync(CategoriesAllRequest request);
 
     public Task<(List<Category> Items, int TotalCount)> GetWithCountAsync(CategoriesAllRequest request);
 }
