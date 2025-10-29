@@ -17,7 +17,14 @@ builder.Services.AddOpenApi();
 
     builder.Services.AddDbContext<AppDbContext>((sp, options) =>
     {
-        options.UseSqlite(builder.Configuration.GetConnectionString("DbConnectionString"));
+        // DB PATH
+        var relativePath = builder.Configuration.GetConnectionString("DbConnectionString") 
+                           ?? throw new InvalidOperationException("DbConnectionString is missing");
+        
+        var projectRoot = Path.GetFullPath(Path.Combine(builder.Environment.ContentRootPath, ".."));
+        var absolutePath = Path.Combine(projectRoot, relativePath);
+
+        options.UseSqlite($"Data Source={absolutePath}");
 
         // Interceptors
         options.AddInterceptors(sp.GetRequiredService<AuditInterceptor>());
