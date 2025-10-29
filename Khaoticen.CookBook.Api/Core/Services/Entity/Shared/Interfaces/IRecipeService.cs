@@ -20,7 +20,7 @@ public interface IRecipeService
     
     public Task<(List<Recipe> Items, int TotalCount)> GetWithCountAsync(RecipesAllRequest request, bool withDeleted = false);
     
-    public Task<Recipe?> GetWithRelatedAsync(Guid id);
+    public Task<Recipe?> GetWithRelatedAsync(Guid id, bool withDeleted = false);
 
     public Task UpdateCategoriesAsync(Recipe recipe, RecipeCategoriesDto categories);
 

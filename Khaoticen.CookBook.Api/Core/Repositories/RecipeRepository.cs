@@ -9,12 +9,19 @@ namespace Khaoticen.CookBook.Api.Core.Repositories;
 
 public class RecipeRepository(AppDbContext db, IRecipeQueryMetadata metadata) : BaseRepository<Recipe>(db, metadata)
 {
-    public async Task<Recipe?> GetByIdIncludeAllRelatedAsync(Guid id) =>
-        await Table
+    public async Task<Recipe?> GetByIdIncludeAllRelatedAsync(Guid id, bool withDeleted = false)
+    {
+        var query = Table.AsQueryable();
+
+        if (withDeleted) query = query.IgnoreQueryFilters();
+        
+        return await query
             .Include(r => r.Reviews)
             .Include(r => r.Categories)
             .FirstOrDefaultAsync(r => r.Id == id);
+    }
 
+    
     public async Task<(List<Recipe> Items, int TotalCount)> GetAllPaginatedAsync(RecipesAllRequest request,
         bool withDeleted = false)
     {
@@ -31,8 +38,8 @@ public class RecipeRepository(AppDbContext db, IRecipeQueryMetadata metadata) : 
 
         return (items, totalCount);
     }
-
-
+    
+    
     protected IQueryable<Recipe> ApplyRelationalFiltering(IQueryable<Recipe> query, Guid? categoryId)
     {
         if (categoryId.HasValue)

@@ -2,4 +2,10 @@
 
 namespace Khaoticen.CookBook.Api.Core.Exceptions;
 
-public class InvalidRecipeException(string message) : DomainException(message);
+public class InvalidRecipeException: DomainException
+{
+    public InvalidRecipeException(string? message = null)
+        : base(message ?? "Recipe must have at least one category.")
+    {
+    }
+}

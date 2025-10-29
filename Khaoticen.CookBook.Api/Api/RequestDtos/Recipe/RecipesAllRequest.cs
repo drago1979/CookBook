@@ -20,9 +20,6 @@ public class RecipesAllRequest : BasePaginatedSortedRequest, IHasSearchColumn
 
     [DependsOn(nameof(SearchColumn))]
     public string? SearchValue { get; set; }
-
-    // [Required]
-    // [StringGuid]
-    // public required string? CategoryId { get; set; } // todo!!!: check why was string
+    
     public Guid? CategoryId { get; set; }
 }

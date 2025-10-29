@@ -59,9 +59,9 @@ public class RecipeService(
         return (items, total);
     }
 
-    public async Task<Recipe?> GetWithRelatedAsync(Guid id)
+    public async Task<Recipe?> GetWithRelatedAsync(Guid id, bool withDeleted = false)
     {
-        return await Repository.GetByIdIncludeAllRelatedAsync(id);
+        return await Repository.GetByIdIncludeAllRelatedAsync(id, withDeleted);
     }
 
     public override async Task DeleteAsync(Recipe entity)
@@ -108,7 +108,7 @@ public class RecipeService(
     private void EnsureRecipeHasCategory(Recipe recipe)
     {
         if (recipe.Categories.Count == 0)
-            throw new InvalidRecipeException("Recipe must have at least one category.");
+            throw new InvalidRecipeException();
     }
 
     private void EnsureCategoriesExist(List<Guid> nonExisting)

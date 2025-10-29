@@ -2,4 +2,10 @@
 
 namespace Khaoticen.CookBook.Api.Core.Exceptions;
 
-public class ValueNotAllowedException(string message) : DomainException(message);
+public class ValueNotAllowedException : DomainException
+{
+    public ValueNotAllowedException(string? message = null)
+        : base(message ?? "Value not allowed.")
+    {
+    }
+}

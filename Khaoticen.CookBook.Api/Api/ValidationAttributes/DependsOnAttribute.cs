@@ -25,8 +25,7 @@ public class DependsOnAttribute: ValidationAttribute
 
         bool thisHasValue = value is string s1 && !string.IsNullOrWhiteSpace(s1);
         bool otherHasValue = otherValue is string s2 && !string.IsNullOrWhiteSpace(s2);
-
-        // If one has value and the other doesn't => error
+        
         if (thisHasValue && !otherHasValue)
         {
             return new ValidationResult(

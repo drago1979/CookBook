@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using Khaoticen.CookBook.Api.Api.Controllers.Shared.Base;
 using Khaoticen.CookBook.Api.Api.RequestDtos.Review;
-using Khaoticen.CookBook.Api.Api.ResponseDtos.Recipe;
 using Khaoticen.CookBook.Api.Api.ResponseDtos.Review;
 using Khaoticen.CookBook.Api.Core.Dtos.Entity.Review;
 using Khaoticen.CookBook.Api.Core.Entities;
+using Khaoticen.CookBook.Api.Core.Exceptions;
 using Khaoticen.CookBook.Api.Core.Services.Entity.Shared.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,7 +21,7 @@ public class ReviewsController(IReviewService entityService, IMapper mapper) : B
 >(mapper)
 {
     #region CRUD
-    
+
     [HttpGet(Name = "ReviewGetAll")]
     public async Task<ActionResult> GetAllAsync([FromQuery] ReviewsAllRequest request)
     {
@@ -30,16 +30,11 @@ public class ReviewsController(IReviewService entityService, IMapper mapper) : B
         return Ok(TransformToPaginated(request, items, total));
     }
 
-    [HttpPatch("{id:guid}", Name = "ReviewPatch")]
+    [HttpPatch("{id}", Name = "ReviewPatch")]
     public async Task<ActionResult> PatchAsync(Guid id, [FromBody] ReviewUpdateRequestDto requestDto,
         bool returnUpdated = false)
     {
-        var entity = await entityService.GetWithRelatedAsync(id);
-
-        if (entity == null)
-        {
-            return NotFound();
-        }
+        var entity = await GetOrThrowAsync(id);
 
         var updateEntityDto = TransformToUpdateDto(requestDto);
 
@@ -53,15 +48,10 @@ public class ReviewsController(IReviewService entityService, IMapper mapper) : B
         return NoContent();
     }
 
-    [HttpDelete("{id:guid}", Name = "ReviewDelete")]
+    [HttpDelete("{id}", Name = "ReviewDelete")]
     public async Task<ActionResult> DeleteAsync(Guid id)
     {
-        var entity = await entityService.GetAsync(id);
-
-        if (entity == null)
-        {
-            return NotFound();
-        }
+        var entity = await GetOrThrowAsync(id);
 
         await entityService.DeleteAsync(entity);
 
@@ -74,6 +64,15 @@ public class ReviewsController(IReviewService entityService, IMapper mapper) : B
 
     private ReviewUpdateDto TransformToUpdateDto(ReviewUpdateRequestDto requestDto) =>
         Mapper.Map<ReviewUpdateDto>(requestDto);
+
+    private async Task<Review> GetOrThrowAsync(Guid id)
+    {
+        var entity = await entityService.GetAsync(id);
+
+        if (entity is null) throw new EntityNotFoundException(nameof(Review), id.ToString());
+        
+        return entity;
+    }
 
     #endregion
 }

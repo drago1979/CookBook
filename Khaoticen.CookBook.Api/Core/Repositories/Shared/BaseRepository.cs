@@ -134,6 +134,19 @@ public abstract class
         string searchColumn,
         string searchValue)
     {
+        // todo!!! CHECK THIS:
+        /*    // If no filtering metadata at all, skip filtering and just return query
+    if (metadata?.Filters is null)
+        return query;
+
+    if (!metadata.Filters.TryGetValue(searchColumn, out var propertyExpr))
+        throw new ArgumentException($"Unknown search column '{searchColumn}'.");
+
+    // ... apply filtering with propertyExpr
+
+    return query;*/
+        if(metadata.Filters == null) return query;
+        
         if (!metadata.Filters.TryGetValue(searchColumn, out var propertyExpr))
             throw new ArgumentException($"Unknown search column '{searchColumn}'");
 

@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Khaoticen.CookBook.Api.Api.Controllers.Shared.Base;
-using Khaoticen.CookBook.Api.Api.RequestDtos;
 using Khaoticen.CookBook.Api.Api.RequestDtos.Category;
 using Khaoticen.CookBook.Api.Api.ResponseDtos.Category;
 using Khaoticen.CookBook.Api.Core.Dtos.Entity.Category;
@@ -45,29 +44,19 @@ public class CategoriesController(ICategoryService entityService, IMapper mapper
         return Ok(TransformToPaginated(request, items, total));
     }
 
-    [HttpGet("{id:guid}", Name = "CategoryGet")]
+    [HttpGet("{id}", Name = "CategoryGet")]
     public async Task<ActionResult> GetAsync(Guid id)
     {
-        var entity = await entityService.GetWithRelatedAsync(id);
-
-        if (entity == null)
-        {
-            return NotFound();
-        }
-
+        var entity = await GetOrThrowAsync(id);
+        
         return Ok(TransformEntityToResponse(entity));
     }
 
-    [HttpPatch("{id:guid}", Name = "CategoryPatch")]
+    [HttpPatch("{id}", Name = "CategoryPatch")]
     public async Task<ActionResult> PatchAsync(Guid id, [FromBody] CategoryUpdateRequestDto requestDto,
         bool returnUpdated = false)
     {
-        var entity = await entityService.GetWithRelatedAsync(id);
-
-        if (entity is null) throw new EntityNotFoundException("Category not found.");
-        // {
-        //     return NotFound();
-        // }
+        var entity = await GetOrThrowAsync(id);
 
         var updateEntityDto = TransformToUpdateDto(requestDto);
 
@@ -81,16 +70,11 @@ public class CategoriesController(ICategoryService entityService, IMapper mapper
         return NoContent();
     }
 
-    [HttpDelete("{id:guid}", Name = "CategoryDelete")]
+    [HttpDelete("{id}", Name = "CategoryDelete")]
     public async Task<ActionResult> DeleteAsync(Guid id)
     {
-        var entity = await entityService.GetAsync(id);
-
-        if (entity == null)
-        {
-            return NotFound();
-        }
-
+        var entity = await GetOrThrowAsync(id);
+        
         await entityService.DeleteAsync(entity);
 
         return NoContent();
@@ -118,6 +102,15 @@ public class CategoriesController(ICategoryService entityService, IMapper mapper
 
     private CategoryUpdateDto TransformToUpdateDto(CategoryUpdateRequestDto requestDto) =>
         Mapper.Map<CategoryUpdateDto>(requestDto);
+
+    private async Task<Category> GetOrThrowAsync(Guid id)
+    {
+        var entity = await entityService.GetWithRelatedAsync(id);
+
+        if (entity is null) throw new EntityNotFoundException(nameof(Category), id.ToString());
+        
+        return entity;
+    }
 
     #endregion
 }

@@ -8,14 +8,8 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Init version
-// builder.Services.AddControllers();
-
-// Changed: Suppress circular refs.in responses // todo!!: confirm circ.refs in responeses sit.
 builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
-
-
 
 builder.Services.AddOpenApi();
 
@@ -64,11 +58,10 @@ builder.Services.AddScoped<AuditInterceptor>();
 #endregion
 
 #region Validation-error-customization
-#region Customize validation error exceptions
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
-    options.InvalidModelStateResponseFactory = context =>
+    options.InvalidModelStateResponseFactory = context => // Note: added to align json-deserialization-error-format with exceptions-format used in app
     {
         var errors = context.ModelState
             .Where(e => e.Value?.Errors.Count > 0)
@@ -101,16 +94,6 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
     };
 });
 
-// builder.Services.Configure<JsonOptions>(options =>
-// {
-//     options.JsonSerializerOptions.MaxDepth = 1;
-//     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-// });
-
-
-#endregion
-
-
 #endregion
 
 var app = builder.Build();
@@ -121,11 +104,11 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
-
-app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.MapControllers();
 
