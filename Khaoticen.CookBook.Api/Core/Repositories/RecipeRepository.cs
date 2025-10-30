@@ -49,34 +49,31 @@ public class RecipeRepository(AppDbContext db, IRecipeQueryMetadata metadata) : 
         bool withDeleted = false)
     {
         var query = Table.AsQueryable();
-
-        // Relationships
-        query = ApplyRelationalFiltering(query, request.CategoryId);
-
-        // Deleted-or-not
-        if (withDeleted) query = query.IgnoreQueryFilters();
-
-        var (items, totalCount) =
-            await base.GetAllPaginatedAsync<RecipesAllRequest>(request, query);
+        
+        query = ApplyRelationalFiltering(request, query);
+        
+        var (items, totalCount) = await base.GetAllPaginatedAsync(request, query);
 
         return (items, totalCount);
     }
 
     /// <summary>
-    /// Filters the provided query to apply relational filtering based on the specified category ID.
+    /// Applies filtering to the given query based on the relational properties specified in the request.
     /// </summary>
+    /// <param name="request">
+    /// The request object containing filtering criteria, such as the category identifier.
+    /// </param>
     /// <param name="query">
-    /// The queryable object of type <see cref="Recipe"/> that represents the base dataset to filter.
+    /// The initial query to which the filtering is applied. If null, a new query is instantiated using the base Table.
     /// </param>
-    /// <param name="categoryId">
-    /// The optional category ID to filter recipes by. If specified, only recipes associated with the given category will be included.
-    /// </param>
-    /// <return>
-    /// The filtered queryable object containing recipes, potentially narrowed down to those related to the specified category.
-    /// </return>
-    protected IQueryable<Recipe> ApplyRelationalFiltering(IQueryable<Recipe> query, Guid? categoryId)
+    /// <returns>
+    /// The query after applying the filtering based on the relational properties.
+    /// </returns>
+    private IQueryable<Recipe> ApplyRelationalFiltering(RecipesAllRequest request, IQueryable<Recipe>? query = null)
     {
-        if (categoryId.HasValue)
+        query ??= Table.AsQueryable();
+        
+        if (request.CategoryId is { } categoryId)
         {
             query = query.Where(r => r.Categories.Any(c => c.Id == categoryId));
         }

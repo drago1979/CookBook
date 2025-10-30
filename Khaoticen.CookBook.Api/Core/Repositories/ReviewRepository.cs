@@ -1,4 +1,5 @@
-﻿using Khaoticen.CookBook.Api.Core.Entities;
+﻿using Khaoticen.CookBook.Api.Api.RequestDtos.Review;
+using Khaoticen.CookBook.Api.Core.Entities;
 using Khaoticen.CookBook.Api.Core.Repositories.Shared;
 using Khaoticen.CookBook.Api.Infrastructure.Db;
 using Khaoticen.CookBook.Api.Shared.Query.Metadata.Shared.Interfaces;
@@ -27,4 +28,20 @@ public class ReviewRepository(AppDbContext db, IReviewQueryMetadata metadata)
     /// <returns>A list of all entities, including softly deleted ones.</returns>
     public async Task<List<Review>> GetAllWithDeletedAsync() =>
         await Table.IgnoreQueryFilters().ToListAsync();
+
+    /// <summary>
+    /// Retrieves a paginated list of reviews based on the specified request parameters, with an option to include deleted reviews.
+    /// </summary>
+    /// <param name="request">The request parameters, including pagination, sorting, and search criteria.</param>
+    /// <param name="withDeleted">Indicates whether to include deleted reviews in the result.</param>
+    /// <returns>
+    /// A task representing the asynchronous operation. The task result contains a tuple with the list of reviews and the total count of matching reviews.
+    /// </returns>
+    public async Task<(List<Review> Items, int TotalCount)> GetAllPaginatedAsync(ReviewsAllRequest request,
+        bool withDeleted = false)
+    {
+        var (items, totalCount) = await base.GetAllPaginatedAsync(request);
+
+        return (items, totalCount);
+    }
 }

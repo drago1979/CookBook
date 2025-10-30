@@ -1,4 +1,5 @@
-﻿using Khaoticen.CookBook.Api.Core.Entities;
+﻿using Khaoticen.CookBook.Api.Api.RequestDtos.Category;
+using Khaoticen.CookBook.Api.Core.Entities;
 using Khaoticen.CookBook.Api.Core.Repositories.Shared;
 using Khaoticen.CookBook.Api.Infrastructure.Db;
 using Khaoticen.CookBook.Api.Shared.Query.Metadata.Shared.Interfaces;
@@ -61,5 +62,19 @@ public class CategoryRepository(AppDbContext db, ICategoryQueryMetadata metadata
             .Where(c => idList.Contains(c.Id))
             .Select(c => c.Id)
             .ToListAsync();
+    }
+
+    /// <summary>
+    /// Retrieves a paginated and optionally sorted list of categories, along with the total count of matching categories.
+    /// </summary>
+    /// <param name="request">The request object containing pagination, sorting, and search parameters.</param>
+    /// <param name="withDeleted">A boolean indicating whether to include deleted categories in the result. Defaults to false.</param>
+    /// <returns>A tuple containing a list of categories and the total count of matching categories.</returns>
+    public async Task<(List<Category> Items, int TotalCount)> GetAllPaginatedAsync(CategoriesAllRequest request,
+        bool withDeleted = false)
+    {
+        var (items, totalCount) = await base.GetAllPaginatedAsync(request);
+
+        return (items, totalCount);
     }
 }
